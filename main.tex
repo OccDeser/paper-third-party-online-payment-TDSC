@@ -60,9 +60,55 @@
 % my coustom packages
 \usepackage{enumitem}
 
+% my coustom colors
+\definecolor{xhs_blue}{HTML}{364FC7}
+\definecolor{xhs_blue_dark}{HTML}{081C59}
+\definecolor{xhs_blue_light}{HTML}{EDF2FF}
+
+\definecolor{xhs_red}{HTML}{c13c33}
+\definecolor{xhs_green}{HTML}{3c5840}
+
+\definecolor{xhs_all}{HTML}{9f1f31}
+\definecolor{xhs_ex}{HTML}{2885a9}
+
 % my coustom commands
 \newcommand{\rom}[1]{\romannumeral #1}
 \newcommand{\Rom}[1]{\uppercase\expandafter{\romannumeral #1}}
+
+
+\newcommand{\funcText}[1]{{\ttfamily #1}}
+
+\newcommand{\ruleNameText}[1]{{\ttfamily #1}}
+
+\newcommand{\TFact}[1]{{\ttfamily #1}}
+\newcommand{\TLemma}[1]{{\ttfamily #1}}
+\newcommand{\TEmpFact}[1]{\lbrack \  #1 \rbrack}
+\newcommand{\TFacts}[1]{\lbrack\ #1 \ \rbrack}
+\newcommand{\TEmpActFact}[0]{-\hspace{-0.45em}\rightarrow}
+\newcommand{\TEmpActFactSL}[1]{- \hspace{-2.3pt} \TEmpFact{#1} \hspace{-4.8pt} \rightarrow} % single line
+\newcommand{\TActFacts}[1]{- \hspace{-4.5pt} \TFacts{#1} \hspace{-4.8pt} \rightarrow}
+\newcommand{\TActFactsSL}[1]{- \hspace{-2.3pt} \TFacts{#1} \hspace{-4.8pt} \rightarrow}
+\newcommand{\TPair}[1]{\langle #1 \rangle}
+\newcommand{\TPairN}[1]{$\langle$\text{\ttfamily #1}$\rangle$}
+
+\newcommand{\TLet}[0]{\text{\Tterm{let}}}
+\newcommand{\TIn}[0]{\text{\Tterm{in}}}
+
+\newcommand{\TLetS}[0]{\text{\Tterm{let}} \hspace{0.5em}}
+\newcommand{\TInS}[0]{\text{\Tterm{in}} \hspace{0.5em}}
+
+\newcommand{\TAll}[0]{\text{\textcolor{xhs_all}{\TLemma{All}}}}
+\newcommand{\TEx}[0]{\text{\textcolor{xhs_ex}{\TLemma{Ex}}}}
+\newcommand{\TNot}[0]{\text{\TLemma{not}}}
+
+\newcommand{\Tterm}[1]{{\ttfamily #1}}
+\newcommand{\Tequation}[1]{{\ttfamily #1}}
+\newcommand{\Tfunction}[1]{{\ttfamily #1}}
+\newcommand{\Tamarin}[0]{\textsc{Tamarin}}
+
+\newcommand{\TFrTerm}[1]{{\Tterm{$\sim$#1}}}
+\newcommand{\TFactTerm}[2]{{\ttfamily #1}$(\,$\Tterm{#2}$\,)$}
+\newcommand{\TFrFactTerm}[1]{{\ttfamily Fr}$(\,$\TFrTerm{#1}$\,)$}
 
 %-------------------------------------------------------------------------------
 \begin{document}
@@ -101,8 +147,8 @@ Not more than 200 words, if possible, and preferably closer to 150.
 \input{sections/introduction.tex}
 \input{sections/background.tex}
 \input{sections/threat_model.tex}
-\input{sections/security_goals.tex}
 \input{sections/formal_modeling.tex}
+\input{sections/security_properties.tex}
 \input{sections/attack_patterns.tex}
 \input{sections/real_world.tex}
 \input{sections/discussion.tex}
