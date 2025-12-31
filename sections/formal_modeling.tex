@@ -1,61 +1,105 @@
 %-------------------------------------------------------------------------------
 \section{Payment Protocol Modeling}
 %-------------------------------------------------------------------------------
+We formally model the payment protocols of WeChat Pay and Alipay across three payment scenarios, and the complete models are available in an open-source repository~\cite{Repo2025FormalModels}.
+In this section, we present the key details in modeling third-party payment protocols.
+First, we introduce how a generalized channel model is incorporated into third-party payment protocols to flexibly capture different channel assumptions.
+Then, we describe the user model, which allows us to accurately capture users' evaluation of payment information and their authorization behavior within the symbolic model.
+Finally, we explain how to use an Order Oracle to model the adversary’s capability to obtain legitimate payment parameters.
 
-A paragraph of text goes here. Lots of text. Plenty of interesting
-text. Text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text.
-More fascinating text. Features galore, plethora of promises.
+\subsection{Channel Model}
+We introduce appropriate modifications to the standard secure channel model in order to systematically model different channels and security assumptions.
+We use the facts \TFact{SOut} and \TFact{SIn} to represent message sending and receiving over a channel.
+Messages transmitted over our secure channels are not replayable.
+Therefore, the message transmission process of the channel is simplified, and the rule is shown below.
+\begin{flalign*}
+\text{\Tterm{Ru}}  & \text{\Tterm{le SecureChannel}} :      & \\
+  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}  \\
+            & \TEmpActFactSL{}                                \\
+  \TFacts{  & \text{\TFactTerm{SIn}{ChannelID, A, B, m}}}
+\end{flalign*}
+Here, \Tterm{m} is the message transmitted over the channel, \Tterm{A} denotes the message sender, and \Tterm{B} denotes the message receiver.
+\Tterm{ChannelID} is a channel identifier that specifies which channel is used for communication.
+For example, when \Tterm{ChannelID} takes the value \Tterm{\textquotesingle U-PS\textquotesingle}, it denotes the communication channel between \emph{U} and \emph{PS}.
 
+To model insecure channels, we introduce two additional attack rules for such channels, corresponding to violations of channel confidentiality and integrity, respectively.
+\begin{flalign*}
+\text{\Tterm{Ru}}  & \text{\Tterm{le BreakConfidentiality}} :                   & \\
+  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}} }                     \\
+            & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
+  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}, \TFactTerm{Out}{m}}}  \\ \\
+\text{\Tterm{Ru}}  & \text{\Tterm{le BreakIntegrity}} :                         \\
+  \TFacts{  & \text{\TFactTerm{In}{\TPairN{ChannelID, A, B, m}}} }              \\
+            & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
+  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}                      
+\end{flalign*}
+Compromising confidentiality grants the adversary the ability to obtain messages from the channel, while compromising integrity grants the adversary the ability to inject arbitrary messages into the channel.
+\TFact{In} and \TFact{Out} are built-in facts of the Tamarin prover that represent receiving messages from, and sending messages to, the public channel.
+The fact \TFact{InsecureChannel} is used to label a channel as insecure. 
+We use a restriction to constrain the adversary so that it can compromise only the channels specified under a given channel assumption.
+\begin{flalign*}
+\text{\Tterm{Re}}  & \text{\Tterm{striction Insecure}} :            & \\
+    & \TAll \; \text{\Tterm{ch\_id k \#i.}} \; \text{\TFact{InsecureChannel(ch\_id)@\#i}} \\
+    & \implies (\text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-MS\textquotesingle}} \; \lor \; \text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-PS\textquotesingle}} ) 
+\end{flalign*}
+This restriction specifies that the channels between \emph{MF} and \emph{MS}, and between \emph{MF} and \emph{PS}, are insecure.
 
-% ## 5. Formalizing Payment Security Goals
+\subsection{User Model} 
+Under our security assumptions, users are capable of accurately identifying the payment amount and product description, thereby avoiding being misled into authorizing a payment.
+To model this capability in the symbolic model, we introduce two unary functions, 
+\Tfunction{calc\_amt} and \Tfunction{gen\_desc}, which are used to compute the payment amount and the product description from goods information, respectively.
+During the \emph{Ordering} phase, users select goods.
+In our model, we use a fresh value as an abstract representation of the goods information.
+The following rule models the user's goods ordering behavior:
+\begin{flalign*}
+      &\TFacts{ \text{\TFact{Fr}}(\TSymbolFr goods)} \TEmpActFactSL{} & \\
+      &\TFacts{
+        \text{\TFact{Order}}(\TSymbolFr goods),
+        \text{\TFact{SOut}}(..., \TSymbolFr goods)
+      }
+\end{flalign*}
+This rule represents that the user \emph{U} selects a product $\TSymbolFr goods$ and sends it to \emph{MF}.
+Here, $\text{\TFact{Fr}}(\TSymbolFr goods)$ indicates that the value $\TSymbolFr goods$ is freshly generated.
+% 我们简化了通信
+In \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
+\begin{flalign*}
+      amount & = \text{\Tfunction{calc\_amt}}(\TSymbolFr goods) &\\
+      description & = \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)
+\end{flalign*}
+In \emph{Payment} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
+Due to pattern matching, the user authorizes a payment if only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
+The following rule models the user's payment authorization behavior:
+\begin{flalign*}
+      \TFacts{ &\text{\TFact{Order}}(\TSymbolFr goods),                     &\\
+              &\text{\TFact{SIn}}(..., \TPair{\text{\Tfunction{calc\_amt}}(\TSymbolFr goods), \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)}) } \\
+      & \TEmpActFactSL{} \\
+      \TFacts{& \text{\TFact{UserAuthorizePayment}}(...) }
+\end{flalign*}
 
-% **（形式化 = 翻译，不是发明）**
+\subsection{Order Oracle Modeling}
 
-% > 这章的定位是：
-% > **“我们把上一章的语义翻译成可验证的形式逻辑”**
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{img/black.png}
+  \caption{Overview of the Order Oracle}
+  \label{fig:order_oracle_overview}
+\end{figure}
 
-% ### 5.1 Why Tamarin
-
-% 一句话：多方、多会话、多攻击者
-
-% ### 5.2 Event-Based Semantics
-
-% 解释 `Commit / Running` 是**语义承载工具**
-
-% ### 5.3 Formal Lemmas for L1–L3
-
-% - 每一层一个子节
-% - 每个子节结构统一：
-%   1. 非形式化目标
-%   2. 对应 lemma
-%   3. 解释 injective agreement 的意义
-
-% 👉 评审应感受到：
-% **lemma 是 inevitability，而不是人为设计**
-
-% ------
-
-% ## 6. Protocol Modeling and Verification Results
-
-% **（“我们到底分析了什么”）**
-
-% ### 内容重组建议
-
-% #### 6.1 Payment Scenarios and Protocol Variants
-
-% - 3 场景
-% - 2 订单生成模型
-
-% #### 6.2 Verification Matrix
-
-% | Model | Scenario | Channel Assumption | L1 | L2 | L3 |
-
-% 👉 用表格让评审一眼看到“系统性”
-
-% #### 6.3 Summary of Violations
-
-% - 哪一层最常被破坏
-% - 不同模型 → 不同失败层
+In our threat model, the adversary is assumed to have the capability to obtain legitimate payment parameters from arbitrary merchant platforms.
+To model this capability in an intuitive and explicit manner, we introduce the concept of an \emph{Order Oracle}.
+Figure~\ref{fig:order_oracle_overview} illustrates the structure of the \emph{Order Oracle}.
+\emph{Order Oracle} takes two inputs: the payment amount $amount$ and the order description $description$.
+Upon receiving these two inputs, \emph{Order Oracle} generates payment parameters $pay\_params$ and returns them to the adversary.
+The generated $pay\_params$ constitute valid payment parameters accepted by the \emph{PS}.
+When $pay\_params$ are used for payment, the payment amount and order description displayed on the payment interface are consistent with the provided $amount$ and $description$.
+We model the Order Oracle using the following rule:
+\begin{flalign*}
+\text{\Tterm{Ru}}  & \text{\Tterm{le OrderOracle}} :        & \\
+  \TFacts{  & \text{\TFactTerm{In}{<amount, description>}}} \\
+            & \TEmpActFactSL{}                              \\
+  \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params(amount, description)}}}}}
+\end{flalign*}
+\Tfunction{gen\_params} is a function that generates valid payment parameters $pay\_params$ based on the payment amount $amount$ and the order description $description$.
+This function is not deterministic. 
+In our formal model, \Tfunction{gen\_params} represents different payment-parameter generation procedures under different payment scenarios and protocols, 
+thereby producing payment parameters that are compliant with the corresponding protocol specifications.

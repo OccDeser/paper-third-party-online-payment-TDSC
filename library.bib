@@ -102,7 +102,6 @@ all-text-fields[identity]
   shorttitle = {The {EMV} {Standard}},
   url = {https://ieeexplore.ieee.org/document/9519404/},
   doi = {10.1109/SP40001.2021.00037},
-  abstract = {EMV is the international protocol standard for smartcard payment and is used in over 9 billion cards worldwide. Despite the standard’s advertised security, various issues have been previously uncovered, deriving from logical ﬂaws that are hard to spot in EMV’s lengthy and complex speciﬁcation, running over 2,000 pages.},
   language = {en},
   urldate = {2023-05-20},
   booktitle = {2021 {IEEE} {Symposium} on {Security} and {Privacy} ({SP})},
@@ -187,4 +186,21 @@ year={2023}
   author={Cremers, Cas and Dehnel-Wild, Martin},
   booktitle={Network and Distributed System Security Symposium (NDSS)},
   year={2019},
+}
+
+
+@article{shi_formal_nodate,
+	title = {Formal {Analysis} of {BLE} {Secure} {Connection} {Pairing} and {Revelation} of the {PE} {Confusion} {Attack}},
+	abstract = {The Secure Connection (SC) pairing is the latest version of the security protocol designed to protect sensitive information transmitted over Bluetooth Low Energy (BLE) channels. A formal and rigorous analysis of this protocol is essential for improving security assurances and identifying potential vulnerabilities. However, the complexity of the protocol flow, difficulties in formalizing pairing method selection, and overly idealized user assumptions present significant obstacles to such analysis. In this paper, we address these challenges and present an accurate and comprehensive formal analysis of the BLE-SC pairing protocol using Tamarin. We extract state machines for each participant as the blueprint for modeling the protocol, and we use an equational theory to formalize the pairing method selection logic. Our model incorporates subtle user behaviors and considers stronger adversary capabilities, including the potential compromise of private channels such as the temporary out-of-band channel. We develop a verification strategy to automate protocol analysis and implement a script to parallelize verification tasks across multiple servers. We verify 84 pairing cases and identify the minimal security assumptions required for the protocol. Moreover, our results reveal a new Man-in-the-Middle (MitM) attack, which we call the PE confusion attack. We provide tools and Proof-ofConcept (PoC) exploits for simulating and understanding this attack within a controlled environment. Finally, we propose countermeasures to defend against this attack, improving the security of the BLE-SC pairing protocol.},
+	language = {en},
+	author = {Shi, Min and Xiao, Yongkang and Chen, Jing and He, Kun and Du, Ruiying and Jia, Meng},
+}
+
+
+@misc{Repo2025FormalModels,
+  title = {Formal Models Repository},
+  year = {2024},
+  howpublished = {\url{https://github.com/yourusername/your-repo}},
+  note = {Open-source repository containing formal models and specifications},
+  keywords = {formal-methods, repository, formal-models}
 }
