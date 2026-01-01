@@ -49,7 +49,8 @@ Under our security assumptions, users are capable of accurately identifying the 
 To model this capability in the symbolic model, we introduce two unary functions, 
 \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, which are used to compute the payment amount and the product description from goods information, respectively.
 During the \emph{Ordering} phase, users select goods.
-In our model, we use a fresh value as an abstract representation of the goods information.
+For the same goods (note that this does not refer to the same product model), a user can only purchase them at most once. 
+Therefore, in our model, we use a fresh value as an abstract representation of the goods.
 The following rule models the user's goods ordering behavior:
 \begin{flalign*}
       &\TFacts{ \text{\TFact{Fr}}(\TSymbolFr goods)} \TEmpActFactSL{} & \\
@@ -60,7 +61,6 @@ The following rule models the user's goods ordering behavior:
 \end{flalign*}
 This rule represents that the user \emph{U} selects a product $\TSymbolFr goods$ and sends it to \emph{MF}.
 Here, $\text{\TFact{Fr}}(\TSymbolFr goods)$ indicates that the value $\TSymbolFr goods$ is freshly generated.
-% 我们简化了通信
 In \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
 \begin{flalign*}
       amount & = \text{\Tfunction{calc\_amt}}(\TSymbolFr goods) &\\
