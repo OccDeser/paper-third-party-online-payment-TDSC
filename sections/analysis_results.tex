@@ -1,39 +1,40 @@
+\input{tables/lemma_results.tex}
 %-------------------------------------------------------------------------------
-\section{Analysis Results}
+\section{Analysis Results}  \label{sec:results}
 %-------------------------------------------------------------------------------
-\subsection{Verification Results}
-\label{sec:results}
 
-A paragraph of text goes here. Lots of text. Plenty of interesting
-text. Text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text.
-More fascinating text. Features galore, plethora of promises.
+We conducted a comprehensive automated security analysis of three payment scenarios of WeChat Pay and Alipay under three channel security assumptions using Tamarin Prover version~1.10.0 on a server equipped with a 24-core, 32-thread Intel Core i9-14900K CPU and 192\,GB of memory, running Ubuntu~24.04~LTS. 
+This section presents the verification results in detail. 
 
-\subsection{Attack Patterns}
+\subsection{Results}
 
-A paragraph of text goes here. Lots of text. Plenty of interesting
-text. Text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text.
-More fascinating text. Features galore, plethora of promises.
+Table~\ref{tab:lemma-results} summarizes our analysis results.
+We find that two protocols following Payment Model~A also fail to satisfy the IA-O1 property under all three channel assumptions. 
+When it comes to IA-O2 , regardless of whether they belong to Payment Model~A or Payment Model~B, fail to satisfy the IA-O2 property.
+The corresponding counterexample traces reveal the order tampering attack and its variants.
 
-% **（攻击 = 定理反例）**
+\subsection{Order Tampering Attack}
 
-% > 把攻击章节从“漏洞故事”提升为“语义失败分类”。
+In an Order Tampering Attack, the attacker misleads both the user and the merchant into becoming confused about the order, thereby causing the user to authorize an incorrect order.
+This attack was first identified by \cite{Yang2017FlawedImplementations} in the In-App payment scenario.
+Our model-based analysis shows that Order Tampering Attacks are prevalent, can be extended to other payment scenarios, and admit distinct variants.
 
-% ### 7.1 Three Canonical Attack Patterns
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{img/black.png}
+  \caption{Order Tampering Attack Variant 1}
+  \label{fig:order_tampering_variant_1}
+\end{figure}
 
-% 每一种攻击结构为：
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{img/black.png}
+  \caption{Order Tampering Attack Variant 2}
+  \label{fig:order_tampering_variant_2}
+\end{figure}
 
-% 1. 攻击描述
-% 2. 违反的层（L1/L2/L3）
-% 3. 为什么这是**协议设计导致的必然结果**
-
-% ### 7.2 Cross-Protocol Generality
-
-% 强调：
-
-% > 攻击模式跨支付商、跨场景、跨实现
+There are two variants of the Order Tampering Attack, as illustrated in Figures~\ref{fig:order_tampering_variant_1} and~\ref{fig:order_tampering_variant_2}.
+The main difference between these two variants lies in the communication channel over which the attacker tampers with the order.
+In Variant~1, the attacker tampers with the communication channel between \emph{MF} and \emph{MS}, thereby causing \emph{U} to ultimately authorize an order specified by the attacker.
+In Variant~2, the order is tampered with by the attacker on the communication channel between \emph{MF} and \emph{PS}.
+We identify a widely prevalent vulnerability that can be exploited to mount the Variant~2 Order Tampering Attack, which will be discussed in detail in Section~\ref{sec:real_world}.

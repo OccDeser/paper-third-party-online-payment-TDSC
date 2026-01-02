@@ -1,0 +1,45 @@
+
+\begin{table*}[t]
+\centering
+\caption{Lemma verification results. $\checkmark$ = verified, $\times$ = falsified.}
+\label{tab:lemma-results}
+
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Payment} &
+\textbf{PS-MS-O-IA} &
+\textbf{U-MS-O-IA} &
+\textbf{MS-PS-R-IA} &
+\textbf{U-PS-R-IA} &
+\textbf{No-Pay-Without-Pwd} \\
+\midrule
+
+\multicolumn{6}{l}{\textbf{base}}\\
+\quad \texttt{alipay\_app}         & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_mobile\_web} & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_order\_code} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_app}    & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_h5}     & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_native} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\midrule
+
+\multicolumn{6}{l}{\textbf{sc\_ms}}\\
+\quad \texttt{alipay\_app}         & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_mobile\_web} & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_order\_code} & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_app}    & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_h5}     & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_native} & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\midrule
+
+\multicolumn{6}{l}{\textbf{sc\_ps}}\\
+\quad \texttt{alipay\_app}         & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_mobile\_web} & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_order\_code} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_app}    & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_h5}     & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_native} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+
+\end{table*}
