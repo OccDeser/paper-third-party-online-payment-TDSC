@@ -1,12 +1,13 @@
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\caption{Lemma verification results. $\checkmark$ = verified, $\times$ = falsified.}
-\label{tab:lemma-results}
-
-\begin{tabular}{lccccc}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{lcccccc}
 \toprule
 \textbf{Payment} &
+\textbf{Time(s)} &
 \textbf{PS-MS-O-IA} &
 \textbf{U-MS-O-IA} &
 \textbf{MS-PS-R-IA} &
@@ -14,32 +15,34 @@
 \textbf{No-Pay-Without-Pwd} \\
 \midrule
 
-\multicolumn{6}{l}{\textbf{base}}\\
-\quad \texttt{alipay\_app}         & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_mobile\_web} & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_order\_code} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_app}    & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_h5}     & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_native} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\multicolumn{7}{l}{\textbf{base}}\\
+\quad \texttt{alipay\_app}         & 265.80 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_mobile\_web} & 266.22 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_order\_code} & 606.59 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_app}    & 562.21 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_h5}     &  88.18 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_native} & 123.89 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
 \midrule
 
-\multicolumn{6}{l}{\textbf{sc\_ms}}\\
-\quad \texttt{alipay\_app}         & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_mobile\_web} & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_order\_code} & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_app}    & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_h5}     & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_native} & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\multicolumn{7}{l}{\textbf{sc\_ms}}\\
+\quad \texttt{alipay\_app}         & 13.94 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_mobile\_web} & 14.39 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_order\_code} & 73.57 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_app}    & 19.96 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_h5}     &  7.73 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_native} &  7.22 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
 \midrule
 
-\multicolumn{6}{l}{\textbf{sc\_ps}}\\
-\quad \texttt{alipay\_app}         & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_mobile\_web} & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_order\_code} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_app}    & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_h5}     & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_native} & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\multicolumn{7}{l}{\textbf{sc\_ps}}\\
+\quad \texttt{alipay\_app}         & 19.55 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_mobile\_web} & 18.20 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{alipay\_order\_code} &155.14 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_app}    &159.02 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_h5}     & 20.66 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\quad \texttt{wechat\_pay\_native} & 26.77 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
 \bottomrule
 \end{tabular}
 
-\end{table*}
+\caption{Lemma verification results. Time is per-file wall time (seconds, 2 decimals). $\checkmark$ = verified, $\times$ = falsified.}
+\label{tab:lemma-results}
+\end{table}
