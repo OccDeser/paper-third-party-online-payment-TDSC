@@ -17,24 +17,25 @@ The corresponding counterexample traces reveal the order tampering attack and it
 
 In an Order Tampering Attack, the attacker misleads both the user and the merchant into becoming confused about the order, thereby causing the user to authorize an incorrect order.
 This attack was first identified by \cite{Yang2017FlawedImplementations} in the In-App payment scenario.
-Our model-based analysis shows that Order Tampering Attacks are prevalent, can be extended to other payment scenarios, and admit distinct variants.
+Our formal analysis indicates that this attack is prevalent across a wide range of payment scenarios and cannot be prevented by any existing payment model currently adopted by payment service providers. 
+While traditional defenses emphasize securing individual communication channels, our results show that the attack admits multiple variants and can be launched whenever any insecure channel exists between \emph{MS} and the \emph{PS-App}.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/black.png}
-  \caption{Order Tampering Attack Variant 1}
+  \caption{Order Tampering Attack Variant \Rom{1}}
   \label{fig:order_tampering_variant_1}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/black.png}
-  \caption{Order Tampering Attack Variant 2}
+  \caption{Order Tampering Attack Variant \Rom{2}}
   \label{fig:order_tampering_variant_2}
 \end{figure}
 
 There are two variants of the Order Tampering Attack, as illustrated in Figures~\ref{fig:order_tampering_variant_1} and~\ref{fig:order_tampering_variant_2}.
 The main difference between these two variants lies in the communication channel over which the attacker tampers with the order.
-In Variant~1, the attacker tampers with the communication channel between \emph{MF} and \emph{MS}, thereby causing \emph{U} to ultimately authorize an order specified by the attacker.
-In Variant~2, the order is tampered with by the attacker on the communication channel between \emph{MF} and \emph{PS}.
-We identify a widely prevalent vulnerability that can be exploited to mount the Variant~2 Order Tampering Attack, which will be discussed in detail in Section~\ref{sec:real_world}.
+In Variant~\Rom{1}, the attacker tampers with the communication channel between \emph{MF} and \emph{MS}, thereby causing \emph{U} to ultimately authorize an order specified by the attacker.
+In Variant~\Rom{2}, the order is tampered with by the attacker on the communication channel between \emph{MF} and \emph{PS}.
+We identify a widely prevalent vulnerability that can be exploited to mount the Variant~\Rom{2} Order Tampering Attack, which will be discussed in detail in Section~\ref{sec:real_world}.
