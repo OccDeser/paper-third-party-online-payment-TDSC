@@ -2,9 +2,65 @@
 \section{Countermeasures} 
 %-------------------------------------------------------------------------------
 
-A paragraph of text goes here. Lots of text. Plenty of interesting
-text. Text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text.
-More fascinating text. Features galore, plethora of promises.
+In this section, we analyze the causes of order tampering attacks and present our countermeasures.
+
+\subsection{Cause Analysis}
+
+\paragraph{Superficial Causes}
+From a superficial perspective, order tampering attacks arise from the existence of insecure communication channels between \emph{MS} and \emph{PS-App}.
+An attacker can intercept and tamper with order information along this channel, thereby misleading the user into authorizing an incorrect payment.
+At first glance, addressing this issue appears straightforward.
+It suffices to ensure that the communication channels between \emph{MS} and \emph{PS-App} are secure.
+However, for payment service providers, this seemingly simple solution is difficult to realize in practice.
+The security of the communication path from merchant backends to \emph{PS-App} is influenced by both merchants and end users, and is largely beyond the control of payment service providers.
+Payment service providers serve a large number of merchants, each with diverse backend implementations, making it infeasible to ensure that all merchants correctly secure their communication channels.
+Similarly, merchants serve a vast user base with heterogeneous device environments, and payment service providers cannot guarantee that all users operate within secure network conditions.
+Therefore, defending against order tampering attacks solely by securing communication channels is, in practice, highly challenging.
+Consequently, mitigation is often reactive: once an insecure communication channel is identified, merchants and users are notified to apply patches.
+
+\paragraph{Root Causes}
+The root cause of such attacks lies in the lack of an effective user-side authentication mechanism for order information in existing payment models.
+We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
+However, the user does not actually authenticate the order itself.
+Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
+In other words, during the \emph{Payment} phase, the user performs no form of authentication of the order data.
+The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
+Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
+This observation reveals a fundamental design flaw in current payment models.
+
+\subsubsection{Our Countermeasures}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{img/black.png}
+  \caption{Countermeasure Model For First-Time}
+  \label{fig:our_model_first}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{img/black.png}
+  \caption{Countermeasure Model For Non-First-Time}
+  \label{fig:our_model_non_first}
+\end{figure}
+
+Our payment model distinguishes between first-time and non-first-time payment scenarios, whose workflows are illustrated in Fig.~\ref{fig:our_model_first} and Fig.~\ref{fig:our_model_non_first}, respectively.
+At the beginning of the \emph{pre-payment phase} of a user's first-time payment, the merchant backend generates a public–private key pair $(Sk_{UA}, Pk_{UA})$ for the user, and then uses the merchant public key $Pk_M$ to sign $Pk_{UA}$ together with the order parameters before sending them to the payment server.
+When storing the pre-payment order, the payment server associates it with the public key $Pk_{UA}$ and returns the payment parameters to the merchant.
+Upon receiving the parameters, the merchant generates two signatures over the payment parameters using $Pk_M$ and $Pk_{UA}$, respectively, and sends both the signatures and the payment parameters to the merchant front-end application.
+During the \emph{payment phase}, the payment server transmits the order information together with the public key $Pk_{UA}$ to \emph{PS-App}.
+At this point, \emph{PS-App} notifies the user that this is the first payment to the merchant and asks whether the merchant should be trusted.
+If the user chooses to trust the merchant, \emph{PS-App} verifies both signatures and, upon successful verification, binds $Pk_{UA}$ to the merchant identifier and stores it locally; otherwise, the payment process is aborted.
+
+In the non-first-time payment scenario, the \emph{pre-payment phase} is identical to that of Payment Model~B.
+During the \emph{payment phase}, the merchant similarly generates two signatures and sends the signatures together with the payment parameters to the merchant front-end application.
+When executing the payment, \emph{PS-App} first checks whether a public key $Pk_{UA}$ has already been bound locally to the merchant identifier.
+If such a binding exists, the user is considered to have trusted the merchant, and \emph{PS-App} verifies both signatures before prompting the user to confirm the order information and complete the payment.
+Otherwise, the application informs the user that the merchant is not yet trusted and asks whether to proceed with the payment.
+
+\subsection{Evaluation}
+
+\input{tables/countermeasure.tex}
+
+We formally modeled and verified the non-first-time payment scenario, and the results are summarized in Table~\ref{tab:countermeasure-results}.
+The analysis shows that under all three channel assumptions, the proposed payment model effectively defends against order tampering attacks and satisfies all security properties.
+This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
