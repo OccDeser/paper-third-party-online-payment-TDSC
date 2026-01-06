@@ -2,13 +2,37 @@
 \section{Conclusion}
 %-------------------------------------------------------------------------------
 
-A paragraph of text goes here. Lots of text. Plenty of interesting
-text. Text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text.
-More fascinating text. Features galore, plethora of promises.
+This paper presents a systematic and hierarchical security modeling, formal verification, and empirical evaluation of the third-party online payment ecosystem, revealing and validating a long-standing yet underestimated design anti-pattern in industrial practice:
+the lack of a strong binding between user payment authorization and order semantics, which leads to the widespread prevalence of order tampering attacks.
+Under a realistic threat model that no longer assumes all communication channels to be secure, our formal model covers representative platforms (e.g., Alipay and WeChat Pay), typical payment scenarios (in-app payments, mobile web payments, and QR-code-based payments), as well as two mainstream payment models (Model~A and Model~B), 
+and employs the Tamarin Prover to formally analyze the security of the underlying protocols.
+Our analysis shows that as long as an insecure channel exists between the merchant frontend and the merchant server (MF--MS), or between the merchant frontend and the payment system (MF--PS), there exist feasible order tampering paths that are transferable across different scenarios and payment models.
+Our real-world attack reproduction experiments further corroborate this conclusion.
+Based on these findings, we propose and formally verify a user-side order authentication mechanism, fundamentally breaking the tampering chain while balancing security and compatibility within the payment workflow.
 
-% **一句话收尾（极其重要）**
+The main contributions of this paper are as follows:
+\begin{enumerate}
+  \item \textbf{A unified formal abstraction of third-party online payments.}
+    We systematically characterize the roles and interaction boundaries among users, merchant frontends/servers, and payment systems, and abstract three common payment scenarios and two payment models into a unified semantic framework that is reusable for payment protocol security analysis.
+  \item \textbf{A general security model for online payments.}
+    We define and formalize core security properties surrounding the consistency of orders and payment results, as well as replay resistance, with a particular emphasis on injective agreement, and conduct proofs and counterexample searches for multiple protocol instances under realistic non–fully-secure channel assumptions.
+  \item \textbf{Revealing and validating pervasive order tampering attacks.}
+    Our formal verification results provide necessary and sufficient conditions for successful attacks when MF--MS or MF--PS channels are insecure. 
+    We identify two major attack variants and explain their transferability and reusability across different scenarios and payment models.
+  \item \textbf{Reproducing real-world vulnerabilities and quantifying their impact.}
+    On the Android platform, we discover that a large number of merchant apps are vulnerable to order hijacking and tampering due to their use of implicit Intents for interacting with payment apps. 
+    We successfully carry out attacks and, through large-scale measurements, find that approximately $20\%$ of the evaluated applications are affected, impacting hundreds of millions of users. 
+    We further conduct responsible disclosure and facilitate remediation by platforms and merchants.
+  \item \textbf{A deployable and formally verified defense \\ mechanism.}
+    Our user-side order authentication mechanism binds a user public key at the granularity of user–merchant pairs, tightly coupling payment authorization with order semantics. 
+    Under insecure channel assumptions, we formally prove that it satisfies all defined security properties, and discuss its compatibility with existing platforms and its deployment costs.
+\end{enumerate}
 
-% > We argue that online payment security should be reasoned about not in terms of channels or cryptographic primitives, but in terms of layered semantic agreements.
+From a broader perspective, our work offers three important insights for the security research of online payment systems.
+First, the security of payment protocols must not rely on idealized assumptions of fully secure channels, but instead explicitly account for cross-application interactions and channel degradation risks inherent in the mobile ecosystem.
+Second, consistency around order semantics and explicit endpoint binding are fundamental to payment security.
+The absence of such protocol design elements can easily introduce opaque attack surfaces in complex ecosystems.
+Third, formal methods and real-world measurements are complementary: the former establishes provable security boundaries, while the latter exposes systemic vulnerabilities in deployment and provides prioritization guidance for remediation and standardization.
+
+
+% 尽管我们在覆盖主流平台与场景方面做出了广泛努力，仍存在若干边界与未来方向：例如，对跨国支付网关、浏览器端支付（包含 WebAuthn 等新标准）以及离线聚合码场景的全面验证有待展开；用户侧密钥的生命周期管理、设备迁移与可用性权衡需要进一步的人因与系统研究；在产业层面，如何将订单语义绑定与端到端认证纳入平台 SDK 与行业标准，需要与生态参与方持续协作。我们相信，将分层语义安全建模、形式化验证与可部署防御结合的研究范式，能够为在线支付生态建立更稳固的安全基线，并为后续在更广泛的可信交互系统中推广提供扎实的理论与实践依据。
