@@ -1,6 +1,7 @@
 %-------------------------------------------------------------------------------
 \section{Countermeasures} 
 %-------------------------------------------------------------------------------
+\input{tables/countermeasure.tex}
 
 In this section, we analyze the causes of order tampering attacks and present our countermeasures.
 
@@ -28,7 +29,7 @@ The user's authorization is applied only to the act of payment transaction, rath
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
 This observation reveals a fundamental design flaw in current payment models.
 
-\subsubsection{Our Countermeasures}
+\subsection{Our Countermeasures}
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/black.png}
@@ -58,8 +59,6 @@ If such a binding exists, the user is considered to have trusted the merchant, a
 Otherwise, the application informs the user that the merchant is not yet trusted and asks whether to proceed with the payment.
 
 \subsection{Evaluation}
-
-\input{tables/countermeasure.tex}
 
 We formally modeled and verified the non-first-time payment scenario, and the results are summarized in Table~\ref{tab:countermeasure-results}.
 The analysis shows that under all three channel assumptions, the proposed payment model effectively defends against order tampering attacks and satisfies all security properties.

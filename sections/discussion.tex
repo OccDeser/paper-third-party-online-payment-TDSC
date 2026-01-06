@@ -2,27 +2,32 @@
 \section{Discussion}
 %-------------------------------------------------------------------------------
 
-A paragraph of text goes here. Lots of text. Plenty of interesting
-text. Text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text
-text text text text text text text.
-More fascinating text. Features galore, plethora of promises.
+In this paper, we reveal and formally verify the widely prevalent Order Tampering attack, and propose a user-side order authentication mechanism to fundamentally mitigate this class of attacks.
+The core idea is to introduce a user authentication public key, denoted as $Pk_{UA}$, for each user–merchant pair and bind it to the merchant identifier during the initial payment.
+It enables the user side to perform a secondary verification of the order origin and integrity.
+While preserving the existing payment experience, the proposed mechanism introduces order authentication as an explicit user-side trust anchor and narrows the attack surface from order tampering over arbitrary insecure channels to the compromise of locally bound keys, and significantly increasing the attack difficulty.
+Through formal verification, we show that under the assumption of insecure channels between \emph{MF}--\emph{MS} and \emph{MF}--\emph{PS}, the proposed model satisfies all the security properties defined in this work.
 
-% **（Best Paper 冲刺章节）**
+\paragraph{Advantages.}
+From a protocol design perspective, our countermeasure exhibits three key advantages.
+First, \textbf{minimal trust reduction}: the set of channels that must be trusted is reduced from all channels to only the human–computer interaction channel and the channel used to communicate with the \emph{PS-Server}.
+Second, \textbf{backward compatibility}: our payment path closely resembles existing payment models, with only additional logic for signature verification and local key binding introduced at the payment side.
+Third, \textbf{formally provable security}: our Tamarin model demonstrates that the proposed countermeasure effectively prevents order tampering attacks and satisfies all the security properties defined in this paper.
 
-% ### 9.1 Root Cause Revisited
+\paragraph{Limitations.} 
+We honestly present the limitations and trade-offs of the proposed countermeasure.
+(\rom{1}) \textbf{Security vulnerability during the initial payment}: 
+during the first payment, no public key has yet been bound on the user side, and thus order tampering attacks cannot be prevented. 
+As a result, the initial payment, similar to existing payment models, requires all communication channels to be secure.
+(\rom{2}) \textbf{User interaction cost during the initial payment}: 
+the initial binding requires presenting trust prompts to the user and obtaining explicit confirmation, which increases the user interaction overhead.
+(\rom{3}) \textbf{Signature and storage overhead}: 
+introducing additional signatures and local storage incurs computational and implementation complexity. 
+However, no new cryptographic primitives are introduced, and the signature algorithms can be directly reused from those already deployed in existing payment systems. 
+Moreover, modern servers and smartphones are sufficiently powerful to handle signing and verification operations, and the storage overhead is small.
+Therefore, the overall cost is acceptable in practical deployments.
 
-% 用你那句非常强的总结：
-
-% > Failure to bind user intent, order semantics, and payment results into a single security context.
-
-% ### 9.2 Design Guidelines from L1–L3
-
-% 把你的分层目标反向变成**设计原则**
-
-% ### 9.3 Beyond Alipay and WeChat Pay
-
-% - 数字钱包
-% - Web3 支付
-% - 订阅、自动扣费
+With respect to mitigating the vulnerabilities we identified, we recommend adopting a phased remediation strategy.
+In the short term, merchants and payment service providers should strengthen the protection of communication channels.
+On the Android platform, explicit Intents should be enforced to prevent the risk of implicit Intent hijacking.
+In the medium to long term, the proposed countermeasure can be gradually rolled out to high-value or high-risk merchants before being incrementally extended to all payment scenarios.
