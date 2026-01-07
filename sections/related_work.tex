@@ -2,3 +2,48 @@
 \section{Related Work}
 %-------------------------------------------------------------------------------
 
+\subsection{Banking Payment Systems}
+In the security analysis of banking payment systems, formal analysis methods have played a pivotal role.
+Existing research has primarily focused on constructing abstract symbolic models of payment protocols and leveraging automated verification tools to uncover design flaws.
+An early representative work was conducted by De Ruiter and Poll, who modeled and analyzed a variant of the EMV contact-based protocol using the ProVerif tool~\cite{Ruiter2011FormalEMV}.
+However, for the sake of tractability, the model was overly simplified—for example, by assuming that the terminal always selects offline plaintext PIN verification—and therefore failed to capture the critical PIN bypass attack later identified by Murdoch et al.~\cite{Murdoch2010chip}.
+
+As the research progressed, both the coverage and precision of formal models improved significantly.
+In~\cite{Basin2021EMVStandard}, the authors constructed a comprehensive formal model of the EMV protocol and employed the Tamarin Prover~\cite{Meier2013TAMARINProver} for automated verification.
+This model successfully identified multiple attacks, including the VISA contactless PIN bypass attack~\cite{Basin2023AuthenticationFailures}, demonstrating the strength of formal methods in analyzing complex and highly configurable payment protocols.
+Moreover, subsequent formal studies extended the original model and uncovered new classes of attacks, such as PIN bypass attacks stemming from missing offline authentication and cross-brand card brand mixup attacks~\cite{Basin2023AuthenticationFailures,Basin2021CardBrandMixup}, further highlighting the importance of formal analysis in payment system security research.
+
+\subsection{Third-Party Payment System}
+
+The security analysis of third-party payment platforms, such as PayPal, Alipay, WeChat Pay, Apple Pay, and UPI, has also attracted significant attention from the research community.
+
+One line of work focuses on empirical studies of third-party payment systems.
+Yang et al.~\cite{Yang2017FlawedImplementations} conducted a reverse engineering study of mainstream in-app payment solutions used by mobile applications in China. 
+They derived a unified payment workflow model, summarized a set of security rules, and identified numerous rule violations across real-world applications, with attack examples including payment bypass and payment fraud.
+Kumar et al.~\cite{Kumar2020SecurityUPI} performed an in-depth analysis of the Unified Payments Interface (UPI) in India and uncovered design flaws in its multi-factor authentication mechanism. 
+Specifically, an attacker could remotely link a victim's bank account to a malicious address and drain the funds without the victim actively using the payment application.
+To further reveal the risks associated with third-party payment SDK usage, other studies have conducted large-scale scans of mobile payment libraries.
+Mohsen et al.~\cite{Mohsen2025PayScan} proposed PayScan, a tool for analyzing payment libraries in Android applications, and evaluated more than 10,000 apps. Their results show that $71.7\%$ of the analyzed applications rely on outdated or insecure payment SDKs, and reveal hundreds of leaked private keys as well as tens of thousands of high-severity vulnerabilities, including SSL misconfigurations, WebView XSS, and weak cryptographic implementations.
+
+In recent years, a small number of studies have begun to conduct rigorous formal analyses of third-party payment mechanisms from the perspective of protocol and system design.
+Küsters et al.~\cite{Do2022WebPaymentSecurity} were the first to conduct a systematic symbolic security analysis of the W3C Web Payments API, a unified browser-based payment standard designed for major third-party payment processors such as Google Pay, Apple Pay, and Stripe.
+Building upon the Web Infrastructure Model (WIM), they extended the browser model and used ProVerif to formalize key workflows, including payment requests, user confirmations, and merchant interactions.
+Their analysis revealed critical protocol-level design flaws in the current standard: a malicious merchant can manipulate the checkout process without the user’s awareness, resulting in overcharging.
+Beyond deriving attack traces through formal reasoning, the authors successfully reproduced the attacks in a real browser implementation (Chrome) and further prompted the W3C and browser vendors to revise the standard and deploy fixes, demonstrating the practical value of formal methods in identifying and eliminating design flaws in third-party payment protocols.
+
+From a design and defense perspective, Neera et al.~\cite{Neera2025TrustworthyPayment} proposed a privacy-preserving third-party mobile payment protocol to address the issue that payment processors in existing systems can comprehensively track users’ consumption behaviors.
+The scheme introduces unlinkable payment tokens by leveraging partially blind signatures, zero-knowledge proofs, and identity-based signature mechanisms, achieving unlinkability of user payment behaviors while still enabling third-party payment service providers to meet regulatory and risk-control requirements.
+The authors systematically defined a set of security and privacy properties tailored to third-party payment scenarios—such as unforgeability, unlinkability, and double-spending prevention—and further used ProVerif to formally model and verify the protocol, showing that it satisfies the specified security goals under threat models involving malicious merchants, malicious users, and honest-but-curious payment platforms.
+
+
+\subsection{Vulnerabilities in Implementations}
+
+In mobile ecosystems, applications frequently interoperate through mechanisms such as implicit Intents, which introduces numerous implementation-level security risks.
+Improperly exported Android application components can cause implicit Intents to be tampered with or intercepted, a problem that has been extensively studied in the literature.
+Fernandes et al.~\cite{Bhandari2017AndroidInterApp} pointed out that launch hijacking and intent spoofing are common vulnerabilities, where a malicious application can impersonate the intended target component and be invoked instead.
+VenomAttack~\cite{Sun2023VenomAttackAndroid} further demonstrates that advanced adaptive launch hijacking attacks remain feasible on the latest Android systems, and can even incorporate stealthy impersonation and phishing attacks without user prompts.
+
+Implicit URI schemes and deep linking mobile payments are vulnerable channels.
+Liu et al.~\cite{Liu2017MeasuringMobileDeep} conducted an empirical study of over 160,000 applications released between 2014 and 2016, and found that only a small fraction implemented proper security checks. In most applications, insufficient link validation allowed malicious apps to hijack URI Schemes intended for target applications and steal sensitive parameters embedded in the links.
+In addition, in-app QR code scanning functionalities also introduce security risks.
+Han et al.~\cite{Han2023MedusaAttackQR} introduced the MEDUSA attack, demonstrating how malicious QR codes can trigger remote handlers in built-in QR code readers, thereby invoking sensitive application interfaces or tampering with payment data.

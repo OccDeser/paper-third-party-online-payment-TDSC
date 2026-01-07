@@ -191,7 +191,6 @@ year={2023}
 
 @article{shi_formal_nodate,
 	title = {Formal {Analysis} of {BLE} {Secure} {Connection} {Pairing} and {Revelation} of the {PE} {Confusion} {Attack}},
-	abstract = {The Secure Connection (SC) pairing is the latest version of the security protocol designed to protect sensitive information transmitted over Bluetooth Low Energy (BLE) channels. A formal and rigorous analysis of this protocol is essential for improving security assurances and identifying potential vulnerabilities. However, the complexity of the protocol flow, difficulties in formalizing pairing method selection, and overly idealized user assumptions present significant obstacles to such analysis. In this paper, we address these challenges and present an accurate and comprehensive formal analysis of the BLE-SC pairing protocol using Tamarin. We extract state machines for each participant as the blueprint for modeling the protocol, and we use an equational theory to formalize the pairing method selection logic. Our model incorporates subtle user behaviors and considers stronger adversary capabilities, including the potential compromise of private channels such as the temporary out-of-band channel. We develop a verification strategy to automate protocol analysis and implement a script to parallelize verification tasks across multiple servers. We verify 84 pairing cases and identify the minimal security assumptions required for the protocol. Moreover, our results reveal a new Man-in-the-Middle (MitM) attack, which we call the PE confusion attack. We provide tools and Proof-ofConcept (PoC) exploits for simulating and understanding this attack within a controlled environment. Finally, we propose countermeasures to defend against this attack, improving the security of the BLE-SC pairing protocol.},
 	language = {en},
 	author = {Shi, Min and Xiao, Yongkang and Chen, Jing and He, Kun and Du, Ruiying and Jia, Meng},
 }
@@ -212,4 +211,133 @@ year={2023}
   pages={31--43},
   year={1997},
   organization={IEEE}
+}
+
+@inproceedings{Ruiter2011FormalEMV,
+  title={Formal analysis of the EMV protocol suite},
+  author={De Ruiter, Joeri and Poll, Erik},
+  booktitle={Joint Workshop on Theory of Security and Applications},
+  pages={113--129},
+  year={2011},
+  organization={Springer}
+}
+
+@inproceedings{Murdoch2010chip,
+  title={Chip and PIN is Broken},
+  author={Murdoch, Steven J and Drimer, Saar and Anderson, Ross and Bond, Mike},
+  booktitle={2010 IEEE Symposium on Security and Privacy},
+  pages={433--446},
+  year={2010},
+  organization={IEEE}
+}
+
+@inproceedings{Meier2013TAMARINProver,
+  title={The TAMARIN prover for the symbolic analysis of security protocols},
+  author={Meier, Simon and Schmidt, Benedikt and Cremers, Cas and Basin, David},
+  booktitle={International conference on computer aided verification},
+  pages={696--701},
+  year={2013},
+  organization={Springer}
+}
+
+@inproceedings{Mauw2018DistanceBoundingProtocols,
+  title={Distance-bounding protocols: Verification without time and location},
+  author={Mauw, Sjouke and Smith, Zach and Toro-Pozo, Jorge and Trujillo-Rasua, Rolando},
+  booktitle={2018 IEEE Symposium on Security and Privacy (SP)},
+  pages={549--566},
+  year={2018},
+  organization={IEEE}
+}
+
+@inproceedings{Kumar2020SecurityUPI,
+author = {Renuka Kumar and Sreesh Kishore and Hao Lu and Atul Prakash},
+title = {Security Analysis of Unified Payments Interface and Payment Apps in India},
+booktitle = {29th USENIX Security Symposium (USENIX Security 20)},
+year = {2020},
+isbn = {978-1-939133-17-5},
+pages = {1499--1516},
+url = {https://www.usenix.org/conference/usenixsecurity20/presentation/kumar},
+publisher = {USENIX Association},
+month = aug
+}
+
+@article{Mohsen2025PayScan,
+  title={PayScan: Detection and Security Analysis of Payment Libraries in Android Apps: F. Mohsen et al.},
+  author={Mohsen, Fadi and Alohaly, Manar and Rauf, Usman and Therattil, Dominic and Oosterhaven, Loran},
+  journal={International Journal of Information Security},
+  volume={24},
+  number={4},
+  pages={189},
+  year={2025},
+  publisher={Springer}
+}
+
+@inproceedings{Lou2021PaymentVulnerabilities,
+author = {Jiadong Lou and Xu Yuan and Ning Zhang},
+title = {Messy States of Wiring: Vulnerabilities in Emerging Personal Payment Systems},
+booktitle = {30th USENIX Security Symposium (USENIX Security 21)},
+year = {2021},
+isbn = {978-1-939133-24-3},
+pages = {3273--3289},
+url = {https://www.usenix.org/conference/usenixsecurity21/presentation/lou},
+publisher = {USENIX Association},
+month = aug
+}
+
+@inproceedings{Do2022WebPaymentSecurity,
+title={A formal security analysis of the W3C web payment apis: Attacks and verification},
+author={Do, Quoc Huy and Hosseyni, Pedram and K{"u}sters, Ralf and Schmitz, Guido and Wenzler, Nils and W{"u}rtele, Tim},
+booktitle={2022 IEEE Symposium on Security and Privacy (SP)},
+pages={215--234},
+year={2022},
+organization={IEEE}
+}
+
+@article{Neera2025TrustworthyPayment,
+  title={A trustworthy and untraceable centralised payment protocol for mobile payment},
+  author={Neera, Jeyamohan and Chen, Xiaomin and Aslam, Nauman and Issac, Biju},
+  journal={ACM Transactions on Privacy and Security},
+  volume={28},
+  number={2},
+  pages={1--29},
+  year={2025},
+  publisher={ACM New York, NY}
+}
+
+
+@article{Bhandari2017AndroidInterApp,
+  title={Android inter-app communication threats and detection techniques},
+  author={Bhandari, Shweta and Jaballah, Wafa Ben and Jain, Vineeta and Laxmi, Vijay and Zemmari, Akka and Gaur, Manoj Singh and Mosbah, Mohamed and Conti, Mauro},
+  journal={Computers \& Security},
+  volume={70},
+  pages={392--421},
+  year={2017},
+  publisher={Elsevier}
+}
+
+@article{Sun2023VenomAttackAndroid,
+  title={VenomAttack: automated and adaptive activity hijacking in Android},
+  author={Sun, Pu and Chen, Sen and Fan, Lingling and Gao, Pengfei and Song, Fu and Yang, Min},
+  journal={Frontiers of Computer Science},
+  volume={17},
+  number={1},
+  pages={171801},
+  year={2023},
+  publisher={Springer}
+}
+
+@inproceedings{Liu2017MeasuringMobileDeep,
+  title={Measuring the insecurity of mobile deep links of android},
+  author={Liu, Fang and Wang, Chun and Pico, Andres and Yao, Danfeng and Wang, Gang},
+  booktitle={26th USENIX security symposium (USENIX Security 17)},
+  pages={953--969},
+  year={2017}
+}
+
+@inproceedings{Han2023MedusaAttackQR,
+  title={Medusa attack: Exploring security hazards of $\{$in-app$\}$$\{$QR$\}$ code scanning},
+  author={Han, Xing and Zhang, Yuheng and Zhang, Xue and Chen, Zeyuan and Wang, Mingzhe and Zhang, Yiwei and Ma, Siqi and Yu, Yu and Bertino, Elisa and Li, Juanru},
+  booktitle={32nd USENIX Security Symposium (USENIX Security 23)},
+  pages={4607--4624},
+  year={2023}
 }
