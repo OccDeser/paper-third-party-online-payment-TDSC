@@ -12,11 +12,11 @@ Within this ecosystem, payment protocols typically employ cryptographic mechanis
 However, extensive empirical studies show that third-party payment workflows expose multiple classes of security vulnerabilities when operating over insecure or misconfigured channels, most notably the lack of a strong binding between user payment authorization and order semantics, which leads to systemic risks.
 In summary, prior work has covered at least the following three classes of attack vectors, which are often intertwined: 
 (1) \emph{Order injection and tampering over insecure channels}: 
-attackers replace or replay order parameters, causing users to unknowingly pay for incorrect orders~\cite{Yang2017FlawedImplementations, SunEtAl2021OrderBinding};
+attackers replace or replay order parameters, causing users to unknowingly pay for incorrect orders~\cite{Sun2014DetectingECommerce, Yang2017FlawedImplementations};
 (2) \emph{Misuse of signatures and parameter structures}: 
-by exploiting flawed signature designs (e.g., field relocation or optional fields not covered by the signature), attackers can alter order semantics without invalidating the signature~\cite{LouEtAl2020SignatureFieldMove, ChenEtAl2019TokenReplay};
+by exploiting flawed signature designs (e.g., field relocation or optional fields not covered by the signature), attackers can alter order semantics without invalidating the signature~\cite{Lou2021PaymentVulnerabilities};
 (3) \emph{Payment result forgery and UI confusion}: 
-attackers inject forged “payment success” messages or leverage UI overlay attacks and H5 redirection/script injection, misleading merchants or users about the transaction status and enabling free purchases or misdirected payments~\cite{YangEtAl2018FakePaymentSuccess, LinEtAl2018UIOverlay, ZhaoEtAl2020H5Redirect}.
+attackers inject forged ``payment success'' messages or leverage UI overlay attacks and H5 redirection/script injection, misleading merchants or users about the transaction status and enabling free purchases or misdirected payments~\cite{Ulqinaku2019ScanAndPayAndroid, Yang2017FlawedImplementations}.
 Although these studies reveal important issues, most focus on empirical analyses of specific products or isolated scenarios, and lack a unified, formal security perspective to answer a fundamental question: 
 under what models and channel assumptions can a third-party payment system achieve end-to-end security by design?
 
@@ -25,7 +25,7 @@ We first develop a unified symbolic model of the ecosystem participants (U, MF, 
 The model explicitly distinguishes secure and insecure channels, allowing the adversary to eavesdrop on, tamper with, replay, or inject messages.
 We further employ oracle-based modeling to capture the adversary’s legitimate access to merchant order parameters, and formalize user behaviors including item selection, order confirmation, and payment authorization.
 Centered on the three core semantics (\emph{order}, \emph{authorization}, and \emph{result}), we define and formalize multiple injective agreement security properties.
-These properties impose layered semantic constraints on the “order–authorization–result” chain in the payment workflow, providing verifiable and comparable security criteria.
+These properties impose layered semantic constraints on the ``order–authorization–result'' chain in the payment workflow, providing verifiable and comparable security criteria.
 
 Based on this formal framework, our automated verification reveals a class of pervasive yet previously under-characterized \emph{order tampering attacks}.
 The key insight is that as long as an insecure channel exists between the user and the merchant, existing payment models fail to guarantee order consistency between the two parties across different scenarios.
