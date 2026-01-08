@@ -25,6 +25,10 @@ Specifically, an attacker could remotely link a victim's bank account to a malic
 To further reveal the risks associated with third-party payment SDK usage, other studies have conducted large-scale scans of mobile payment libraries.
 Mohsen et al.~\cite{Mohsen2025PayScan} proposed PayScan, a tool for analyzing payment libraries in Android applications, and evaluated more than 10,000 apps. Their results show that $71.7\%$ of the analyzed applications rely on outdated or insecure payment SDKs, and reveal hundreds of leaked private keys as well as tens of thousands of high-severity vulnerabilities, including SSL misconfigurations, WebView XSS, and weak cryptographic implementations.
 
+Complementary to code- and protocol-level analyses, Chen et al.~\cite{Chen2019LogicVulnerabilities} showed that logic flaws in third-party payment integration can already be predicted from developer documentation alone. 
+Focusing on emerging payment syndication services that integrate multiple third-party payment platforms into merchant systems, they demonstrated that such services may fundamentally break security requirements—such as checking the payment amount against the order price—by obscuring critical parameters across parties. 
+They developed a suite of NLP-based techniques to automatically inspect syndication developers' guides against payment models and security requirements, and uncovered five previously unknown, security-critical logic flaws in popular Chinese merchant systems that enable payment circumvention.
+
 In recent years, a small number of studies have begun to conduct rigorous formal analyses of third-party payment mechanisms from the perspective of protocol and system design.
 Küsters et al.~\cite{Do2022WebPaymentSecurity} were the first to conduct a systematic symbolic security analysis of the W3C Web Payments API, a unified browser-based payment standard designed for major third-party payment processors such as Google Pay, Apple Pay, and Stripe.
 Building upon the Web Infrastructure Model (WIM), they extended the browser model and used ProVerif to formalize key workflows, including payment requests, user confirmations, and merchant interactions.
@@ -35,6 +39,10 @@ From a design and defense perspective, Neera et al.~\cite{Neera2025TrustworthyPa
 The scheme introduces unlinkable payment tokens by leveraging partially blind signatures, zero-knowledge proofs, and identity-based signature mechanisms, achieving unlinkability of user payment behaviors while still enabling third-party payment service providers to meet regulatory and risk-control requirements.
 The authors systematically defined a set of security and privacy properties tailored to third-party payment scenarios—such as unforgeability, unlinkability, and double-spending prevention—and further used ProVerif to formally model and verify the protocol, showing that it satisfies the specified security goals under threat models involving malicious merchants, malicious users, and honest-but-curious payment platforms.
 
+In addition, prior work has focused on the security analysis of Personal Payment Systems~(PPS).
+A PPS refers to a scenario in which individual users leverage third-party payment platforms to provide payment services for small merchants.
+Lou et al.~\cite{Lou2021PaymentVulnerabilities} conducted a security analysis of PPS by abstracting fundamental models of the ecosystem. 
+Their study identified seven major classes of protocol design or implementation flaws across 35 real-world systems and demonstrated corresponding attacks, including payment binding bypass and replay attacks.
 
 \subsection{Vulnerabilities in Implementations}
 
