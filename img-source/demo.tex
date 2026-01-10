@@ -1,0 +1,28 @@
+\documentclass[class={IEEEtran}]{standalone}
+\input{common.tex}
+
+\begin{document}
+\begin{tikzpicture}
+
+\NewCoord{c_A}{0,0};
+\NewAgent{agent_A}{c_A}{Agent A};
+
+\NewCoordRightToN{c_B}{agent_A}{\AGENTSPAN};
+\NewAgent{agent_B}{c_B}{Agent B};
+
+\NewCoordBelowToN{c_smsg1}{agent_A}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg1}{agent_B}{c_smsg1};
+\NewArrow{c_smsg1}{c_rmsg1}{A, Hello B};
+
+\NewCoordBelowToC{c_smsg2}{c_rmsg1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg2}{agent_A}{c_smsg2};
+\NewArrow{c_smsg2}{c_rmsg2}{B, Hello A};
+
+\begin{scope}[on background layer]
+  \GetLowestCoord{c_lowest}{c_smsg2,c_rmsg2};
+  \DrawEnd{agent_A}{c_lowest};
+  \DrawEnd{agent_B}{c_lowest};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}
