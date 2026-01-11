@@ -3,7 +3,9 @@
 \usepackage{pgf}
 \usepackage{pifont}
 \usepackage{xcolor}
+\usepackage{contour}
 
+\contourlength{1pt} 
 \pagestyle{empty}
 \usetikzlibrary{shapes.geometric,shapes.arrows,positioning,calc,arrows.meta,math,backgrounds}
 
@@ -14,7 +16,7 @@
 \tikzset{AGENT/.style={rectangle,minimum width=6.5em,minimum height=3.5ex,draw,semithick,align=flush center, anchor=north,fill=white}}
 \tikzset{ACTION/.style={rectangle,rounded corners,draw,semithick,align=flush center,fill=white}, anchor=north}
 \tikzset{ARROW/.style={thick, -stealth}}
-\tikzset{DARROW/.style={<->,>=latex, line width=4ex, gray!20}}
+\tikzset{DARROW/.style={<->,>=latex, line width=0.8ex, gray!50}}
 \tikzset{PREPARATION/.style={rectangle,draw,semithick,align=flush center,fill=white,dashed, anchor=north}}
 % ---------------------------------
 % ---- DEFINE GLOBAL VARIABLES ----
@@ -33,7 +35,8 @@
 
 \newcommand{\NewAgent}[3]{\node[AGENT, anchor=north] (#1) at (#2) {#3}}
 \newcommand{\NewAction}[3]{\node[ACTION, anchor=north] (#1) at (#2) {#3}}
-\newcommand{\NewArrow}[3]{\draw[ARROW] (#1) -- (#2) node[midway,above=-0.3ex]{#3}}
+\newcommand{\NewArrow}[3]{\draw[ARROW] (#1) -- (#2) node[midway,above=-0.75ex]{\contour{white}{#3}}}
+\newcommand{\NewDarrow}[3]{\draw[DARROW] (#1) -- (#2) node[midway,above=-0.75ex]{\contour{white}{#3}}}
 
 \makeatletter
 \newcommand{\GetLowestCoord}[2]{%
