@@ -1,0 +1,156 @@
+\documentclass[class={IEEEtran}]{standalone}
+\usepackage{fontawesome7}
+\input{common.tex}
+
+\renewcommand{\AGENTSPAN}{0.145\textwidth}
+
+\begin{document}
+\begin{tikzpicture}
+
+% ========================================
+%   Agents
+% ========================================
+\NewCoord{c_U}{0,0};
+\NewAgent{agent_U}{c_U}{\hspace{-0.5em} \faUser \; U};
+
+\NewCoordRightToC{c_MF}{c_U}{\AGENTSPAN};
+\NewAgent{agent_MF}{c_MF}{\hspace{-0.5em} \faBasketShopping \; MF};
+
+\NewCoordRightToC{c_MS}{c_MF}{\AGENTSPAN};
+\NewAgent{agent_MS}{c_MS}{\hspace{-0.5em} \faServer \; MS};
+
+\NewCoordRightToC{c_PS}{c_MS}{\AGENTSPAN};
+\NewAgent{agent_PS}{c_PS}{\hspace{-0.5em} \faSackDollar \; PS};
+
+% ========================================
+%   Messages
+% ========================================
+
+% Phase 1: Ordering
+% -------------- Divide Line --------------
+  \NewCoordRightToC{c_tmp}{agent_U.south}{-\AGENTSPAN/2};
+  \NewCoordBelowToC{c_ldiv_1}{c_tmp}{\LINEHEIGHT/2};
+  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_1};
+  \NewCoordRightToC{c_rdiv_1}{c_tmp}{\AGENTSPAN/2};
+  \DrawLine{LineDotted}{c_ldiv_1}{c_rdiv_1};
+% ----------------------------------------
+% ---------------- Label -----------------
+  \NewCoordBelowToC{c_tmp}{c_ldiv_1}{\LINEHEIGHT*1.8};
+  \NewCoordRightToC{c_label_1}{c_tmp}{1em};
+  \NewLabel{label_1}{c_label_1}{\romannumeral 1};
+% ----------------------------------------
+
+\NewCoordBelowToC{c_act_U1}{c_ldiv_1-|c_U}{\LINEHEIGHT/2};
+\NewAction{action_U1}{c_act_U1}{Select $goods$};
+
+\NewCoordBelowToN{c_smsg_U_MF_1}{action_U1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_U_MF_1}{agent_MF}{c_smsg_U_MF_1};
+\DrawArrow{Arrow}{c_smsg_U_MF_1}{c_rmsg_U_MF_1}{$goods$};
+
+\NewCoordBelowToC{c_smsg_MF_MS_1}{c_rmsg_U_MF_1}{\LINEHEIGHT/2};
+\NewCoordAlignToN{c_rmsg_MF_MS_1}{agent_MS}{c_smsg_MF_MS_1};
+\DrawArrow{Arrow}{c_smsg_MF_MS_1}{c_rmsg_MF_MS_1}{$goods$};
+
+% Phase 2: Prepayment
+% -------------- Divide Line --------------
+  \NewCoord{c_tmp}{c_rmsg_MF_MS_1 -| c_ldiv_1};
+  \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/2};
+  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_2};
+  \NewCoordRightToC{c_rdiv_2}{c_tmp}{\AGENTSPAN/2};
+  \DrawLine{LineDotted}{c_ldiv_2}{c_rdiv_2};
+% ----------------------------------------
+% ---------------- Label -----------------
+  \NewCoordBelowToC{c_tmp}{c_ldiv_2}{\LINEHEIGHT*2};
+  \NewCoordRightToC{c_label_2}{c_tmp}{1em};
+  \NewLabel{label_2}{c_label_2}{\romannumeral 2};
+% ----------------------------------------
+
+\NewCoordBelowToC{c_act_MS1}{c_ldiv_2-|c_MS}{\LINEHEIGHT/2};
+\NewAction{action_MS1}{c_act_MS1}{Generate \\ payment $params$};
+
+\NewCoordBelowToC{c_opt_smsg_MS_PS_1}{action_MS1.east}{-\LINEHEIGHT/6};
+\NewCoordAlignToN{c_opt_rmsg_MS_PS_1}{agent_PS}{c_opt_smsg_MS_PS_1};
+\DrawArrow{ArrowDash}{c_opt_smsg_MS_PS_1}{c_opt_rmsg_MS_PS_1}{};
+
+\NewCoordBelowToC{c_opt_smsg_PS_MS_1}{c_opt_rmsg_MS_PS_1}{\LINEHEIGHT/3};
+\DrawArrow{ArrowDash}{c_opt_smsg_PS_MS_1}{action_MS1.east|-c_opt_smsg_PS_MS_1}{};
+
+\NewCoordBelowToN{c_smsg_MS_MF_2}{action_MS1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_MS_MF_2}{agent_MF}{c_smsg_MS_MF_2};
+\DrawArrow{Arrow}{c_smsg_MS_MF_2}{c_rmsg_MS_MF_2}{$params$};
+
+\NewCoordBelowToC{c_smsg_MF_PS_1}{c_rmsg_MS_MF_2}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_MF_PS_1}{agent_PS}{c_smsg_MF_PS_1};
+\DrawArrow{Arrow}{c_smsg_MF_PS_1}{c_rmsg_MF_PS_1}{$params$};
+
+% Phase 3: Payment
+% -------------- Divide Line --------------
+  \NewCoord{c_tmp}{c_smsg_MF_PS_1 -| c_ldiv_1};
+  \NewCoordBelowToC{c_ldiv_3}{c_tmp}{\LINEHEIGHT/2};
+  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_3};
+  \NewCoordRightToC{c_rdiv_3}{c_tmp}{\AGENTSPAN/2};
+  \DrawLine{LineDotted}{c_ldiv_3}{c_rdiv_3};
+% ----------------------------------------
+% ---------------- Label -----------------
+  \NewCoordBelowToC{c_tmp}{c_ldiv_3}{\LINEHEIGHT/3};
+  \NewCoordRightToC{c_label_3}{c_tmp}{1em};
+  \NewLabel{label_3}{c_label_3}{\romannumeral 3};
+% ----------------------------------------
+
+\NewCoordBelowToC{c_smsg_PS_U_1}{c_ldiv_3-|c_PS}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_PS_U_1}{agent_U}{c_smsg_PS_U_1};
+\DrawArrow{Arrow}{c_smsg_PS_U_1}{c_rmsg_PS_U_1}{$amount, description, account, ...$};
+
+\NewCoordBelowToC{c_act_U_2}{c_rmsg_PS_U_1}{\LINEHEIGHT/2};
+\NewAction{action_U2}{c_act_U_2}{Enter $password$};
+
+\NewCoordBelowToN{c_smsg_U_PS_1}{action_U2}{\LINEHEIGHT/2};
+\NewCoordAlignToN{c_rmsg_U_PS_1}{agent_PS}{c_smsg_U_PS_1};
+\DrawArrow{Arrow}{c_smsg_U_PS_1}{c_rmsg_U_PS_1}{$password$};
+
+% Phase 4: Notification 
+% -------------- Divide Line --------------
+  \NewCoord{c_tmp}{c_smsg_U_PS_1 -| c_ldiv_1};
+  \NewCoordBelowToC{c_ldiv_4}{c_tmp}{\LINEHEIGHT/2};
+  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_4};
+  \NewCoordRightToC{c_rdiv_4}{c_tmp}{\AGENTSPAN/2};
+  \DrawLine{LineDotted}{c_ldiv_4}{c_rdiv_4};
+% ----------------------------------------
+% ---------------- Label -----------------
+  \NewCoordBelowToC{c_tmp}{c_ldiv_4}{\LINEHEIGHT*2};
+  \NewCoordRightToC{c_label_4}{c_tmp}{1em};
+  \NewLabel{label_4}{c_label_4}{\romannumeral 4};
+% ----------------------------------------
+
+\NewCoordBelowToC{c_act_PS2}{c_ldiv_4-|c_PS}{\LINEHEIGHT/2};
+\NewAction{action_PS2}{c_act_PS2}{Process transaction\\Generate $result$};
+
+\NewCoordBelowToN{c_smsg_PS_MS_1}{action_PS2}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_PS_MS_1}{agent_MS}{c_smsg_PS_MS_1};
+\DrawArrow{Arrow}{c_smsg_PS_MS_1}{c_rmsg_PS_MS_1}{$result$};
+
+\NewCoordBelowToC{c_smsg_PS_U_2}{c_smsg_PS_MS_1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_PS_U_2}{agent_U}{c_smsg_PS_U_2};
+\DrawArrow{Arrow}{c_smsg_PS_U_2}{c_rmsg_PS_U_2}{$result$};
+
+% -------------- Divide Line --------------
+  \NewCoord{c_tmp}{c_smsg_PS_U_2 -| c_ldiv_1};
+  \NewCoordBelowToC{c_ldiv_5}{c_tmp}{\LINEHEIGHT/2};
+  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_5};
+  \NewCoordRightToC{c_rdiv_5}{c_tmp}{\AGENTSPAN/2};
+  \DrawLine{LineDotted}{c_ldiv_5}{c_rdiv_5};
+% ----------------------------------------
+
+% ========================================
+%   Ends
+% ========================================
+\begin{scope}[on background layer]
+  \GetLowestCoord{c_lowest}{c_ldiv_5};
+  \DrawEnd{agent_U}{c_lowest};
+  \DrawEnd{agent_MF}{c_lowest};
+  \DrawEnd{agent_MS}{c_lowest};
+  \DrawEnd{agent_PS}{c_lowest};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

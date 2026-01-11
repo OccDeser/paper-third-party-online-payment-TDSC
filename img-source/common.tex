@@ -12,18 +12,37 @@
 % --------- DEFINE COLORS ---------
 \definecolor{red}{HTML}{c13c33}
 % ---------------------------------
-% --------- DEFINE STYLES ---------
-\tikzset{AGENT/.style={rectangle,minimum width=6.5em,minimum height=3.5ex,draw,semithick,align=flush center, anchor=north,fill=white}}
-\tikzset{ACTION/.style={rectangle,rounded corners,draw,semithick,align=flush center,fill=white}, anchor=north}
-\tikzset{ARROW/.style={thick, -stealth}}
-\tikzset{DARROW/.style={<->,>=latex, line width=0.8ex, gray!50}}
-\tikzset{PREPARATION/.style={rectangle,draw,semithick,align=flush center,fill=white,dashed, anchor=north}}
-% ---------------------------------
 % ---- DEFINE GLOBAL VARIABLES ----
 \newcommand{\AGENTSPAN}{0.2\textwidth}
 \newcommand{\LINEHEIGHT}{3.2ex}
-\newcommand{\ENDWIDTH}{1em}
-\newcommand{\ENDHEIGHT}{0.65ex}
+\newcommand{\ENDWIDTH}{1.4em}
+\newcommand{\ENDHEIGHT}{0.4ex}
+% ---------------------------------
+% --------- DEFINE STYLES ---------
+\tikzset{AGENT/.style={rectangle,minimum width=5em,minimum height=3.5ex,draw,semithick,align=flush center, anchor=north,fill=white}}
+\tikzset{ACTION/.style={rectangle,rounded corners,draw,semithick,align=flush center,fill=white}, anchor=north}
+\tikzset{LABEL/.style={circle, draw, semithick, align=center, minimum size=1.2em, inner sep=0pt,fill=white}, anchor=north}
+\tikzset{PREPARATION/.style={rectangle,draw,semithick,align=flush center,fill=white,dashed, anchor=north}}
+
+% 基础单向箭头
+\tikzset{Arrow/.style={thick, -stealth}}
+% 基础单向箭头（细）
+\tikzset{ArrowThin/.style={->,>=stealth, thin}}
+% 加粗单向箭头
+\tikzset{ArrowThick/.style={->,>=stealth, very thick}}
+% 虚线箭头（流程/假设）
+\tikzset{ArrowDash/.style={->,>=stealth, dashed, thick}}
+% 点线箭头（弱关系）
+\tikzset{ArrowDot/.style={->,>=stealth, dotted, thick}}
+% 双向箭头
+\tikzset{BiArrow/.style={<->,>=latex, thick}}
+% 超粗双向箭头（强调用）
+\tikzset{BiArrowThick/.style={<->,>=latex, very thick}}
+
+\tikzset{LineThin/.style={thin}}
+\tikzset{LineThick/.style={thick}}
+\tikzset{LineDashed/.style={dashed, thin}}
+\tikzset{LineDotted/.style={dotted, thick}}
 % ---------------------------------
 % -------- DEFINE COMMANDS --------
 \newcommand{\NewCoord}[2]{\coordinate (#1) at (#2)}
@@ -35,8 +54,10 @@
 
 \newcommand{\NewAgent}[3]{\node[AGENT, anchor=north] (#1) at (#2) {#3}}
 \newcommand{\NewAction}[3]{\node[ACTION, anchor=north] (#1) at (#2) {#3}}
-\newcommand{\NewArrow}[3]{\draw[ARROW] (#1) -- (#2) node[midway,above=-0.75ex]{\contour{white}{#3}}}
-\newcommand{\NewDarrow}[3]{\draw[DARROW] (#1) -- (#2) node[midway,above=-0.75ex]{\contour{white}{#3}}}
+\newcommand{\NewLabel}[3]{\node[LABEL, anchor=north] (#1) at (#2) {#3}}
+
+\newcommand{\DrawLine}[3]{\draw[#1] (#2) -- (#3)}
+\newcommand{\DrawArrow}[4]{\draw[#1] (#2) -- (#3) node[midway,above=-3pt]{\contour{white}{#4}}}
 
 \makeatletter
 \newcommand{\GetLowestCoord}[2]{%
