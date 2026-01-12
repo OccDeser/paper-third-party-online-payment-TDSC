@@ -60,20 +60,20 @@
   \DrawLine{LineDotted}{c_ldiv_2}{c_rdiv_2};
 % ----------------------------------------
 % ---------------- Label -----------------
-  \NewCoordBelowToC{c_tmp}{c_ldiv_2}{\LINEHEIGHT*2};
+  \NewCoordBelowToC{c_tmp}{c_ldiv_2}{\LINEHEIGHT*3.5};
   \NewCoordRightToC{c_label_2}{c_tmp}{1em};
   \NewLabel{label_2}{c_label_2}{\romannumeral 2};
 % ----------------------------------------
 
 \NewCoordBelowToC{c_act_MS1}{c_ldiv_2-|c_MS}{\LINEHEIGHT/2};
-\NewAction{action_MS1}{c_act_MS1}{Generate \\ payment $params$};
+\NewAction{action_MS1}{c_act_MS1}{Generate $params$};
 
 \NewCoordBelowToC{c_opt_smsg_MS_PS_1}{action_MS1.east}{-\LINEHEIGHT/6};
 \NewCoordAlignToN{c_opt_rmsg_MS_PS_1}{agent_PS}{c_opt_smsg_MS_PS_1};
-\DrawArrow{ArrowDash}{c_opt_smsg_MS_PS_1}{c_opt_rmsg_MS_PS_1}{};
+\DrawArrow{ArrowDash, color=gray}{c_opt_smsg_MS_PS_1}{c_opt_rmsg_MS_PS_1}{};
 
 \NewCoordBelowToC{c_opt_smsg_PS_MS_1}{c_opt_rmsg_MS_PS_1}{\LINEHEIGHT/3};
-\DrawArrow{ArrowDash}{c_opt_smsg_PS_MS_1}{action_MS1.east|-c_opt_smsg_PS_MS_1}{};
+\DrawArrow{ArrowDash, color=gray}{c_opt_smsg_PS_MS_1}{action_MS1.east|-c_opt_smsg_PS_MS_1}{};
 
 \NewCoordBelowToN{c_smsg_MS_MF_2}{action_MS1}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_MS_MF_2}{agent_MF}{c_smsg_MS_MF_2};
@@ -83,16 +83,23 @@
 \NewCoordAlignToN{c_rmsg_MF_PS_1}{agent_PS}{c_smsg_MF_PS_1};
 \DrawArrow{Arrow}{c_smsg_MF_PS_1}{c_rmsg_MF_PS_1}{$params$};
 
+\NewCoordBelowToC{c_act_PS1}{c_rmsg_MF_PS_1}{\LINEHEIGHT/2};
+\NewAction{action_PS1}{c_act_PS1}{
+  \textbf{if} $validate(params)$ \textbf{then}\\
+  \quad $continue()$\\
+  \textbf{else} $abort()$
+};
+
 % Phase 3: Payment
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{c_smsg_MF_PS_1 -| c_ldiv_1};
+  \NewCoord{c_tmp}{action_PS1.south -| c_ldiv_1};
   \NewCoordBelowToC{c_ldiv_3}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_3};
   \NewCoordRightToC{c_rdiv_3}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_3}{c_rdiv_3};
 % ----------------------------------------
 % ---------------- Label -----------------
-  \NewCoordBelowToC{c_tmp}{c_ldiv_3}{\LINEHEIGHT/3};
+  \NewCoordBelowToC{c_tmp}{c_ldiv_3}{\LINEHEIGHT*3};
   \NewCoordRightToC{c_label_3}{c_tmp}{1em};
   \NewLabel{label_3}{c_label_3}{\romannumeral 3};
 % ----------------------------------------
@@ -108,30 +115,44 @@
 \NewCoordAlignToN{c_rmsg_U_PS_1}{agent_PS}{c_smsg_U_PS_1};
 \DrawArrow{Arrow}{c_smsg_U_PS_1}{c_rmsg_U_PS_1}{$password$};
 
+\NewCoordBelowToC{c_act_PS2}{c_rmsg_U_PS_1}{\LINEHEIGHT/2};
+\NewAction{action_PS2}{c_act_PS2}{
+  \textbf{if} validate($password$) \textbf{then} \\
+  \quad $make\_payment()$\\
+  \textbf{else} $abort()$
+};
+
 % Phase 4: Notification 
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{c_smsg_U_PS_1 -| c_ldiv_1};
+  \NewCoord{c_tmp}{action_PS2.south -| c_ldiv_1};
   \NewCoordBelowToC{c_ldiv_4}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_4};
   \NewCoordRightToC{c_rdiv_4}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_4}{c_rdiv_4};
 % ----------------------------------------
 % ---------------- Label -----------------
-  \NewCoordBelowToC{c_tmp}{c_ldiv_4}{\LINEHEIGHT*2};
+  \NewCoordBelowToC{c_tmp}{c_ldiv_4}{\LINEHEIGHT*4};
   \NewCoordRightToC{c_label_4}{c_tmp}{1em};
   \NewLabel{label_4}{c_label_4}{\romannumeral 4};
 % ----------------------------------------
 
-\NewCoordBelowToC{c_act_PS2}{c_ldiv_4-|c_PS}{\LINEHEIGHT/2};
-\NewAction{action_PS2}{c_act_PS2}{Process transaction\\Generate $result$};
+\NewCoordBelowToC{c_act_PS3}{c_ldiv_4-|c_PS}{\LINEHEIGHT/2};
+\NewAction{action_PS3}{c_act_PS3}{
+  $id_{trade} := random()$\\
+  $result := \text{``success''} || id_{trade} || id_{M}$ \\
+  \quad\quad\quad\quad $|| id_{order}|| amount$\\
+  $S_{result} := sign_{priv_{P}}(result)$
+};
 
-\NewCoordBelowToN{c_smsg_PS_MS_1}{action_PS2}{\LINEHEIGHT};
+\NewCoordBelowToN{c_smsg_PS_MS_1}{action_PS3}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_PS_MS_1}{agent_MS}{c_smsg_PS_MS_1};
-\DrawArrow{Arrow}{c_smsg_PS_MS_1}{c_rmsg_PS_MS_1}{$result$};
+\DrawArrow{Arrow}{c_smsg_PS_MS_1}{c_rmsg_PS_MS_1}{$result, S_{result}$};
 
 \NewCoordBelowToC{c_smsg_PS_U_2}{c_smsg_PS_MS_1}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_PS_U_2}{agent_U}{c_smsg_PS_U_2};
-\DrawArrow{Arrow}{c_smsg_PS_U_2}{c_rmsg_PS_U_2}{$result$};
+\DrawArrow{Arrow}{c_smsg_PS_U_2}{c_rmsg_PS_U_2}{
+  $\text{``Successful''}, amount, description, ...$
+};
 
 % -------------- Divide Line --------------
   \NewCoord{c_tmp}{c_smsg_PS_U_2 -| c_ldiv_1};
