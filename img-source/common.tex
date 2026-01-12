@@ -4,23 +4,54 @@
 \usepackage{pifont}
 \usepackage{xcolor}
 \usepackage{contour}
+\usepackage{mathptmx}
 
 \contourlength{1pt} 
 \pagestyle{empty}
 \usetikzlibrary{shapes.geometric,shapes.arrows,positioning,calc,arrows.meta,math,backgrounds}
 
 % --------- DEFINE COLORS ---------
-\definecolor{red}{HTML}{c13c33}
+% Blue 系
+\definecolor{blue}{RGB}{76,114,176}        % 沉稳学术蓝
+\definecolor{navy}{RGB}{59,72,99}           % 深藏青
+\definecolor{steelblue}{RGB}{102,139,171}   % 钢蓝
+
+% Red 系
+\definecolor{red}{RGB}{180,82,82}           % 暗红（非警告型）
+\definecolor{maroon}{RGB}{128,70,70}        % 学术酒红
+\definecolor{brick}{RGB}{150,90,75}         % 砖红
+
+% Green 系
+\definecolor{green}{RGB}{90,140,120}        % 灰绿色
+\definecolor{olive}{RGB}{120,130,90}        % 橄榄绿
+\definecolor{forest}{RGB}{80,110,95}        % 深林绿
+
+% Yellow / Orange 系
+\definecolor{orange}{RGB}{200,140,90}       % 低饱和橙
+\definecolor{goldenrod}{RGB}{170,145,85}    % 学术金
+\definecolor{sand}{RGB}{190,175,140}        % 沙色
+
+% Purple 系
+\definecolor{purple}{RGB}{130,110,150}      % 灰紫
+\definecolor{plum}{RGB}{120,95,125}         % 李子紫
+\definecolor{violet}{RGB}{145,130,170}      % 冷紫
+
+% Gray 系（强烈推荐学术使用）
+\definecolor{gray}{RGB}{130,130,130}
+\definecolor{darkgray}{RGB}{90,90,90}
+\definecolor{lightgray}{RGB}{200,200,200}
 % ---------------------------------
 % ---- DEFINE GLOBAL VARIABLES ----
 \newcommand{\AGENTSPAN}{0.2\textwidth}
 \newcommand{\LINEHEIGHT}{3.2ex}
 \newcommand{\ENDWIDTH}{1.4em}
 \newcommand{\ENDHEIGHT}{0.4ex}
+\newcommand{\LABELSIZE}{1}
+\newcommand{\LABELCOLOR}{black}
 % ---------------------------------
 % --------- DEFINE STYLES ---------
 \tikzset{AGENT/.style={rectangle,minimum width=5em,minimum height=3.5ex,draw,semithick,align=flush center, anchor=north,fill=white}}
-\tikzset{ACTION/.style={rectangle,rounded corners,draw,semithick,align=flush center,fill=white}, anchor=north}
+\tikzset{ACTION/.style={rectangle,rounded corners,draw,semithick,align=flush left,fill=white}, anchor=north}
 \tikzset{LABEL/.style={circle, draw, semithick, align=center, minimum size=1.2em, inner sep=0pt,fill=white}, anchor=north}
 \tikzset{PREPARATION/.style={rectangle,draw,semithick,align=flush center,fill=white,dashed, anchor=north}}
 
@@ -52,9 +83,10 @@
 \newcommand{\NewCoordBelowToN}[3]{\coordinate (#1) at ($(#2.south)+(0,-#3)$)}
 \newcommand{\NewCoordAlignToN}[3]{\coordinate (#1) at ($(#3 -| #2.north)$)}
 
-\newcommand{\NewAgent}[3]{\node[AGENT, anchor=north] (#1) at (#2) {#3}}
-\newcommand{\NewAction}[3]{\node[ACTION, anchor=north] (#1) at (#2) {#3}}
-\newcommand{\NewLabel}[3]{\node[LABEL, anchor=north] (#1) at (#2) {#3}}
+\newcommand{\NewNode}[4]{\node[#1] (#2) at (#3) {#4}}
+\newcommand{\NewAgent}[3]{\node[AGENT] (#1) at (#2) {#3}}
+\newcommand{\NewAction}[3]{\node[ACTION] (#1) at (#2) {#3}}
+\newcommand{\NewLabel}[3]{\node[LABEL, scale=\LABELSIZE, text=\LABELCOLOR, draw=\LABELCOLOR] (#1) at (#2) {#3}}
 
 \newcommand{\DrawLine}[3]{\draw[#1] (#2) -- (#3)}
 \newcommand{\DrawArrow}[4]{\draw[#1] (#2) -- (#3) node[midway,above=-3pt]{\contour{white}{#4}}}
