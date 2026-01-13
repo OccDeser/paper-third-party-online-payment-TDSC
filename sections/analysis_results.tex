@@ -1,4 +1,12 @@
 \input{tables/lemma_results.tex}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{img/attack.pdf}
+  \caption{Order Tampering Attack Variants}
+  \label{fig:order_tampering_variants}
+\end{figure*}
+
 %-------------------------------------------------------------------------------
 \section{Analysis Results}  \label{sec:results}
 %-------------------------------------------------------------------------------
@@ -20,20 +28,6 @@ In an Order Tampering Attack, the attacker misleads both the user and the mercha
 This attack was first identified by \cite{Yang2017FlawedImplementations} in the In-App payment scenario.
 Our formal analysis indicates that this attack is prevalent across a wide range of payment scenarios and cannot be prevented by any existing payment model currently adopted by payment service providers. 
 While traditional defenses emphasize securing individual communication channels, our results show that the attack admits multiple variants and can be launched whenever any insecure channel exists between \emph{MS} and the \emph{PS-App}.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{img/black.png}
-  \caption{Order Tampering Attack Variant \Rom{1}}
-  \label{fig:order_tampering_variant_1}
-\end{figure}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{img/black.png}
-  \caption{Order Tampering Attack Variant \Rom{2}}
-  \label{fig:order_tampering_variant_2}
-\end{figure}
 
 There are two variants of the Order Tampering Attack, as illustrated in Figures~\ref{fig:order_tampering_variant_1} and~\ref{fig:order_tampering_variant_2}.
 The main difference between these two variants lies in the communication channel over which the attacker tampers with the order.

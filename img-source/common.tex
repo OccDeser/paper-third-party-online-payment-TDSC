@@ -17,7 +17,7 @@
 \definecolor{steelblue}{RGB}{102,139,171}   % 钢蓝
 
 % Red 系
-\definecolor{red}{RGB}{180,82,82}           % 暗红（非警告型）
+\definecolor{red}{RGB}{172,31,24}           % 暗红（非警告型）
 \definecolor{maroon}{RGB}{128,70,70}        % 学术酒红
 \definecolor{brick}{RGB}{150,90,75}         % 砖红
 
@@ -87,6 +87,7 @@
 \newcommand{\NewAgent}[3]{\node[AGENT] (#1) at (#2) {#3}}
 \newcommand{\NewAction}[3]{\node[ACTION] (#1) at (#2) {#3}}
 \newcommand{\NewLabel}[3]{\node[LABEL, scale=\LABELSIZE, text=\LABELCOLOR, draw=\LABELCOLOR] (#1) at (#2) {#3}}
+\newcommand{\NewGroup}[3][]{\draw[dashed, thick, #1] (#2) rectangle (#3)}
 
 \newcommand{\DrawLine}[3]{\draw[#1] (#2) -- (#3)}
 \newcommand{\DrawArrow}[4]{\draw[#1] (#2) -- (#3) node[midway,above=-3pt]{\contour{white}{#4}}}
