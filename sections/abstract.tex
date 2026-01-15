@@ -2,11 +2,13 @@
 \begin{abstract}
 %-------------------------------------------------------------------------------
 Third-party online payment systems (e.g., Alipay, WeChat Pay) have become critical infrastructure in modern e-commerce, yet their security often relies on an unrealistic assumption of fully secure communication channels. 
-Prior empirical studies have uncovered isolated vulnerabilities, but a systematic analysis of payment protocol security remains lacking. This paper presents formal security models for six third-party payments, covering three major scenarios and two dominant payment service providers. 
-Using Tamarin Prover, we define and verify injective agreement properties to ensure order-consent binding. 
-Our analysis reveals a fundamental flaw: if any channel between merchant frontend, backend, or payment system is insecure, order tampering attacks become universally possible—allowing adversaries to alter payment details unnoticed. 
+Prior empirical studies have uncovered isolated vulnerabilities, but a systematic analysis of payment protocol security remains lacking. 
+This paper presents formal security models for six third-party payments, covering three major scenarios and two dominant payment service providers. 
+Our analysis reveals a fundamental vulnerability: 
+when any communication channel among the merchant frontend, backend, and payment system lacks adequate security guarantees, order tampering attacks become broadly feasible.
 We validate this threat in real-world Android apps, finding that over 20\% of tested merchant apps (affecting hundreds of millions of users) expose orders to tampering via implicit Intent hijacking. 
-Responsible disclosure led to fixes by major payment platforms. As a solution, we propose user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics. 
+Responsible disclosure led to fixes by major payment platforms. 
+As a solution, we propose user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics. 
 Formal proofs confirm its resilience against all identified attacks under weak channel assumptions. 
 Our work bridges formal methods and empirical security, offering actionable insights for payment protocol design and standardization.
 \end{abstract}

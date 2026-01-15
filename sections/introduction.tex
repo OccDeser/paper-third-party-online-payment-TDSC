@@ -4,56 +4,81 @@
 
 Third-party payment systems have become a core infrastructure of modern e-commerce and mobile payments.
 Particularly in China, third-party payment services have evolved into a foundational component of the digital economy, with both market scale and user penetration continuing to grow.
-According to the latest industry report by iResearch~\cite{Iresearch2025ChinaThirdPartyPayment}, the transaction volume of China's personal third-party payment market is expected to reach 67 trillion Chinese yuan (about 9.6 trillion US dollars) in 2025, with online payments accounting for more than $50\%$ of the total.
-Among all third-party payment platforms, Alipay~\cite{alipay2026official} and WeChat Pay~\cite{wechatpay2026official} are the two most dominant payment service providers in China, firmly occupying the top tier of the third-party payment market.
+According to the latest industry report by iResearch~\cite{Iresearch2025ChinaThirdPartyPayment}, 
+the transaction volume of China's personal third-party payment market has reached 67 trillion Chinese yuan (about 9.6 trillion US dollars) in 2025, 
+with online payments accounting for more than $50\%$ of the total.
+Among all third-party payment platforms, 
+Alipay~\cite{alipay2026official} and WeChat Pay~\cite{wechatpay2026official} are the two most dominant payment service providers in China, firmly occupying the top tier of the third-party payment market.
 
-A typical third-party payment ecosystem consists of the user (\emph{U}), the merchant frontend or interface (\emph{MF}), the merchant backend server (\emph{MS}), and the payment system (\emph{PS}), and spans multiple scenarios such as in-app payments, mobile web payments, and QR-code-based payments.
-Within this ecosystem, payment protocols typically employ cryptographic mechanisms such as digital signatures to protect transactions.
-However, extensive empirical studies show that third-party payment workflows expose multiple classes of security vulnerabilities when operating over insecure or misconfigured channels, most notably the lack of a strong binding between user payment authorization and order semantics, which leads to systemic risks.
-In summary, prior work has covered at least the following three classes of attack vectors, which are often intertwined: 
+A typical third-party payment ecosystem consists of the user (\emph{U}), the merchant frontend or interface (\emph{MF}), the merchant backend server (\emph{MS}), and the payment system (\emph{PS}), 
+and spans multiple scenarios such as in-app payments, mobile web payments, and QR-code-based payments.
+Within this ecosystem, payment service providers can ensure the security of communications within their own payment systems, 
+such as the communication between the payment application (\emph{PS-App}) and the payment server (\emph{PS-Server}).
+They can also protect the channel security between \emph{MS} and \emph{PS-Server} by restricting the communication to HTTPS only.
+However, the security of communications between external entities cannot be guaranteed by payment service providers.
+
+Unfortunately, a large number of empirical studies has shown that exactly these insecure or misconfigured channels have led to various categories of security vulnerabilities in third-party payment workflows.
+Prior work has demonstrated that untrusted channels may give rise to at least the following three types of attacks, which are often intertwined:
 (1) \emph{Order injection and tampering over insecure channels}: 
 attackers replace or replay order parameters, causing users to unknowingly pay for incorrect orders~\cite{Sun2014DetectingECommerce, Yang2017FlawedImplementations};
 (2) \emph{Misuse of signatures and parameter structures}: 
 by exploiting flawed signature designs (e.g., field relocation or optional fields not covered by the signature), attackers can alter order semantics without invalidating the signature~\cite{Lou2021PaymentVulnerabilities};
 (3) \emph{Payment result forgery and UI confusion}: 
 attackers inject forged ``payment success'' messages or leverage UI overlay attacks and H5 redirection/script injection, misleading merchants or users about the transaction status and enabling free purchases or misdirected payments~\cite{Ulqinaku2019ScanAndPayAndroid, Yang2017FlawedImplementations}.
-Although these studies reveal important issues, most focus on empirical analyses of specific products or isolated scenarios, and lack a unified, formal security perspective to answer a fundamental question: 
-under what models and channel assumptions can a third-party payment system achieve end-to-end security by design?
+These studies reveal an important issue: the cryptographic mechanisms adopted by existing third-party online payment protocols are insufficient to withstand threats arising from insecure external channels.
+From the perspective of payment service providers, adopting weaker security assumptions for external channels is more consistent with real-world payment environments.
+This observation motivates us to analyze the security of third-party online payment protocols under weaker security assumptions for external channels.
 
-To address this gap, we present a unified formal abstraction of third-party online payment protocols and workflows, and conduct a systematic security analysis under weak channel assumptions.
-We first develop a unified symbolic model of the ecosystem participants (U, MF, MS, PS), three representative payment scenarios (in-app payments, mobile web payments, and QR-code payments), and two mainstream models.
-The model explicitly distinguishes secure and insecure channels, allowing the adversary to eavesdrop on, tamper with, replay, or inject messages.
-We further employ oracle-based modeling to capture the adversary’s legitimate access to merchant order parameters, and formalize user behaviors including item selection, order confirmation, and payment authorization.
-Centered on the three core semantics (\emph{order}, \emph{authorization}, and \emph{result}), we define and formalize multiple injective agreement security properties.
+Starting from the developer manuals of major third-party service providers, 
+we constructs a comprehensive symbolic model that covers four entities in the ecosystem, three representative payment scenarios, and two payment models.
+Our model considers weak channel assumptions, allowing the adversary to eavesdrop on, tamper with, replay, or inject messages on certain channels.
+To systematically capture the adversary's ability to interact with merchants and payment platforms in the real world, 
+we introduce two oracle models that respectively formalize the adversary's actions of order creation and payment information acquisition.
+Centered on the three core semantic aspects (\emph{order}, \emph{authorization}, and \emph{result}), we define and formalize multiple injective agreement security properties.
 These properties impose layered semantic constraints on the ``order–authorization–result'' chain in the payment workflow, providing verifiable and comparable security criteria.
 
-Based on this formal framework, our automated verification reveals a class of pervasive yet previously under-characterized \emph{order tampering attacks}.
-The key insight is that as long as an insecure channel exists between the user and the merchant, existing payment models fail to guarantee order consistency between the two parties across different scenarios.
+Using this formal framework, we identify a widespread class of \emph{order tampering attacks} that has not been thoroughly characterized in prior work.
+The key insight is that the presence of any insecure channel between the user and the merchant prevents existing payment models from guaranteeing order consistency across different scenarios.
 We further classify two major attack variants based on the compromised communication channels.
-Notably, these attacks do not rely on breaking cryptographic primitives or leaking secret keys, but instead stem from protocol designs that lack a strong binding between order semantics and user authorization, as well as systematic robustness against weak channels.
-
+Notably, these attacks do not rely on breaking cryptographic primitives or compromising secret keys. 
+Instead, they arise from protocol designs that lack a strong binding between order semantics and user authorization, as well as sufficient systematic robustness against weak channels.
 
 To assess the real-world severity of this issue, we conducted an empirical study on the Android platform and found that a large number of merchant apps interact with payment apps via implicit Intents, rendering the \emph{MF}--\emph{PS} path vulnerable to interception and tampering by other malicious applications.
 We developed a proof-of-concept attack application and successfully reproduced order tampering attacks in real-world environments.
-We further measured 462 application versions and found that approximately $20\%$ of the samples suffer from this vulnerability, affecting hundreds of millions of users.
+We further evaluated a larger set of applications, covering different apps and multiple versions, for a total of 461 samples. 
+Our results show that more than $25\%$ of the samples are vulnerable.
+Collectively, these applications account for over 200 billion downloads, potentially affecting billions of users.
 We responsibly disclosed our findings to the security teams of Alipay and WeChat Pay. 
 Alipay has already deployed fixes, while WeChat Pay is in the process of mitigation.
+
 To address these threats, we propose a deployable and backward-compatible user-side order authentication mechanism that fundamentally enforces a strong binding between user authorization and order semantics.
 Under the same weak channel assumptions, we formally verify this mechanism and show that it satisfies all security properties defined in this paper, thereby preventing order tampering and result injection attacks at the protocol level while preserving practical deployability.
 
 \paragraph{Contributions.}
 We make the following contributions:
 \begin{enumerate}
-  \item \textbf{Unified abstraction and formal modeling.}
-    We propose a unified abstraction for third-party online payments, covering four entities and systematically model three payment scenarios and two mainstream models using Tamarin under the Dolev–Yao adversary model.
-  \item \textbf{Layered semantic security model and properties.}
-    We introduce a layered semantic security model from orders to resutls, and formally define a set of injective agreement properties that provide verifiable and comparable end-to-end security criteria.
-  \item \textbf{Systematic identification of order tampering attacks.}
-    Through automated verification, we show that insecure user–merchant channels enable order tampering across all scenarios, classify two major attack variants, and analyze the conditions and impact of result injection.
-  \item \textbf{Real-world evaluation and impact quantification.}
-    We reproduce implicit-Intent-based order tampering attacks in the Android ecosystem, measure 462 app versions and find that about 20\% are affected, impacting hundreds of millions of users, and conduct responsible disclosure.
-  \item \textbf{Deployable countermeasures with formal guarantees.}
-     We propose a user-side order authentication mechanism that distinguishes first-time and subsequent payments for compatibility, and formally prove that it satisfies all security properties under weak channel assumptions.
-  \item \textbf{Methodological and practical insights.}
-    We demonstrate how combining formal methods with empirical analysis uncovers systemic design flaws and informs secure payment protocol design, standardization, and practice.
+  % \item \textbf{Unified abstraction and formal modeling.}
+  %   We propose a unified abstraction for third-party online payments, covering four entities and systematically model three payment scenarios and two mainstream models using Tamarin under the Dolev–Yao adversary model.
+  % \item \textbf{Layered semantic security model and properties.}
+  %   We introduce a layered semantic security model from orders to resutls, and formally define a set of injective agreement properties that provide verifiable and comparable end-to-end security criteria.
+  % \item \textbf{Systematic identification of order tampering attacks.}
+  %   Through automated verification, we show that insecure user–merchant channels enable order tampering across all scenarios, classify two major attack variants, and analyze the conditions and impact of result injection.
+  % \item \textbf{Real-world evaluation and impact quantification.}
+  %   We reproduce implicit-Intent-based order tampering attacks in the Android ecosystem, measure 462 app versions and find that about 20\% are affected, impacting hundreds of millions of users, and conduct responsible disclosure.
+  % \item \textbf{Deployable countermeasures with formal guarantees.}
+  %    We propose a user-side order authentication mechanism that distinguishes first-time and subsequent payments for compatibility, and formally prove that it satisfies all security properties under weak channel assumptions.
+  % \item \textbf{Methodological and practical insights.}
+  %   We demonstrate how combining formal methods with empirical analysis uncovers systemic design flaws and informs secure payment protocol design, standardization, and practice.
+  \item \textbf{Formal Modeling for Third-Party Payments}
+    We propose a comprehensive formal model that covers mainstream third-party payment ecosystems. 
+    Under weak channel assumptions, the model captures multiple entities, payment scenarios, payment models, and payment service providers.
+    We systematically defines a set of verifiable and comparable injective consistency security properties based on the core semantic chain of ``order--authorization--outcome''.
+  \item \textbf{Systematic Identification of Attacks}
+    Based on the verification results under the above formal framework, 
+    we systematically uncover and classify a class of order tampering attacks for the first time. 
+    We show that the presence of any insecure user--merchant channel breaks order consistency, and we reproduce these attacks in the real-world Android ecosystem to quantify their impact.
+  \item \textbf{Formally Verified and Deployable Defenses}
+    We propose a backward-compatible and practically deployable user-side order authentication mechanism.
+    It achieves a strong binding between user authorization and order semantics with minimal modifications to existing payment workflows. 
+    Under the weak channel model, we formally prove that it can effectively defend against existing attacks.
 \end{enumerate}
