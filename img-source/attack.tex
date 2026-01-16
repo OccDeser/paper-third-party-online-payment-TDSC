@@ -2,7 +2,6 @@
 \usepackage{fontawesome7}
 \input{common.tex}
 
-\renewcommand{\AGENTSPAN}{0.23\textwidth}
 \newcommand{\COMMONCOLOR}{gray}
 \newcommand{\SPECIALCOLOR}{black}
 \newcommand{\Rom}[1]{\uppercase\expandafter{\romannumeral #1}}
@@ -14,20 +13,26 @@
 %   Agents
 % ========================================
 \NewCoord{c_U}{0,0};
-\NewAgent{agent_U}{c_U}{\hspace{-0.5em} \faUser \; U};
+\NewNode{AGENT, minimum width=3em}{agent_U}{c_U}{
+  \hspace{-0.3em} \faUser \  U \hspace{-0.6em}
+};
 
+\renewcommand{\AGENTSPAN}{0.08\textwidth}
 \NewCoordRightToC{c_MF}{c_U}{\AGENTSPAN};
-% \NewCoordRightToC{c_MF}{c_U}{\AGENTSPAN/1.5};
-\NewAgent{agent_MF}{c_MF}{\hspace{-0.5em} \faBasketShopping \; MF};
+\NewNode{AGENT, minimum width=3.7em}{agent_MF}{c_MF}{
+  \hspace{-0.5em} \faBasketShopping \ MF \hspace{-0.8em}
+};
 
+\renewcommand{\AGENTSPAN}{0.135\textwidth}
 \NewCoordRightToC{c_A}{c_MF}{\AGENTSPAN};
-\NewAgent{agent_A}{c_A}{\, \textcolor{red}{\faUserSecret \; Attacker} \,}; 
+\NewNode{AGENT, minimum width=4em}{agent_A}{c_A}{\, \textcolor{red}{\faUserSecret \; Attacker} \,}; 
 
 \NewCoordRightToC{c_MS}{c_A}{\AGENTSPAN};
-\NewAgent{agent_MS}{c_MS}{\hspace{-0.5em} \faServer \; MS};
+\NewNode{AGENT, minimum width=4em}{agent_MS}{c_MS}{\hspace{-0.5em} \faServer \; MS};
 
+\renewcommand{\AGENTSPAN}{0.1\textwidth}
 \NewCoordRightToC{c_PS}{c_MS}{\AGENTSPAN};
-\NewAgent{agent_PS}{c_PS}{\hspace{-0.5em} \faSackDollar \; PS};
+\NewNode{AGENT, minimum width=4em}{agent_PS}{c_PS}{\hspace{-0.5em} \faSackDollar \; PS};
 
 % ========================================
 %   Messages
@@ -35,7 +40,7 @@
 
 % Phase 1: Ordering
 % -------------- Divide Line --------------
-  \NewCoordRightToC{c_tmp}{agent_U.south}{-0.06\textwidth};
+  \NewCoordRightToC{c_tmp}{agent_U.south}{-0.04\textwidth};
   \NewCoordBelowToC{c_ldiv_1}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_1};
   \NewCoordRightToC{c_rdiv_1}{c_tmp}{0.06\textwidth};
@@ -72,8 +77,10 @@
   \NewLabel{label_2}{c_label_2}{\romannumeral 2};
 % ----------------------------------------
 
-\NewCoordBelowToC{c_act_MS1}{c_ldiv_2-|c_MS}{\LINEHEIGHT/2};
-\NewNode{ACTION, draw=\SPECIALCOLOR}{action_MS1}{c_act_MS1}{Genearte $params_{M}$};
+\NewCoordBelowToC{c_act_MS1}{$(c_ldiv_2-|c_MS)+(-2em, 0)$}{\LINEHEIGHT/2};
+\NewNode{ACTION, draw=\SPECIALCOLOR}{action_MS1}{c_act_MS1}{
+  Genearte $params_{M}$
+};
 
 \NewCoordBelowToC{c_opt_smsg_MS_PS_1}{action_MS1.east}{-\LINEHEIGHT/6};
 \NewCoordAlignToN{c_opt_rmsg_MS_PS_1}{agent_PS}{c_opt_smsg_MS_PS_1};
@@ -100,18 +107,20 @@
 \DrawArrow{Arrow, color=\SPECIALCOLOR, text=red}{c_smsg_MF_PS_1}{c_rmsg_MF_PS_1}{$params_{A}$};
 
 \NewCoordBelowToC{c_tmp}{action_MS1.south-|c_MF}{\LINEHEIGHT/2};
-\NewCoordRightToC{c_grp1_start}{c_tmp}{-\AGENTSPAN/10};
+\NewCoordRightToC{c_grp1_start}{c_tmp}{-\AGENTSPAN/5};
 \NewCoordBelowToC{c_tmp2}{c_rmsg_MF_PS_1}{\LINEHEIGHT/2};
-\NewCoordRightToC{c_grp1_end}{c_tmp2}{\AGENTSPAN/10};
-\NewGroup[draw=forest]{c_grp1_start}{c_grp1_end};
+\NewCoordRightToC{c_grp1_end}{c_tmp2}{\AGENTSPAN/5};
+\NewGroup[draw=steelblue, very thick]{c_grp1_start}{c_grp1_end};
 
-\NewCoordBelowToC{c_grp1_l1}{c_grp1_start}{\LINEHEIGHT*2};
+\NewCoordBelowToC{c_grp1_l1}{c_grp1_start -| c_grp1_end}{\LINEHEIGHT*1.5};
 \NewCoordBelowToC{c_tmp}{c_grp1_l1}{-\LINEHEIGHT};
-\NewCoordRightToC{c_grp1_l2}{c_tmp}{-\AGENTSPAN/8};
-\NewCoordRightToC{c_grp1_l3}{c_grp1_l2}{-\AGENTSPAN*0.7};
-\draw[dashed, thick, draw=forest] (c_grp1_l1) -- (c_grp1_l2) -- (c_grp1_l3);
-\NewNode{ACTION, draw=none, anchor=south west}{group_label}{c_grp1_l3}{
-  \hspace{-0.6em} \textbf{Attack Variant \Rom{1}}
+\NewCoordRightToC{c_grp1_l2}{c_tmp}{1em};
+\NewCoordRightToC{c_grp1_l3}{c_grp1_l2}{4.5em};
+\draw[dashed, very thick, draw=steelblue] (c_grp1_l1) -- (c_grp1_l2) -- (c_grp1_l3);
+
+\NewCoord{c_grp_label}{c_grp1_start -| c_grp1_end};
+\NewNode{ACTION, draw=none, anchor=south west, fill=none}{group_label}{c_grp1_l2}{
+  \hspace{-0.5em} \textcolor{navy}{\textbf{Variant \Rom{1}}}
 };
 
 \NewCoordBelowToC{c_smsg_MS_MF_2}{c_smsg_MF_PS_1-|c_MS}{\LINEHEIGHT*2};
@@ -127,31 +136,30 @@
   \textcolor{red}{$params_{A}$} $ := oracle(params_{M})$
 };
 
+
 \NewCoordBelowToN{c_smsg_A_PS}{action_A2}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_A_PS}{agent_PS}{c_smsg_A_PS};
 \DrawArrow{Arrow, color=\SPECIALCOLOR, text=red}{c_smsg_A_PS}{c_rmsg_A_PS}{$params_{A}$};
 
 \NewCoordBelowToC{c_tmp}{c_rmsg_MS_MF_2}{-\LINEHEIGHT*1};
-\NewCoordRightToC{c_grp2_start}{c_tmp}{-\AGENTSPAN/10};
+\NewCoordRightToC{c_grp2_start}{c_tmp}{-\AGENTSPAN/5};
 \NewCoordBelowToC{c_tmp2}{c_rmsg_A_PS}{\LINEHEIGHT/2};
-\NewCoordRightToC{c_grp2_end}{c_tmp2}{\AGENTSPAN/10};
-\NewGroup[draw=orange]{c_grp2_start}{c_grp2_end};
+\NewCoordRightToC{c_grp2_end}{c_tmp2}{\AGENTSPAN/5};
+\NewGroup[draw=orange, very thick]{c_grp2_start}{c_grp2_end};
 
-\NewCoordBelowToC{c_grp2_l1}{c_grp2_start}{\LINEHEIGHT*2};
+\NewCoordBelowToC{c_grp2_l1}{c_grp2_start -| c_grp2_end}{\LINEHEIGHT*1.5};
 \NewCoordBelowToC{c_tmp}{c_grp2_l1}{-\LINEHEIGHT};
-\NewCoordRightToC{c_grp2_l2}{c_tmp}{-\AGENTSPAN/8};
-\NewCoordRightToC{c_grp2_l3}{c_grp2_l2}{-\AGENTSPAN*0.7};
-\draw[dashed, thick, draw=orange] (c_grp2_l1) -- (c_grp2_l2) -- (c_grp2_l3);
-\NewNode{ACTION, draw=none, anchor=south west}{group_label2}{c_grp2_l3}{
-  \hspace{-0.6em} \textbf{Attack Variant \Rom{2}}
+\NewCoordRightToC{c_grp2_l2}{c_tmp}{1em};
+\NewCoordRightToC{c_grp2_l3}{c_grp2_l2}{4.5em};
+\draw[dashed, very thick, draw=orange] (c_grp2_l1) -- (c_grp2_l2) -- (c_grp2_l3);
+\NewNode{ACTION, draw=none, anchor=south west}{group_label2}{c_grp2_l2}{
+  \hspace{-0.5em} \textcolor{brick}{\textbf{Variant \Rom{2}}}
 };
 
-
-
-\NewCoordBelowToC{c_act_PS1}{c_rmsg_A_PS}{\LINEHEIGHT};
+\NewCoordBelowToC{c_act_PS1}{$(c_rmsg_A_PS)$}{\LINEHEIGHT};
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_PS1}{c_act_PS1}{
   \textbf{if} $validate($\textcolor{red}{$params_{A}$}$)$ \\
-  \textbf{then} $continue()$\\
+  \textbf{then} $continue()$ \\
   \textbf{else} $abort()$
 };
 

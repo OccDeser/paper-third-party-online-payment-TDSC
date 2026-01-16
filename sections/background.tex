@@ -2,15 +2,12 @@
 \section{Background}
 %-------------------------------------------------------------------------------
 
-% ### 2. Background and Threat Model
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main payment models, and finally introduce the formal modeling tool Tamarin that we use.
+Then, we abstract two main payment models, and finally introduce the model checking tool Tamarin-Prover\cite{Meier2013TAMARINProver} that we use.
 
-
-% #### 2.1 Payment Ecosystem Overview
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
-Currently, there is no unified industry standard for third-party online payment systems, 
+At present, there is no no universally accepted regulatory standard governing third-party online payments, 
 as different payment providers maintain their own proprietary protocols and implementations. 
 Through extensive review of official documentation and developer guides\cite{WeChat2025APIV3,Alipay2025OpenPlatform}, 
 combined with practical analysis of payment workflows,
@@ -20,11 +17,14 @@ A typical third-party online payment ecosystem involves four main participants:
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/tpp_process.pdf}
-    \caption{Typical Third-Party Online Payment Process}
+    \caption{
+        An Overview of a Typical Third-Party Online Payment. 
+        Dashed arrows indicate optional messages, depending on the specific payment model.
+        Notation: $validate(p)$ denotes checking whether $p$ is valid; $continue()$ denotes continuing the execution of the protocol; $abort()$ denotes terminating the protocol; $make_payment()$ denotes the fund transfer operation; $random()$ denotes generating a random number; and $sign_k(m)$ denotes signing message $m$ with key $k$.
+    }
     \label{fig:third_party_payment}
 \end{figure}
 
-% - 参与方:用户 / 商家 / 第三方支付商
 \begin{enumerate} 
   \item \textit{\textbf{User (U):}}
     An individual who initiates the payment for goods or services.
@@ -40,34 +40,30 @@ A typical third-party online payment ecosystem involves four main participants:
     we treat the application and server together as a single black-box system.
 \end{enumerate}
 
-
-% - 支付流程的典型阶段
 As illustrated in Figure.~\ref{fig:third_party_payment}, we abstract a typical third-party payment process into the following phases:
 \begin{enumerate}
   \item[\rom{1}.] \textit{\textbf{Order Phase:}}
-    \emph{U} purchases products and selects a payment provider on \emph{MF}. 
-    The \emph{MF} sends the product and payment provider information to \emph{MS}.
+    \emph{U} purchases $goods$ and selects a payment provider on \emph{MF}. 
+    The \emph{MF} sends the $goods$ and payment provider to \emph{MS}.
   \item[\rom{2}.] \textit{\textbf{Prepayment Phase:}} 
-    Based on the received information, \emph{MS} generates the corresponding payment parameters and returns them to \emph{MF}. 
-    \emph{MF} forwards the payment parameters to the corresponding \emph{PS}.
-  \item[\rom{3}.] \textbf{Payment Phase:} 
-    The \emph{PS} presents the order information (including product description and payment amount) to \emph{U} on the payment interface for confirmation. 
-    After verifying the order details, \emph{U} enters the payment password on the \emph{PS-App} to authorize and complete the transaction.
+    Based on the received information, \emph{MS} generates the corresponding payment parameters $params$ and returns them to \emph{MF}. 
+    \emph{MF} forwards $params$ to the corresponding \emph{PS}.
+  \item[\rom{3}.] \textbf{Authorization Phase:} 
+    The \emph{PS} presents the order information (including product description, payment amount, and payee's account) to \emph{U} on the payment interface for confirmation. 
+    After verifying the order details, \emph{U} enters the payment $password$ on the \emph{PS-App} to authorize and complete the transaction.
   \item[\rom{4}.] \textit{\textbf{Notification Phase:}}  
-    After the payment is completed, the \emph{PS} sends a payment result notification to the \emph{MS}. 
-    Meanwhile, the \emph{PS} also presents the payment result page to \emph{U}.
+    After the authorization phase, \emph{PS-Server} signs the payment result using its private key and sends the signed result to \emph{MS}.
+    Meanwhile, the \emph{PS-App} also shows the payment result page to \emph{U}.
 \end{enumerate}
 
-It is important to note that, during the \emph{Prepayment} phase, there are two primary approaches for \emph{MS} to generate payment parameters.
-We classify these approaches into two payment models, which will be discussed in detail in Section~\ref{sec:payment-models}.
+% It is important to note that, during the \emph{Prepayment} phase, there are two primary approaches for \emph{MS} to generate payment parameters.
+% We classify these approaches into two payment models, which will be discussed in detail in Section~\ref{sec:payment-models}.
     
-
-% #### 2.2 Payment Scenarios
 \subsection{Payment Scenarios}
 
-\emph{PS} obtains payment information from \emph{MF} via \emph{PS-App} on the \emph{U}'s mobile device.
-However, due to the diverse forms of \emph{MF}, the interaction methods between \emph{PS-App} and the \emph{MF} also vary. 
-As previously outlined, \emph{MF} manifests in various forms, including native mobile applications, mobile web pages, and desktop web pages. 
+\emph{PS-Server} obtains payment information from \emph{MF} via \emph{PS-App} on the \emph{U}'s mobile device.
+However, the communication methods between \emph{PS-App} and \emph{MF} vary due to the diverse forms in which \emph{MF} is implemented, 
+including native mobile applications, mobile web pages, and desktop web pages.
 These distinct forms differentiate corresponding payment scenarios, 
 for which payment providers have designed specific interaction methods between the \emph{MF} and the payment system (\emph{PS}). 
 In the following, we introduce three common payment scenarios:
@@ -79,12 +75,21 @@ In the following, we introduce three common payment scenarios:
     \label{fig:inapp_payment}
 \end{figure}
 
+\paragraph{In-app Payment}
+This payment scenario takes place within native mobile applications.
+After the user selects a product, the merchant application invokes the \emph{PS-App} through the Software Development Kit (SDK) provided by the payment provider,
+transmits the required payment parameters, and subsequently completes the payment workflow.
+
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/pays2.pdf}
     \caption{Payment Scenario \Rom{2} --- Mobile Web Payment}
     \label{fig:mobile_web_payment}
 \end{figure}
+
+\paragraph{Mobile Web Payment}
+In mobile web payment, the user interacts with the merchant through a mobile browser rather than a native application.
+Similar to in-app payment, the merchant's mobile web page initiates a payment request to the \emph{PS-App} using a URL scheme.
 
 \begin{figure}[t]
     \centering
@@ -93,29 +98,16 @@ In the following, we introduce three common payment scenarios:
     \label{fig:qr_code_payment}
 \end{figure}
 
-% 3. App 内跳转支付
-\paragraph{In-app Payment}
-This payment scenario takes place within native mobile applications.
-After the user selects a product, the merchant application invokes the \emph{PS-App} through the Software Development Kit (SDK) provided by the payment service provider,
-transmits the required payment parameters, and subsequently completes the payment workflow.
-
-% 2. 手机浏览器跳转支付
-\paragraph{Mobile Web Payment}
-In mobile web payment, the user interacts with the merchant through a mobile browser rather than a native application.
-Similar to in-app payment, the merchant’s mobile web page initiates a payment request to the \emph{PS-App} using a URL scheme.
-
-% 1. PC 网站扫码支付
 \paragraph{QR Code Payment}
 QR code payment differs fundamentally from the previous two scenarios in terms of device interaction.
-In this case, the user browses the merchant’s website using a desktop browser, while the payment is executed on a mobile device.
-Since the merchant’s web page cannot directly redirect to a mobile payment application, the payment service provider employs a QR code as a bridging mechanism between the PC and mobile platforms.
+In this case, the user browses the merchant's website using a desktop browser, while the payment is executed on a mobile device.
+Since the merchant's web page cannot directly redirect to a mobile payment application, the payment provider employs a QR code as a bridging mechanism between the PC and mobile platforms.
 After the user selects a product, the merchant website generates a payment QR code, which is scanned by the \emph{PS-App} to obtain the payment parameters and complete the transaction.
  
-% #### 2.3 Payment Models
 \subsection{Payment Models}\label{sec:payment-models}
 
 As discussed earlier, during the \emph{Prepayment} phase, protocol designs vary across different providers and scenarios.
-Here, we introduce two payment models adopted by two payment providers, WeChat Pay and Alipay, across three payment scenarios.
+Here, we introduce two payment models adopted by two mainstream payment providers, WeChat Pay and Alipay, across three payment scenarios.
 
 \begin{figure}[t]
   \centering
@@ -132,20 +124,25 @@ Here, we introduce two payment models adopted by two payment providers, WeChat P
 \end{figure}
 
 \paragraph{Payment Model A}
-In this model, the payment parameters are generated directly by \emph{MS}.
-Figure.~\ref{fig:payment_model_a} illustrates in detail the process by which \emph{MS} generates the order parameters.
-Based on the $goods$ selected by \emph{U}, \emph{MS} calculates the payable $amount$ and the order $description$, and generates a unique order identifier~($id_{order}$).
-\emph{MS} then signs the order parameters using the merchant's private key $Sk_{M}$, producing a signature value $sign_M$.
-During the subsequent $Payment$ phase, the \emph{PS} verifies the signature value to ensure that the order parameters have not been tampered with.
+In this model, the payment parameters are generated by \emph{MS}.
+Figure.~\ref{fig:payment_model_a} illustrates in detail the process by which \emph{MS} generates the order information.
+Based on the information of the $goods$ selected by the user, 
+\emph{MS} calculates the payable $amount$ and the order $description$, and generates a unique order identifier~($id_{order}$). 
+These values, together with the merchant identifier~($id_{M}$), constitute the order information.
+\emph{MS} then signs the order information using its private key $Sk_{M}$, producing a signature value $sign_{order}$.
+The order information and $sign_{order}$ are directly used as the payment parameters $params$.
+During the subsequent \emph{Authorization} phase, \emph{PS} verifies $sign_{order}$ to confirm the integrity of the order information.
 Payment Model A is adopted by Alipay in the In-app Payment and Mobile Web Payment scenarios.
 
 \paragraph{Payment Model B}
-In contrast to Model~A, in Model~B, the payment parameters are generated by \emph{PS}.
-Similarly, the merchant is required to sign the critical order parameters.
-However, in this model, the order parameters and the signature value cannot be directly used as payment parameters. Instead, they are sent to \emph{PS} as a prepayment request.
-At this point, the \emph{PS} verifies the merchant's signature value to ensure the integrity of the order parameters.
-If the verification succeeds, the \emph{PS} generates a payment identifier~($id_{prepay}$) and returns it to the merchant as the payment parameter.
-During the subsequent $Payment$ phase, the \emph{PS} identifies the order information based on this random value and completes the payment.
+In Model~B, the payment parameters are generated with the involvement of \emph{PS}.
+Similarly, \emph{MS} is required to sign the critical order information.
+However, unlike Model~A, the order information and its signature $sign_{order}$ cannot be directly used as payment parameters.
+Instead, they are sent to \emph{PS} as a prepayment request.
+After validating $sign_{order}$, \emph{PS} generates a unique prepayment identifier~($id_{prepay}$) for the payment order and returns it to \emph{MS}.
+\emph{MS} then concatenates $id_{M}$ with $id_{prepay}$ and signs the result again using $Sk_{M}$, producing a new signature value $sign_{prepay}$.
+Finally, $id_{M}$, $id_{prepay}$ and $sign_{prepay}$ are sent to \emph{PS} as the payment parameters $params$ in subsequent phases.
+\emph{PS} verifies the validity of $sign_{prepay}$ to ensure the integrity of the payment request.
 Payment Model~B is adopted by Alipay in the QR Code Payment scenario and by WeChat Pay across all three payment scenarios.
 
 
@@ -174,7 +171,12 @@ In addition, action facts, which are used to record observable execution steps (
 \paragraph{Multiset Rewriting Rules}
 Multiset rewriting rules provide a description of protocol behavior.
 A rule specifies a state transition by means of \emph{left-hand side} premise facts (guards) and \emph{right-hand side} conclusion facts (productions), and may carry action facts as observable events.
-Formally, a rule can be written as  $LF_1,\ldots,LF_m \xrightarrow{AF(t_1, \ldots, t_k)} RF_1, \ldots, RF_n$.
+Formally, a rule can be written as 
+%  $LF_1,\ldots,LF_m \xrightarrow{AF(t_1, \ldots, t_k)} RF_1, \ldots, RF_n$.
+\begin{flalign*}
+% \text{\Tterm{Ru}}  & \text{\Tterm{le demo}} :      & \\
+  \TFacts{  LF_1,\ldots,LF_m } \TEmpActFactSL{AF(t_1, \ldots, t_k)} \TFacts{  RF_1, \ldots, RF_n } &
+\end{flalign*}
 Given the current state multiset $S$, the rule is enabled when $LF_1,\ldots,LF_m \subseteq S$
 Its application yields a new state $S' = (S \setminus \{LF_1,\ldots,LF_m\}) \cup \{RF_1, \ldots, RF_n\}$,
 and records the action fact $AF(t_1, \ldots, t_k)$ in the execution trace.
@@ -187,7 +189,8 @@ These constraints are predicate formulas over events and time points.
 Within this restricted semantic space, security properties are likewise expressed as first-order temporal logic formulas (lemmas), such as secrecy, authentication, or consistency properties, and are required to hold for all valid traces.
 For example, key secrecy can be formalized as:
 \begin{flalign*}
-    & \hspace{0em} \TAll \;\, \text{\Tterm{k \#i.}} \;\, \text{\TFact{Install(k)@\#i}} &\\
-    & \hspace{3em} \implies \TNot (\TEx \;\, \text{\TLemma{\#j.}} \;\, \text{\TFact{K(k)@\#j}} ) &
+    % & \hspace{0em} \TAll \;\, \text{\Tterm{k \#i.}} \;\, \text{\TFact{Install(k)@\#i}} &\\
+    % & \hspace{3em} \implies \TNot (\TEx \;\, \text{\TLemma{\#j.}} \;\, \text{\TFact{K(k)@\#j}} ) &
+    \TAll \;\text{\Tterm{k \#i.}} \;\text{\TFact{Install(k)@\#i}} \implies \TNot (\TEx \;\, \text{\TLemma{\#j.}} \;\text{\TFact{K(k)@\#j}} ) 
 \end{flalign*}
 This formula describes that for all time points~$i$, if a key~$k$ is installed at time~$i$, then there doesn't exist a time point~$j$ at which the key~$k$ is known by an adversary.
