@@ -2,102 +2,100 @@
 \section{Security Properties} \label{sec:security_properties}
 %-------------------------------------------------------------------------------
 
+In this section, we formally define the security properties of third-party online payment protocols.
+The core security goal of such protocols is to ensure that the user, the merchant, and the payment service provider reach a consistent and unambiguous view of a transaction.
+In particular, the protocol must guarantee that (a) all parties agree on the payment order being processed, (b) each payment is explicitly authorized by the user, and (c) the reported payment result faithfully reflects the actual fund transfer.
 
-In this section, we formally model the security properties of third-party online payment protocols.
-The primary objective of a third-party online payment protocol is to ensure that 
-the merchant, the user, and the service provider reach a consistent view of the transaction status, thereby enabling secure fund transfers.
-Specifically, it guarantees the authentication of the payment order and the payment result among the three parties.
-The properties discussed in this section all fall under the notion of \emph{injective agreement}~\cite{Lowe1997AuthenticationHierarchy}.
+All properties considered in this section are instances of \emph{injective agreement}~\cite{Lowe1997AuthenticationHierarchy}.
+Injective agreement strengthens standard agreement by additionally requiring a one-to-one correspondence between protocol runs: 
+each successful local completion must correspond to a unique execution of the peer, thereby ruling out replay, duplication, or reuse of protocol messages.
+Formally, two types of atomic facts are necessary to define injective agreement:
+\begin{enumerate}
+  \item $\mathsf{Running}(A,B,x)$: 
+    records that party $A$ is interacting with $B$ in a concrete execution of the protocol and that the interaction involves data $x$ (an objective execution fact);
+  \item $\mathsf{Commit}(A,B,x)$:
+    denotes that party $A$ subjectively believes that it has reached agreement with $B$ on data $x$ (e.g., after receiving and accepting a message).
+\end{enumerate}
+This notion is particularly well-suited for online payment scenarios, where both consistency and uniqueness of transactions are essential.
+We structure the security properties according to the logical progression of a payment protocol: 
+agreement on the \emph{order}, agreement on \emph{user authorization}, and agreement on the \emph{result}.
+
 
 \subsection{Injective Agreement on Order}
 
-The injective agreement on orders is one of the most fundamental properties of third-party online payment protocols.
-This property ensures that, during the execution of a third-party online payment protocol, \emph{U}, \emph{PS}, and \emph{MS} are processing the same order.
-Once this property is violated, it implies that an attacker is able to tamper the user's order.
-As the property involves three parties, we consider the agreement between \emph{PS} and \emph{MS}, and the agreement between \emph{U} and \emph{MS} separately.
+Injective agreement on the order ensures that all involved parties process the same payment order and that each order is handled at most once.
+Violations of this property indicate that an adversary may have tampered with the order information or caused inconsistent views among the participants.
+Since this property involves three principals, we separately consider the agreements between \emph{PS} and \emph{MS}, and between \emph{U} and \emph{MS}.
 
 \paragraph{IA-O1~(\emph{PS} $\leftarrow$ \emph{MS}):} 
-From the perspective of \emph{PS}, the injective agreement with \emph{MS} on the payment order can be described as follows. 
-If \emph{PS} processes a payment request for some order purportedly from \emph{MS}, 
-then \emph{MS} must have previously submitted a payment request for that order.
-Moreover, \emph{PS} cannot approve another payment request for the same order. 
-This lemma is formalized in first-order logic below:
+This lemma captures injective agreement on the order from the perspective of \emph{PS}.
+If \emph{PS} accepts a payment request for an order allegedly issued by \emph{MS}, then \emph{MS} must have previously initiated a corresponding request for that order.
+Moreover, no other payment request for the same order can be accepted by \emph{PS}, ensuring uniqueness.
+The property is formalized as follows:
 \begin{flalign*}
   \TAll \; \text{\Tterm{ps}} & \text{\Tterm{ ms order \#i.}} \; \text{\TFact{PSCommit(ps, ms, order)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, ps, order)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{ps2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{PSCommit(ps2, ms2, order)@\#i2}}) 
 \end{flalign*}
-The facts \emph{Commit} and \emph{Running} were introduced in~\cite{Lowe1997AuthenticationHierarchy}.
-A \emph{Commit} fact represents a participant's subjective belief about the local state of its communication peer.
-In contrast, a \emph{Running} fact objectively records the actual execution state of the peer in the protocol.
-Together, \emph{Commit} and \emph{Running} facts are used to formally specify authentication properties.
-In our model, the occurrence of \TFact{PSCommit(ps, ms, order)} indicates that the payment request for \Tterm{order} submitted by \emph{MS} is accepted by \emph{PS}.
-The fact \TFact{MSRunning(ms, ps, order)} represents that \emph{MS} has submitted a payment request for \Tterm{order} to \emph{PS}.
-The term \Tterm{order} denotes an order that requires user authorization for payment, including information such as the merchant's order identifier, the amount, and a description.
+Here, the \emph{Commit} and \emph{Running} facts follow the standard interpretation introduced in~\cite{Lowe1997AuthenticationHierarchy}.
+The fact \TFact{PSCommit(ps, ms, order)} denotes that \emph{PS} has accepted a payment request for \Tterm{order}, 
+while \TFact{MSRunning(ms, ps, order)} records that \emph{MS} has actually issued such a request.
+The term \Tterm{order} denotes all security-critical order information, including the merchant's order identifier, the payment amount, and the product description.
 
 \paragraph{IA-O2~(\emph{U} $\leftarrow$ \emph{MS}):} 
-From the user's perspective, the injective agreement with \emph{MS} on the payment order is defined as follows. 
-If \emph{U} authorizes the payment of an order, then it implies that \emph{MS} must have submitted a request for that order.
-Similarly, this lemma is formalized in first-order logic below.
+From the user’s perspective, injective agreement on the order ensures that the user and the merchant reach agreement on order information during the payment process, and that each order is processed exactly once.
+The formalization is as follows:
 \begin{flalign*}
   \TAll \; \text{\Tterm{u }} & \text{\Tterm{ms goods \#i.}} \; \text{\TFact{UMCommit(u, ms, goods)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, u, goods)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{u2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{UMCommit(u2, ms2, goods)@\#i2}}) 
 \end{flalign*}
-A merchant's order identifier is a long string of random characters and is very difficult for a user to distinguish.
-During the \emph{Payment} phase, a user can typically decide whether to authorize the payment only based on the information of the goods selected during the \emph{Ordering} phase.
-Therefore, in this lemma, we use the term \Tterm{goods} to denote the user's order.
-Accordingly, the fact \TFact{UMCommit(u, ms, goods)} represents that the user has authorized the payment for the order corresponding to the purchase of \Tterm{goods}.
-The fact \TFact{MSRunning(ms, u, goods)} represents that the merchant has initiated a payment request for this order.
+Unlike the order information considered in IA-O1, IA-O2 only requires agreement between the user and the merchant on the purchased goods, since the user is primarily concerned with what is being bought.
 
-\subsection{Injective Agreement on Result}
-The payment result is another message that needs to be protected in third-party online payment protocols.
-If the agreement on the payment result is violated, 
-it means that an attacker can deceive the user or the merchant into believing that a transaction has been completed, 
-even though the fund transfer has not actually taken place.
-Similarly, we separately study the agreement on the payment result between \emph{MS} and \emph{PS}, and between \emph{U} and \emph{PS}.
-  
-\paragraph{IA-R1~(\emph{MS} $\leftarrow$ \emph{PS}):} 
-With respect to agreement on the payment result, from the perspective of \emph{MS}, 
-if \emph{MS} receives a notification indicating a successful payment, then \emph{PS} must have sent this notification, 
-and moreover, for the same order, \emph{MS} will not receive a second successful payment notification.
-The corresponding first-order logic formulation is given below:
-\begin{flalign*}
-  \TAll \; \text{\Tterm{ms}} & \text{\Tterm{ ps order \#i.}} \; \text{\TFact{MSCommit(ms, ps, order)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, ms, order)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{ms2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{MSCommit(ms2, ps2, order)@\#i2}}) 
-\end{flalign*}
-In this lemma, the fact \TFact{MSCommit(ms, ps, order)} represents that \emph{MS} has received a successful payment notification for \Tterm{order}.
-The fact \TFact{PSRunning(ps, ms, order)} represents that \emph{PS} has sent a successful payment notification for the order \Tterm{order}.
-Similar to the agreement on the payment order, the term \Tterm{order} here should also encompass all critical information of the order.
 
-\paragraph{IA-R2~(\emph{U} $\leftarrow$ \emph{PS}):} 
-From \emph{U}’s perspective, agreement on the payment result means that if \emph{U} observes a successful payment indication on the \emph{PS-App}, 
-then \emph{PS} must have sent a corresponding successful payment notification to \emph{U}, 
-and moreover, a successful payment notification for a given order will be received at most once.
-\begin{flalign*}
-  \TAll \; \text{\Tterm{u }} & \text{\Tterm{ps goods \#i.}} \; \text{\TFact{UPCommit(u, ps, goods)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, u, goods)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{u2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{UPCommit(u2, ps2, goods)@\#i2}}) 
-\end{flalign*}
-In this lemma, the fact \TFact{UPCommit(u, ps, goods)} represents that \emph{U} has received a successful payment notification for the order corresponding to the purchase of \Tterm{goods}.
-The fact \TFact{PSRunning(ps, u, goods)} represents that \emph{PS} has sent a successful payment notification for this order to \emph{U} .
+\subsection{Injective Agreement on User Authorization}
 
-\subsection{Injective Agreement of User}
+Injective agreement on user authorization ensures that each successful payment is backed by a unique and explicit authorization from the user.
+This property prevents both unauthorized payments and reuse of a single authorization to complete multiple transactions.
 
-\paragraph{IA-U~(\emph{PS} $\leftarrow$ \emph{U}):} 
-The injective agreement of the user is intended to guarantee that each successful payment is authorized by a corresponding password input from \emph{U}, 
-and that each password input can authorize payment at most once.
-It can be described in first-order logic as follows:
+\paragraph{IA-U~(\emph{PS} $\leftarrow$ \emph{U}):}
+Specifically, if \emph{PS} completes a payment based on a password hash, then the corresponding password must have been input by \emph{U}, and each password input can authorize at most one payment:
 \begin{flalign*}
   \TAll \; \text{\Tterm{u }} & \text{\Tterm{p s \#i.}} \; \text{\TFact{PaymentComplete(u, h(p), s)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{UserInputPwd(u, p, s)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{u2 p2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{PaymentComplete(u2, h(p2), s)@\#i2}}) 
 \end{flalign*}
-In the lemma, the fact \TFact{UserInputPwd(u, p, s)} represents that the user \Tterm{u} inputs the password \Tterm{p} in a session \Tterm{s} to authorize a payment.
-The fact \TFact{PaymentComplete(u, h(p), s)} represents that \emph{PS} has received the hash value \Tterm{h(p)} of the password \Tterm{p} sent by \Tterm{u}, and has completed the payment.
+In this lemma, the fact \TFact{UserInputPwd(u, p, s)} represents that the user \Tterm{u} inputs the password \Tterm{p} in a session \Tterm{s} to authorize a payment.
+The fact \TFact{PaymentComplete(u, h(p), s)} denotes that \emph{PS} has received the hash value \Tterm{h(p)} of the password \Tterm{p} sent by \Tterm{u}, and has completed the payment.
+
+
+\subsection{Injective Agreement on Result}
+
+Finally, injective agreement on the payment result guarantees that successful payment notifications cannot be forged, replayed, or duplicated.
+A violation of this property would allow an adversary to falsely convince the user or the merchant that a payment has been completed, even though no actual fund transfer has occurred.
+We again consider the perspectives of \emph{MS} and \emph{U} separately.
+
+\paragraph{IA-R1~(\emph{MS} $\leftarrow$ \emph{PS}):}
+From the merchant's view, if \emph{MS} receives a successful payment notification for an order, then this notification must have been generated by \emph{PS}.
+Furthermore, \emph{MS} must not receive multiple successful notifications for the same order.
+This requirement is captured by the following lemma:
+\begin{flalign*}
+  \TAll \; \text{\Tterm{ms}} & \text{\Tterm{ ps order \#i.}} \; \text{\TFact{MSCommit(ms, ps, order)@\#i}} &\\
+  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, ms, order)@\#j}} \; \land\\
+  \lnot \; &(\;\TEx \; \text{\TLemma{ms2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
+  & \hspace{2em} \text{\TFact{MSCommit(ms2, ps2, order)@\#i2}}) 
+\end{flalign*}
+
+\paragraph{IA-R2~(\emph{U} $\leftarrow$ \emph{PS}):}
+Similarly, from the user’s perspective, if \emph{U} observes a successful payment indication in the payment application, then \emph{PS} must have sent a corresponding notification.
+Each order can lead to at most one such notification.
+Formally:
+\begin{flalign*}
+  \TAll \; \text{\Tterm{u }} & \text{\Tterm{ps goods \#i.}} \; \text{\TFact{UPCommit(u, ps, goods)@\#i}} &\\
+  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, u, goods)@\#j}} \; \land\\
+  \lnot \; &(\;\TEx \; \text{\TLemma{u2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
+  & \hspace{2em} \text{\TFact{UPCommit(u2, ps2, goods)@\#i2}}) 
+\end{flalign*}
