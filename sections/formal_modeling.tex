@@ -3,9 +3,8 @@
 %-------------------------------------------------------------------------------
 We formally model the payment protocols of WeChat Pay and Alipay across three payment scenarios, and the complete models are available in an open-source repository~\cite{Repo2025FormalModels}.
 In this section, we present the key details in modeling third-party payment protocols.
-First, we introduce how a generalized channel model is incorporated into third-party payment protocols to flexibly capture different channel assumptions.
-Then, we describe the user model, which allows us to accurately capture users' evaluation of payment information and their authorization behavior within the symbolic model.
-Finally, we explain how to use an Order Oracle to model the adversary’s capability to obtain legitimate payment parameters.
+First, we describe the user model, which allows us to accurately capture users' evaluation of payment information and their authorization behavior within the symbolic model.
+Then, we introduce oracle models to capture the adversary's capability to obtain legitimate payment parameters.
 
 % \subsection{Channel Model}
 % We introduce appropriate modifications to the standard secure channel model in order to systematically model different channels and security assumptions.
@@ -45,9 +44,9 @@ Finally, we explain how to use an Order Oracle to model the adversary’s capabi
 % This restriction specifies that the channels between \emph{MF} and \emph{MS}, and between \emph{MF} and \emph{PS}, are insecure.
 
 \subsection{User Model} 
-Under our security assumptions, users are capable of accurately identifying the payment amount and product description, thereby avoiding being misled into authorizing a payment.
+Under our security assumptions, users are capable of accurately identifying the payment $amount$ and $description$, thereby avoiding being misled into authorizing a payment.
 To model this capability in the symbolic model, we introduce two unary functions, 
-\Tfunction{calc\_amt} and \Tfunction{gen\_desc}, which are used to compute the payment amount and the product description from goods information, respectively.
+\Tfunction{calc\_amt} and \Tfunction{gen\_desc}, which are used to compute the payment $amount$ and $description$ from $goods$, respectively.
 During the \emph{Ordering} phase, users select goods.
 For the same goods (note that this does not refer to the same product model), a user can only purchase them at most once. 
 Therefore, in our model, we use a fresh value as an abstract representation of the goods.
@@ -61,12 +60,13 @@ The following rule models the user's goods ordering behavior:
 \end{flalign*}
 This rule represents that the user \emph{U} selects a product $\TSymbolFr goods$ and sends it to \emph{MF}.
 Here, $\text{\TFact{Fr}}(\TSymbolFr goods)$ indicates that the value $\TSymbolFr goods$ is freshly generated.
+$\text{\TFact{Order}}(\TSymbolFr goods)$ indicates that the user has placed an order for the goods $\TSymbolFr goods$.
 In \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
 \begin{flalign*}
       amount & = \text{\Tfunction{calc\_amt}}(\TSymbolFr goods) &\\
       description & = \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)
 \end{flalign*}
-In \emph{Payment} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
+In \emph{Authorization} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
 Due to pattern matching, the user authorizes a payment if only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
 The following rule models the user's payment authorization behavior:
 \begin{flalign*}
@@ -75,31 +75,22 @@ The following rule models the user's payment authorization behavior:
       & \TEmpActFactSL{} \\
       \TFacts{& \text{\TFact{UserAuthorizePayment}}(...) }
 \end{flalign*}
+Here, \TFact{UserAuthorizePayment} indicates that the user authorizes the payment.
+Notably, the above model implies that users can accurately distinguish between different items, even when they belong to the same product model.
+In practice, users do not possess such capabilities, nor do merchant platforms provide functionality that allows users to select items based on product serial numbers.
+Nevertheless, this idealized user model helps us focus on analyzing the security of the payment protocol itself, without conflating the analysis with errors that users may make.
 
-\subsection{Order Oracle Modeling}
-
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=\linewidth]{img/black.png}
-%   \caption{Overview of the Order Oracle}
-%   \label{fig:order_oracle_overview}
-% \end{figure}
-
-In our threat model, the adversary is assumed to have the capability to obtain legitimate payment parameters from arbitrary merchant platforms.
-To model this capability in an intuitive and explicit manner, we introduce the concept of an \emph{Order Oracle}.
-Figure~\ref{fig:order_oracle_overview} illustrates the structure of the \emph{Order Oracle}.
-\emph{Order Oracle} takes two inputs: the payment amount $amount$ and the order description $description$.
-Upon receiving these two inputs, \emph{Order Oracle} generates payment parameters $pay\_params$ and returns them to the adversary.
-The generated $pay\_params$ constitute valid payment parameters accepted by the \emph{PS}.
-When $pay\_params$ are used for payment, the payment amount and order description displayed on the payment interface are consistent with the provided $amount$ and $description$.
-We model the Order Oracle using the following rule:
+\subsection{Adversarial Capabilities Model}
+In our threat model, the adversary is capable of obtaining arbitrary legitimate payment parameters.
+In practice, the adversary acquires such legitimate payment parameters by normally accessing merchant platforms and placing orders to purchase goods.
+To intuitively model this behavior in the symbolic model, we introduce an \emph{Order Oracle}, defined by the following rule.
 \begin{flalign*}
 \text{\Tterm{Ru}}  & \text{\Tterm{le OrderOracle}} :        & \\
-  \TFacts{  & \text{\TFactTerm{In}{<amount, description>}}} \\
+  \TFacts{  & \text{\TFactTerm{In}{<amount, description>}, \TFactTerm{!Merchant}{$priv_M$}}} \\
             & \TEmpActFactSL{}                              \\
-  \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params(amount, description)}}}}}
+  \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params(amount, description, $priv_M$)}}}}}
 \end{flalign*}
-\Tfunction{gen\_params} is a function that generates valid payment parameters $pay\_params$ based on the payment amount $amount$ and the order description $description$.
-This function is not deterministic. 
-In our formal model, \Tfunction{gen\_params} represents different payment-parameter generation procedures under different payment scenarios and protocols, 
-thereby producing payment parameters that are compliant with the corresponding protocol specifications.
+By querying this oracle with an order amount $amount$ and an order description $description$, the adversary can obtain the corresponding legitimate payment parameters.
+The oracle is granted access to the merchant’s private key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
+The function \Tfunction{gen\_params(amount, description, $priv_M$)} represents the process by which the oracle generates payment parameters from $amount$ and $description$.
+This process is consistent with the procedure used by merchants to generate payment parameters in both Payment Model~A and Payment Model~B.
