@@ -7,42 +7,42 @@ First, we introduce how a generalized channel model is incorporated into third-p
 Then, we describe the user model, which allows us to accurately capture users' evaluation of payment information and their authorization behavior within the symbolic model.
 Finally, we explain how to use an Order Oracle to model the adversary’s capability to obtain legitimate payment parameters.
 
-\subsection{Channel Model}
-We introduce appropriate modifications to the standard secure channel model in order to systematically model different channels and security assumptions.
-We use the facts \TFact{SOut} and \TFact{SIn} to represent message sending and receiving over a channel.
-Messages transmitted over our secure channels are not replayable.
-Therefore, the message transmission process of the channel is simplified, and the rule is shown below.
-\begin{flalign*}
-\text{\Tterm{Ru}}  & \text{\Tterm{le SecureChannel}} :      & \\
-  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}  \\
-            & \TEmpActFactSL{}                                \\
-  \TFacts{  & \text{\TFactTerm{SIn}{ChannelID, A, B, m}}}
-\end{flalign*}
-Here, \Tterm{m} is the message transmitted over the channel, \Tterm{A} denotes the message sender, and \Tterm{B} denotes the message receiver.
-\Tterm{ChannelID} is a channel identifier that specifies which channel is used for communication.
-For example, when \Tterm{ChannelID} takes the value \Tterm{\textquotesingle U-PS\textquotesingle}, it denotes the communication channel between \emph{U} and \emph{PS}.
+% \subsection{Channel Model}
+% We introduce appropriate modifications to the standard secure channel model in order to systematically model different channels and security assumptions.
+% We use the facts \TFact{SOut} and \TFact{SIn} to represent message sending and receiving over a channel.
+% Messages transmitted over our secure channels are not replayable.
+% Therefore, the message transmission process of the channel is simplified, and the rule is shown below.
+% \begin{flalign*}
+% \text{\Tterm{Ru}}  & \text{\Tterm{le SecureChannel}} :      & \\
+%   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}  \\
+%             & \TEmpActFactSL{}                                \\
+%   \TFacts{  & \text{\TFactTerm{SIn}{ChannelID, A, B, m}}}
+% \end{flalign*}
+% Here, \Tterm{m} is the message transmitted over the channel, \Tterm{A} denotes the message sender, and \Tterm{B} denotes the message receiver.
+% \Tterm{ChannelID} is a channel identifier that specifies which channel is used for communication.
+% For example, when \Tterm{ChannelID} takes the value \Tterm{\textquotesingle U-PS\textquotesingle}, it denotes the communication channel between \emph{U} and \emph{PS}.
 
-To model insecure channels, we introduce two additional attack rules for such channels, corresponding to violations of channel confidentiality and integrity, respectively.
-\begin{flalign*}
-\text{\Tterm{Ru}}  & \text{\Tterm{le BreakConfidentiality}} :                   & \\
-  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}} }                     \\
-            & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
-  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}, \TFactTerm{Out}{m}}}  \\ \\
-\text{\Tterm{Ru}}  & \text{\Tterm{le BreakIntegrity}} :                         \\
-  \TFacts{  & \text{\TFactTerm{In}{\TPairN{ChannelID, A, B, m}}} }              \\
-            & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
-  \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}                      
-\end{flalign*}
-Compromising confidentiality grants the adversary the ability to obtain messages from the channel, while compromising integrity grants the adversary the ability to inject arbitrary messages into the channel.
-\TFact{In} and \TFact{Out} are built-in facts of the Tamarin prover that represent receiving messages from, and sending messages to, the public channel.
-The fact \TFact{InsecureChannel} is used to label a channel as insecure. 
-We use a restriction to constrain the adversary so that it can compromise only the channels specified under a given channel assumption.
-\begin{flalign*}
-\text{\Tterm{Re}}  & \text{\Tterm{striction Insecure}} :            & \\
-    & \TAll \; \text{\Tterm{ch\_id k \#i.}} \; \text{\TFact{InsecureChannel(ch\_id)@\#i}} \\
-    & \implies (\text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-MS\textquotesingle}} \; \lor \; \text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-PS\textquotesingle}} ) 
-\end{flalign*}
-This restriction specifies that the channels between \emph{MF} and \emph{MS}, and between \emph{MF} and \emph{PS}, are insecure.
+% To model insecure channels, we introduce two additional attack rules for such channels, corresponding to violations of channel confidentiality and integrity, respectively.
+% \begin{flalign*}
+% \text{\Tterm{Ru}}  & \text{\Tterm{le BreakConfidentiality}} :                   & \\
+%   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}} }                     \\
+%             & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
+%   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}, \TFactTerm{Out}{m}}}  \\ \\
+% \text{\Tterm{Ru}}  & \text{\Tterm{le BreakIntegrity}} :                         \\
+%   \TFacts{  & \text{\TFactTerm{In}{\TPairN{ChannelID, A, B, m}}} }              \\
+%             & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
+%   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}                      
+% \end{flalign*}
+% Compromising confidentiality grants the adversary the ability to obtain messages from the channel, while compromising integrity grants the adversary the ability to inject arbitrary messages into the channel.
+% \TFact{In} and \TFact{Out} are built-in facts of the Tamarin prover that represent receiving messages from, and sending messages to, the public channel.
+% The fact \TFact{InsecureChannel} is used to label a channel as insecure. 
+% We use a restriction to constrain the adversary so that it can compromise only the channels specified under a given channel assumption.
+% \begin{flalign*}
+% \text{\Tterm{Re}}  & \text{\Tterm{striction Insecure}} :            & \\
+%     & \TAll \; \text{\Tterm{ch\_id k \#i.}} \; \text{\TFact{InsecureChannel(ch\_id)@\#i}} \\
+%     & \implies (\text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-MS\textquotesingle}} \; \lor \; \text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-PS\textquotesingle}} ) 
+% \end{flalign*}
+% This restriction specifies that the channels between \emph{MF} and \emph{MS}, and between \emph{MF} and \emph{PS}, are insecure.
 
 \subsection{User Model} 
 Under our security assumptions, users are capable of accurately identifying the payment amount and product description, thereby avoiding being misled into authorizing a payment.
