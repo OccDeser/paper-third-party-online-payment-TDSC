@@ -62,13 +62,18 @@ The attack procedure can be summarized as follows:
 As a result, the attack successfully achieves order tampering, causing the user to ultimately pay for an order specified by the attacker.
 
 \subsection{Impact Assessment}
-To assess the impact of this vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
-Specifically, we analyzed 150 popular Android applications, considering up to their three most recent versions, as well as the latest versions of 50 games, resulting in a total of 462 app versions.
-The results show that 58 of the analyzed applications and games are affected by the aforementioned vulnerability, accounting for more than 20\% of the dataset.
-These affected applications span multiple categories, including e-commerce, social media, online education, and entertainment.
-Notably, the affected applications collectively exceed 100 million downloads, indicating that a large number of users may be impacted by this vulnerability.
+To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
+Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game, resulting in a total of 461 app versions.
+
+Among these versions, 419 support WeChat Pay and 401 support Alipay.
+Our analysis reveals that 64 WeChat Pay–enabled versions and 72 Alipay-enabled versions are vulnerable.
+In total, 116 app versions (more than 25\% of the analysed dataset) are found to be vulnerable, meaning that at least one of the integrated payment SDKs is affected.
+
+The vulnerable applications span a wide range of categories, including e-commerce, social networking, online education, and entertainment.
+More importantly, the cumulative number of downloads of these vulnerable applications reaches 265.85 billion, indicating that the vulnerability potentially affects a very large user base and poses a significant security risk in practice.
 
 \subsection{Responsible Disclosure}
-We have reported these findings to the security teams of both WeChat Pay and Alipay, and received their acknowledgment and attention.
-As of the time of writing, Alipay has addressed this vulnerability and released the fix in its latest version.
-For WeChat Pay, the corresponding mitigation is still under development and is expected to be released in a future version.In addition, we contacted the developers of the 58 affected Android applications and games, recommending that they update their payment integration by adopting explicit Intents to ensure the secure transmission of payment requests.
+In December 2025, we responsibly reported this vulnerability to the security teams of WeChat Pay and Alipay, both of which acknowledged the issue and treated it with high priority.
+As of the time of writing, Alipay has committed to fixing the vulnerability by the end of January 2026, and WeChat Pay is likewise actively working on a patch.
+In addition, we contacted the developers of xxx affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
+We received positive responses from xxx developers, who indicated that they would update their applications promptly to address the issue.

@@ -38,10 +38,10 @@ def generate_lemma_results_table(json_file, latex_file):
         data = json.load(f)
 
     columns = [
+      "Assumption",
       "Provider",
       "Scenario",
       "Model",
-      "Assumption",
       "\\; IA-O1 \\;",
       "\\; IA-O2 \\;",
       "\\; IA-UA \\;",
@@ -66,13 +66,10 @@ def generate_lemma_results_table(json_file, latex_file):
         if entry["Assumption"] != "Base" and entry["Protocol"] == "Alipay-In-App":
             lines.append("\\midrule")
         line = ""
-        if "Alipay" in entry["Protocol"]:
-          line += "Alipay" + " & "
-        else:
-          line += "WeChatPay" + " & "
+        line += entry["Assumption"] + " & "
+        line += "Alipay" + " & " if "Alipay" in entry["Protocol"] else "WeChatPay" + " & "
         line += "-".join(entry["Protocol"].split("-")[1:]) + " & "
         line += entry["Model"] + " & "
-        line += entry["Assumption"] + " & "
         line += to_latex_symbol(entry["IA-O1"]) + " & "
         line += to_latex_symbol(entry["IA-O2"]) + " & "
         line += to_latex_symbol(entry["IA-UA"]) + " & "
