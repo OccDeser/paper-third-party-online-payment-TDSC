@@ -10,23 +10,23 @@ Our analysis shows that as long as an insecure channel exists between the mercha
 Our real-world attack reproduction experiments further corroborate this conclusion.
 Based on these findings, we propose and formally verify a user-side order authentication mechanism, fundamentally breaking the tampering chain while balancing security and compatibility within the payment workflow.
 
-The main contributions of this paper are as follows:
-\begin{enumerate}
-  \item \textbf{A unified formal abstraction of third-party online payments.}
-    We systematically characterize the roles and interaction boundaries among users, merchant frontends/servers, and payment systems, and abstract three common payment scenarios and two payment models into a unified semantic framework that is reusable for payment protocol security analysis.
-  \item \textbf{A general security model for online payments.}
-    We define and formalize core security properties surrounding the consistency of orders and payment results, as well as replay resistance, with a particular emphasis on injective agreement, and conduct proofs and counterexample searches for multiple protocol instances under realistic non–fully-secure channel assumptions.
-  \item \textbf{Revealing and validating pervasive order tampering attacks.}
-    Our formal verification results provide necessary and sufficient conditions for successful attacks when MF--MS or MF--PS channels are insecure. 
-    We identify two major attack variants and explain their transferability and reusability across different scenarios and payment models.
-  \item \textbf{Reproducing real-world vulnerabilities and quantifying their impact.}
-    On the Android platform, we discover that a large number of merchant apps are vulnerable to order hijacking and tampering due to their use of implicit Intents for interacting with payment apps. 
-    We successfully carry out attacks and, through large-scale measurements, find that approximately $20\%$ of the evaluated applications are affected, impacting hundreds of millions of users. 
-    We further conduct responsible disclosure and facilitate remediation by platforms and merchants.
-  \item \textbf{A deployable and formally verified defense \\ mechanism.}
-    Our user-side order authentication mechanism binds a user public key at the granularity of user–merchant pairs, tightly coupling payment authorization with order semantics. 
-    Under insecure channel assumptions, we formally prove that it satisfies all defined security properties, and discuss its compatibility with existing platforms and its deployment costs.
-\end{enumerate}
+% The main contributions of this paper are as follows:
+% \begin{enumerate}
+%   \item \textbf{A unified formal abstraction of third-party online payments.}
+%     We systematically characterize the roles and interaction boundaries among users, merchant frontends/servers, and payment systems, and abstract three common payment scenarios and two payment models into a unified semantic framework that is reusable for payment protocol security analysis.
+%   \item \textbf{A general security model for online payments.}
+%     We define and formalize core security properties surrounding the consistency of orders and payment results, as well as replay resistance, with a particular emphasis on injective agreement, and conduct proofs and counterexample searches for multiple protocol instances under realistic non–fully-secure channel assumptions.
+%   \item \textbf{Revealing and validating pervasive order tampering attacks.}
+%     Our formal verification results provide necessary and sufficient conditions for successful attacks when MF--MS or MF--PS channels are insecure. 
+%     We identify two major attack variants and explain their transferability and reusability across different scenarios and payment models.
+%   \item \textbf{Reproducing real-world vulnerabilities and quantifying their impact.}
+%     On the Android platform, we discover that a large number of merchant apps are vulnerable to order hijacking and tampering due to their use of implicit Intents for interacting with payment apps. 
+%     We successfully carry out attacks and, through large-scale measurements, find that approximately $20\%$ of the evaluated applications are affected, impacting hundreds of millions of users. 
+%     We further conduct responsible disclosure and facilitate remediation by platforms and merchants.
+%   \item \textbf{A deployable and formally verified defense \\ mechanism.}
+%     Our user-side order authentication mechanism binds a user public key at the granularity of user–merchant pairs, tightly coupling payment authorization with order semantics. 
+%     Under insecure channel assumptions, we formally prove that it satisfies all defined security properties, and discuss its compatibility with existing platforms and its deployment costs.
+% \end{enumerate}
 
 From a broader perspective, our work offers three important insights for the security research of online payment systems.
 First, the security of payment protocols must not rely on idealized assumptions of fully secure channels, but instead explicitly account for cross-application interactions and channel degradation risks inherent in the mobile ecosystem.
