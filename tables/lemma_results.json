@@ -1,0 +1,202 @@
+[
+    {
+      "Assumption": "Base",
+      "Protocol": "Alipay-In-App",
+      "Model": "A",
+      "IA-O1": false,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 265.80
+    },
+    {
+      "Assumption": "Base",
+      "Protocol": "Alipay-Mobile-Web",
+      "Model": "A",
+      "IA-O1": false,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 266.22
+    },
+    {
+      "Assumption": "Base",
+      "Protocol": "Alipay-QR-Code",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 606.59
+    },
+    {
+      "Assumption": "Base",
+      "Protocol": "WeChatPay-In-App",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 562.21
+    },
+    {
+      "Assumption": "Base",
+      "Protocol": "WeChatPay-Mobile-Web",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 88.18
+    },
+    {
+      "Assumption": "Base",
+      "Protocol": "WeChatPay-QR-Code",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 123.89
+    },
+
+    {
+      "Assumption": "SecureMS",
+      "Protocol": "Alipay-In-App",
+      "Model": "A",
+      "IA-O1": false,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 13.94
+    },
+    {
+      "Assumption": "SecureMS",
+      "Protocol": "Alipay-Mobile-Web",
+      "Model": "A",
+      "IA-O1": false,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 14.39
+    },
+    {
+      "Assumption": "SecureMS",
+      "Protocol": "Alipay-QR-Code",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 73.57
+    },
+    {
+      "Assumption": "SecureMS",
+      "Protocol": "WeChatPay-In-App",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 19.96
+    },
+    {
+      "Assumption": "SecureMS",
+      "Protocol": "WeChatPay-Mobile-Web",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 7.73
+    },
+    {
+      "Assumption": "SecureMS",
+      "Protocol": "WeChatPay-QR-Code",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 7.22
+    },
+
+    {
+      "Assumption": "SecurePS",
+      "Protocol": "Alipay-In-App",
+      "Model": "A",
+      "IA-O1": false,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 19.55
+    },
+    {
+      "Assumption": "SecurePS",
+      "Protocol": "Alipay-Mobile-Web",
+      "Model": "A",
+      "IA-O1": false,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 18.20
+    },
+    {
+      "Assumption": "SecurePS",
+      "Protocol": "Alipay-QR-Code",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 155.14
+    },
+    {
+      "Assumption": "SecurePS",
+      "Protocol": "WeChatPay-In-App",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 159.02
+    },
+    {
+      "Assumption": "SecurePS",
+      "Protocol": "WeChatPay-Mobile-Web",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 20.66
+    },
+    {
+      "Assumption": "SecurePS",
+      "Protocol": "WeChatPay-QR-Code",
+      "Model": "B",
+      "IA-O1": true,
+      "IA-O2": false,
+      "IA-UA": true,
+      "IA-R1": true,
+      "IA-R2": true,
+      "Time": 26.77
+    }
+]

@@ -61,17 +61,40 @@
 \usepackage{enumitem}
 \usepackage{amssymb} 
 \usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{pifont}
 
-% my coustom colors
-\definecolor{xhs_blue}{HTML}{364FC7}
-\definecolor{xhs_blue_dark}{HTML}{081C59}
-\definecolor{xhs_blue_light}{HTML}{EDF2FF}
+% --------- DEFINE COLORS ---------
+% Blue 系
+\definecolor{blue}{RGB}{76,114,176}        % 沉稳学术蓝
+\definecolor{navy}{RGB}{59,72,99}           % 深藏青
+\definecolor{steelblue}{RGB}{102,139,171}   % 钢蓝
 
-\definecolor{xhs_red}{HTML}{c13c33}
-\definecolor{xhs_green}{HTML}{3c5840}
+% Red 系
+\definecolor{red}{RGB}{172,31,24}           % 暗红（非警告型）
+\definecolor{maroon}{RGB}{128,70,70}        % 学术酒红
+\definecolor{brick}{RGB}{150,90,75}         % 砖红
 
-\definecolor{xhs_all}{HTML}{9f1f31}
-\definecolor{xhs_ex}{HTML}{2885a9}
+% Green 系
+\definecolor{green}{RGB}{90,140,120}        % 灰绿色
+\definecolor{olive}{RGB}{120,130,90}        % 橄榄绿
+\definecolor{forest}{RGB}{80,110,95}        % 深林绿
+
+% Yellow / Orange 系
+\definecolor{orange}{RGB}{200,140,90}       % 低饱和橙
+\definecolor{goldenrod}{RGB}{170,145,85}    % 学术金
+\definecolor{sand}{RGB}{190,175,140}        % 沙色
+
+% Purple 系
+\definecolor{purple}{RGB}{130,110,150}      % 灰紫
+\definecolor{plum}{RGB}{120,95,125}         % 李子紫
+\definecolor{violet}{RGB}{145,130,170}      % 冷紫
+
+% Gray 系（强烈推荐学术使用）
+\definecolor{gray}{RGB}{130,130,130}
+\definecolor{darkgray}{RGB}{90,90,90}
+\definecolor{lightgray}{RGB}{200,200,200}
+% ---------------------------------
 
 % my coustom commands
 \newcommand{\rom}[1]{\romannumeral #1}
@@ -99,8 +122,8 @@
 \newcommand{\TLetS}[0]{\text{\Tterm{let}} \hspace{0.5em}}
 \newcommand{\TInS}[0]{\text{\Tterm{in}} \hspace{0.5em}}
 
-\newcommand{\TAll}[0]{\text{\textcolor{xhs_all}{\TLemma{All}}}}
-\newcommand{\TEx}[0]{\text{\textcolor{xhs_ex}{\TLemma{Ex}}}}
+\newcommand{\TAll}[0]{\text{\textcolor{red}{\TLemma{All}}}}
+\newcommand{\TEx}[0]{\text{\textcolor{green!80!black}{\TLemma{Ex}}}}
 \newcommand{\TNot}[0]{\text{\TLemma{not}}}
 
 \newcommand{\Tterm}[1]{{\ttfamily #1}}

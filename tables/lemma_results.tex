@@ -2,44 +2,46 @@
 \begin{table*}[t]
 \centering
 \small
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.12}
-\begin{tabular}{lcccccc}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.15}
+
+\caption{
+      \textbf{Security Property Satisfaction of Third‑Party Online Payment Protocols.}
+      Each protocol is evaluated under three channel security assumptions. 
+      IA-O1/O2, IA-UA, IA-R1/R2 denote the security properties defined in Section~\ref{sec:security_properties}.
+      \textcolor{green}{\ding{51}} indicates that the security property is satisfied, while \textcolor{red}{\ding{55}} indicates a violation.
+      Time reports the total analysis time.
+    }
+\label{tab:lemma-results}
+
+\begin{tabularx}{\textwidth}{XXXXcccccr}
 \toprule
-\textbf{Payment} &
-\textbf{Time(s)} &
-\textbf{PS-MS-O-IA} &
-\textbf{U-MS-O-IA} &
-\textbf{MS-PS-R-IA} &
-\textbf{U-PS-R-IA} &
-\textbf{No-Pay-Without-Pwd} \\
+
+\textbf{Provider} & \textbf{Scenario} & \textbf{Model} & \textbf{Assumption} & \textbf{\; IA-O1 \;} & \textbf{\; IA-O2 \;} & \textbf{\; IA-UA \;} & \textbf{\; IA-R1 \;} & \textbf{\; IA-R2 \;} & \textbf{Time (s)}\\
+
 \midrule
 
-\multicolumn{7}{l}{\textbf{base}}\\
-\quad \texttt{alipay\_app}         & 265.80 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_mobile\_web} & 266.22 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_order\_code} & 606.59 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_app}    & 562.21 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_h5}     &  88.18 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_native} & 123.89 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+Alipay & In-App & A & Base & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 265.8 \\
+Alipay & Mobile-Web & A & Base & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 266.22 \\
+Alipay & QR-Code & B & Base & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 606.59 \\
+WeChatPay & In-App & B & Base & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 562.21 \\
+WeChatPay & Mobile-Web & B & Base & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 88.18 \\
+WeChatPay & QR-Code & B & Base & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 123.89 \\
 \midrule
-
-\multicolumn{7}{l}{\textbf{sc\_ms}}\\
-\quad \texttt{alipay\_app}         & 13.94 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_mobile\_web} & 14.39 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_order\_code} & 73.57 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_app}    & 19.96 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_h5}     &  7.73 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_native} &  7.22 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+Alipay & In-App & A & SecureMS & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 13.94 \\
+Alipay & Mobile-Web & A & SecureMS & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 14.39 \\
+Alipay & QR-Code & B & SecureMS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 73.57 \\
+WeChatPay & In-App & B & SecureMS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 19.96 \\
+WeChatPay & Mobile-Web & B & SecureMS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 7.73 \\
+WeChatPay & QR-Code & B & SecureMS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 7.22 \\
 \midrule
+Alipay & In-App & A & SecurePS & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 19.55 \\
+Alipay & Mobile-Web & A & SecurePS & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 18.2 \\
+Alipay & QR-Code & B & SecurePS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 155.14 \\
+WeChatPay & In-App & B & SecurePS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 159.02 \\
+WeChatPay & Mobile-Web & B & SecurePS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 20.66 \\
+WeChatPay & QR-Code & B & SecurePS & \textcolor{green}{\ding{51}} & \textcolor{red}{\ding{55}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & \textcolor{green}{\ding{51}} & 26.77 \\
 
-\multicolumn{7}{l}{\textbf{sc\_ps}}\\
-\quad \texttt{alipay\_app}         & 19.55 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_mobile\_web} & 18.20 & $\times$     & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{alipay\_order\_code} &155.14 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_app}    &159.02 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_h5}     & 20.66 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-\quad \texttt{wechat\_pay\_native} & 26.77 & $\checkmark$ & $\times$     & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table*}

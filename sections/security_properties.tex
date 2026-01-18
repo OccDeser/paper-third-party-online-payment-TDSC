@@ -60,7 +60,7 @@ Unlike the order information considered in IA-O1, IA-O2 only requires agreement 
 Injective agreement on user authorization ensures that each successful payment is backed by a unique and explicit authorization from the user.
 This property prevents both unauthorized payments and reuse of a single authorization to complete multiple transactions.
 
-\paragraph{IA-U~(\emph{PS} $\leftarrow$ \emph{U}):}
+\paragraph{IA-UA~(\emph{PS} $\leftarrow$ \emph{U}):}
 Specifically, if \emph{PS} completes a payment based on a password hash, then the corresponding password must have been input by \emph{U}, and each password input can authorize at most one payment:
 \begin{flalign*}
   \TAll \; \text{\Tterm{u }} & \text{\Tterm{p s \#i.}} \; \text{\TFact{PaymentComplete(u, h(p), s)@\#i}} &\\
