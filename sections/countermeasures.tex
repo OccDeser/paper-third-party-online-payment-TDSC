@@ -1,7 +1,6 @@
 %-------------------------------------------------------------------------------
 % \section{Countermeasures} 
 %-------------------------------------------------------------------------------
-\input{tables/countermeasure.tex}
 
 % In this section, we analyze the causes of order tampering attacks and present our countermeasures.
 
@@ -34,32 +33,41 @@ This observation reveals a fundamental design flaw in current payment models.
   \centering
   \includegraphics[width=\linewidth]{img/cm_initial.pdf}
   \caption{Countermeasure Model For Initial Payment}
-  \label{fig:our_model_first}
+  \label{fig:our_model_initial}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/cm_regular.pdf}
   \caption{Countermeasure Model For Regular Payment}
-  \label{fig:our_model_non_first}
+  \label{fig:our_model_regular}
 \end{figure}
 
-Our payment model distinguishes between first-time and non-first-time payment scenarios, whose workflows are illustrated in Fig.~\ref{fig:our_model_first} and Fig.~\ref{fig:our_model_non_first}, respectively.
-At the beginning of the \emph{pre-payment phase} of a user's first-time payment, the merchant backend generates a public–private key pair $(Sk_{UA}, Pk_{UA})$ for the user, and then uses the merchant public key $Pk_M$ to sign $Pk_{UA}$ together with the order parameters before sending them to the payment server.
-When storing the pre-payment order, the payment server associates it with the public key $Pk_{UA}$ and returns the payment parameters to the merchant.
-Upon receiving the parameters, the merchant generates two signatures over the payment parameters using $Pk_M$ and $Pk_{UA}$, respectively, and sends both the signatures and the payment parameters to the merchant front-end application.
-During the \emph{payment phase}, the payment server transmits the order information together with the public key $Pk_{UA}$ to \emph{PS-App}.
-At this point, \emph{PS-App} notifies the user that this is the first payment to the merchant and asks whether the merchant should be trusted.
-If the user chooses to trust the merchant, \emph{PS-App} verifies both signatures and, upon successful verification, binds $Pk_{UA}$ to the merchant identifier and stores it locally; otherwise, the payment process is aborted.
+\input{tables/countermeasure.tex}
 
-In the non-first-time payment scenario, the \emph{pre-payment phase} is identical to that of Payment Model~B.
-During the \emph{payment phase}, the merchant similarly generates two signatures and sends the signatures together with the payment parameters to the merchant front-end application.
-When executing the payment, \emph{PS-App} first checks whether a public key $Pk_{UA}$ has already been bound locally to the merchant identifier.
-If such a binding exists, the user is considered to have trusted the merchant, and \emph{PS-App} verifies both signatures before prompting the user to confirm the order information and complete the payment.
-Otherwise, the application informs the user that the merchant is not yet trusted and asks whether to proceed with the payment.
+To fundamentally address order tampering attacks, we design and propose a new third-party payment model that introduces a user-side order authentication mechanism to effectively prevent such attacks.
+Our payment model distinguishes between \emph{initial} and \emph{regular} payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.~\ref{fig:our_model_regular}, respectively.
+For a given merchant and user, the first payment initiated by the user is defined as an \emph{initial} payment, while all later payments are defined as \emph{regular} payments.
+Our model is backward compatible with existing payment models, preserves most of their workflows, and enables payment service providers to deploy it incrementally without modifying the existing payment process.
 
-\subsection{Evaluation}
+At the beginning of the \emph{Prepayment} phase of a user's initial payment, \emph{MS} generates a public–private key pair $(priv_{UA}, pub_{UA})$ for \emph{U}, and then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them to \emph{PS}.
+Then, \emph{PS} temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~($id_{prepay}$) to the merchant.
+Upon receiving $id_{prepay}$, \emph{MS} generates two signatures over the payment parameters using $pub_M$ and $pub_{UA}$, respectively, and sends signatures and $id_{prepay}$ to \emph{MF}
+During the \emph{Authentication} phase, \emph{PS-Server} send the order information together with $pub_{UA}$ to \emph{PS-App}.
+At this point, \emph{PS-App} notifies the user that this is the first payment to the merchant and asks whether this merchant should be trusted.
+If the user chooses to trust the merchant, \emph{PS-App} verifies both signatures and, upon successful verification, binds $pub_{UA}$ to the merchant identifier and stores it locally;.
+Otherwise, the payment process is aborted.
 
-We formally modeled and verified the non-first-time payment scenario, and the results are summarized in Table~\ref{tab:countermeasure-results}.
-The analysis shows that under all three channel assumptions, the proposed payment model effectively defends against order tampering attacks and satisfies all security properties.
+In regular payments, the \emph{Prepayment} phase largely follows Payment Model~B.
+The only difference is that \emph{MS} additionally signs$id_{prepay}$ and $id_{M}$ using $priv_{UA}$.
+Then, \emph{PS-App} first checks whether a public key $pub_{UA}$ has already been bound locally to the merchant identifier.
+If such a binding exists, \emph{PS-App} verifies both signatures before prompting the user to confirm the order information and complete the payment.
+Otherwise, the application informs the user that the merchant is not trusted and asks whether to proceed with the payment.
+
+\subsection{Security Verification}
+
+We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
+The analysis shows that under all three channel assumptions, our regular payment model effectively defends against order tampering attacks and satisfies all security properties.
 This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
+Although our initial payment model does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, 
+the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
