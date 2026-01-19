@@ -11,18 +11,18 @@ Then, we introduce oracle models to capture the adversary's capability to obtain
 % We use the facts \TFact{SOut} and \TFact{SIn} to represent message sending and receiving over a channel.
 % Messages transmitted over our secure channels are not replayable.
 % Therefore, the message transmission process of the channel is simplified, and the rule is shown below.
-% \begin{flalign*}
+% \begin{tightflalign}
 % \text{\Tterm{Ru}}  & \text{\Tterm{le SecureChannel}} :      & \\
 %   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}  \\
 %             & \TEmpActFactSL{}                                \\
 %   \TFacts{  & \text{\TFactTerm{SIn}{ChannelID, A, B, m}}}
-% \end{flalign*}
+% \end{tightflalign}
 % Here, \Tterm{m} is the message transmitted over the channel, \Tterm{A} denotes the message sender, and \Tterm{B} denotes the message receiver.
 % \Tterm{ChannelID} is a channel identifier that specifies which channel is used for communication.
 % For example, when \Tterm{ChannelID} takes the value \Tterm{\textquotesingle U-PS\textquotesingle}, it denotes the communication channel between \emph{U} and \emph{PS}.
 
 % To model insecure channels, we introduce two additional attack rules for such channels, corresponding to violations of channel confidentiality and integrity, respectively.
-% \begin{flalign*}
+% \begin{tightflalign}
 % \text{\Tterm{Ru}}  & \text{\Tterm{le BreakConfidentiality}} :                   & \\
 %   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}} }                     \\
 %             & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
@@ -31,16 +31,16 @@ Then, we introduce oracle models to capture the adversary's capability to obtain
 %   \TFacts{  & \text{\TFactTerm{In}{\TPairN{ChannelID, A, B, m}}} }              \\
 %             & \TActFactsSL{ \text{\TFactTerm{InsecureChannel}{ChannelID}}}      \\
 %   \TFacts{  & \text{\TFactTerm{SOut}{ChannelID, A, B, m}}}                      
-% \end{flalign*}
+% \end{tightflalign}
 % Compromising confidentiality grants the adversary the ability to obtain messages from the channel, while compromising integrity grants the adversary the ability to inject arbitrary messages into the channel.
 % \TFact{In} and \TFact{Out} are built-in facts of the Tamarin prover that represent receiving messages from, and sending messages to, the public channel.
 % The fact \TFact{InsecureChannel} is used to label a channel as insecure. 
 % We use a restriction to constrain the adversary so that it can compromise only the channels specified under a given channel assumption.
-% \begin{flalign*}
+% \begin{tightflalign}
 % \text{\Tterm{Re}}  & \text{\Tterm{striction Insecure}} :            & \\
 %     & \TAll \; \text{\Tterm{ch\_id k \#i.}} \; \text{\TFact{InsecureChannel(ch\_id)@\#i}} \\
 %     & \implies (\text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-MS\textquotesingle}} \; \lor \; \text{\Tterm{ch\_id}} = \text{\Tterm{\textquotesingle MF-PS\textquotesingle}} ) 
-% \end{flalign*}
+% \end{tightflalign}
 % This restriction specifies that the channels between \emph{MF} and \emph{MS}, and between \emph{MF} and \emph{PS}, are insecure.
 
 \subsection{User Model} 
@@ -51,30 +51,30 @@ During the \emph{Ordering} phase, users select goods.
 For the same goods (note that this does not refer to the same product model), a user can only purchase them at most once. 
 Therefore, in our model, we use a fresh value as an abstract representation of the goods.
 The following rule models the user's goods ordering behavior:
-\begin{flalign*}
+\begin{tightflalign}
       &\TFacts{ \text{\TFact{Fr}}(\TSymbolFr goods)} \TEmpActFactSL{} & \\
       &\TFacts{
         \text{\TFact{Order}}(\TSymbolFr goods),
         \text{\TFact{SOut}}(..., \TSymbolFr goods)
       }
-\end{flalign*}
+\end{tightflalign}
 This rule represents that the user \emph{U} selects a product $\TSymbolFr goods$ and sends it to \emph{MF}.
 Here, $\text{\TFact{Fr}}(\TSymbolFr goods)$ indicates that the value $\TSymbolFr goods$ is freshly generated.
 $\text{\TFact{Order}}(\TSymbolFr goods)$ indicates that the user has placed an order for the goods $\TSymbolFr goods$.
 In \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
-\begin{flalign*}
+\begin{tightflalign}
       amount & = \text{\Tfunction{calc\_amt}}(\TSymbolFr goods) &\\
       description & = \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)
-\end{flalign*}
+\end{tightflalign}
 In \emph{Authorization} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
 Due to pattern matching, the user authorizes a payment if only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
 The following rule models the user's payment authorization behavior:
-\begin{flalign*}
+\begin{tightflalign}
       \TFacts{ &\text{\TFact{Order}}(\TSymbolFr goods),                     &\\
               &\text{\TFact{SIn}}(..., \TPair{\text{\Tfunction{calc\_amt}}(\TSymbolFr goods), \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)}) } \\
       & \TEmpActFactSL{} \\
       \TFacts{& \text{\TFact{UserAuthorizePayment}}(...) }
-\end{flalign*}
+\end{tightflalign}
 Here, \TFact{UserAuthorizePayment} indicates that the user authorizes the payment.
 Notably, the above model implies that users can accurately distinguish between different items, even when they belong to the same product model.
 In practice, users do not possess such capabilities, nor do merchant platforms provide functionality that allows users to select items based on product serial numbers.
@@ -84,12 +84,12 @@ Nevertheless, this idealized user model helps us focus on analyzing the security
 In our threat model, the adversary is capable of obtaining arbitrary legitimate payment parameters.
 In practice, the adversary acquires such legitimate payment parameters by normally accessing merchant platforms and placing orders to purchase goods.
 To intuitively model this behavior in the symbolic model, we introduce an \emph{Order Oracle}, defined by the following rule.
-\begin{flalign*}
+\begin{tightflalign}
 \text{\Tterm{Ru}}  & \text{\Tterm{le OrderOracle}} :        & \\
   \TFacts{  & \text{\TFactTerm{In}{<amount, description>}, \TFactTerm{!Merchant}{$priv_M$}}} \\
             & \TEmpActFactSL{}                              \\
   \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params(amount, description, $priv_M$)}}}}}
-\end{flalign*}
+\end{tightflalign}
 By querying this oracle with an order amount $amount$ and an order description $description$, the adversary can obtain the corresponding legitimate payment parameters.
 The oracle is granted access to the merchant’s private key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
 The function \Tfunction{gen\_params(amount, description, $priv_M$)} represents the process by which the oracle generates payment parameters from $amount$ and $description$.

@@ -8,13 +8,13 @@ It enables the user side to perform a secondary verification of the order origin
 While preserving the existing payment experience, the proposed mechanism introduces order authentication as an explicit user-side trust anchor and narrows the attack surface from order tampering over arbitrary insecure channels to the compromise of locally bound keys, and significantly increasing the attack difficulty.
 Through formal verification, we show that under the assumption of insecure channels between \emph{MF}--\emph{MS} and \emph{MF}--\emph{PS}, the proposed model satisfies all the security properties defined in this work.
 
-\paragraph{Advantages.}
+\textbf{Advantages.}
 From a protocol design perspective, our countermeasure exhibits three key advantages.
 First, \textbf{minimal trust reduction}: the set of channels that must be trusted is reduced from all channels to only the human–computer interaction channel and the channel used to communicate with the \emph{PS-Server}.
 Second, \textbf{backward compatibility}: our payment path closely resembles existing payment models, with only additional logic for signature verification and local key binding introduced at the payment side.
 Third, \textbf{formally provable security}: our Tamarin model demonstrates that the proposed countermeasure effectively prevents order tampering attacks and satisfies all the security properties defined in this paper.
 
-\paragraph{Limitations.} 
+\textbf{Limitations.} 
 We honestly present the limitations and trade-offs of the proposed countermeasure.
 (\rom{1}) \textbf{Security vulnerability during the initial payment}: 
 during the first payment, no public key has yet been bound on the user side, and thus order tampering attacks cannot be prevented. 
