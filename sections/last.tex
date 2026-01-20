@@ -1,125 +1,33 @@
-%-------------------------------------------------------------------------------
-\section{Footnotes, Verbatim, and Citations}
-%-------------------------------------------------------------------------------
+% 伦理附录
+\section*{Ethical Considerations}
+This study involves the analysis and experimental validation of security vulnerabilities in third-party online payment integrations. 
+Particular care was taken to ensure that the research did not cause harm to users, merchants, or payment platforms.
 
-Footnotes should be places after punctuation characters, without any
-spaces between said characters and footnotes, like so.%
-\footnote{Remember that USENIX format stopped using endnotes and is
-  now using regular footnotes.} And some embedded literal code may
-look as follows.
+First, all attack experiments were conducted exclusively using accounts fully controlled by the authors. 
+No real users were involved, and no real user funds were accessed or affected. 
+All transactions were performed with test payments or self-owned accounts, and no financial loss was incurred by users, merchants, or payment platforms.
 
-\begin{verbatim}
-int main(int argc, char *argv[]) 
-{
-    return 0;
-}
-\end{verbatim}
+Second, during the measurement study of Android applications, we only tested whether payment requests could be intercepted or hijacked at the communication level. 
+We did not perform actual order tampering attacks, nor did we attempt to manipulate payment amounts or outcomes. 
+As a result, application developers and merchants did not suffer any financial or operational damage during the measurement process.
 
-Now we're going to cite somebody. Watch for the cite tag. Here it
-comes. Arpachi-Dusseau and Arpachi-Dusseau co-authored an excellent OS
-book, which is also really funny~\cite{Radu-Practical-2022}, and
-Waldspurger got into the SIGOPS hall-of-fame due to his seminal paper
-about resource management in the ESX hypervisor~\cite{waldspurger02}.
+Third, to prevent misuse and reduce the risk of exploitation, we do not disclose the identities or names of affected applications in this paper. 
+Vulnerability details are reported in an aggregated manner, and responsible disclosure was conducted with the relevant payment platforms and application developers.
 
-The tilde character (\~{}) in the tex source means a non-breaking
-space. This way, your reference will always be attached to the word
-that preceded it, instead of going to the next line.
+Last, We followed responsible disclosure practices and reported the identified vulnerability to the security teams of WeChat Pay and Alipay prior to publication. 
+We also contacted affected application developers with recommended mitigations. 
+These steps were taken to ensure that remediation could be initiated before public disclosure.
 
-And the 'cite' package sorts your citations by their numerical order
-of the corresponding references at the end of the paper, ridding you
-from the need to notice that, e.g, ``Waldspurger'' appears after
-``Arpachi-Dusseau'' when sorting references
-alphabetically~\cite{waldspurger02,arpachiDusseau18:osbook}. 
+We believe that the study was conducted in an ethically responsible manner and that the benefits of disclosing the vulnerability and its mitigation outweigh the residual risks.
 
-It'd be nice and thoughtful of you to include a suitable link in each
-and every bibtex entry that you use in your submission, to allow
-reviewers (and other readers) to easily get to the cited work, as is
-done in all entries found in the References section of this document.
+% 开放科学附录
+\section*{Open Science}
 
-Now we're going take a look at Section~\ref{sec:figs}, but not before
-observing that refs to sections and citations and such are colored and
-clickable in the PDF because of the packages we've included.
+To support transparency, reproducibility, and independent validation, we provide research artifacts that enable reviewers and readers to evaluate the technical claims of this paper. 
+These artifacts include formal models of six third-party payment protocols and our countermeasure, specifications of the proposed security properties, and scripts used to reproduce the formal verification results.
 
-%-------------------------------------------------------------------------------
-\section{Floating Figures and Lists}
-\label{sec:figs}
-%-------------------------------------------------------------------------------
+All publicly available artifacts are hosted in an anonymous repository at the following location:
+[anonymous repository URL]
+The repository contains our formal models, a detailed README file describing the contents of each artifact, the required software and hardware environment, and step-by-step instructions for reproducing the main results of the paper.
 
-
-%---------------------------
-\begin{figure}
-\begin{center}
-\begin{tikzpicture}
-  \draw[thin,gray!40] (-2,-2) grid (2,2);
-  \draw[<->] (-2,0)--(2,0) node[right]{$x$};
-  \draw[<->] (0,-2)--(0,2) node[above]{$y$};
-  \draw[line width=2pt,blue,-stealth](0,0)--(1,1)
-        node[anchor=south west]{$\boldsymbol{u}$};
-  \draw[line width=2pt,red,-stealth](0,0)--(-1,-1)
-        node[anchor=north east]{$\boldsymbol{-u}$};
-\end{tikzpicture}
-\end{center}
-\caption{\label{fig:vectors} Text size inside figure should be as big as
-  caption's text. Text size inside figure should be as big as
-  caption's text. Text size inside figure should be as big as
-  caption's text. Text size inside figure should be as big as
-  caption's text. Text size inside figure should be as big as
-  caption's text. }
-\end{figure}
-%% %---------------------------
-
-
-Here's a typical reference to a floating figure:
-Figure~\ref{fig:vectors}. Floats should usually be placed where latex
-wants then. Figure\ref{fig:vectors} is centered, and has a caption
-that instructs you to make sure that the size of the text within the
-figures that you use is as big as (or bigger than) the size of the
-text in the caption of the figures. Please do. Really.
-
-In our case, we've explicitly drawn the figure inlined in latex, to
-allow this tex file to cleanly compile. But usually, your figures will
-reside in some file.pdf, and you'd include them in your document
-with, say, \textbackslash{}includegraphics.
-
-Lists are sometimes quite handy. If you want to itemize things, feel
-free:
-
-\begin{description}
-  
-\item[fread] a function that reads from a \texttt{stream} into the
-  array \texttt{ptr} at most \texttt{nobj} objects of size
-  \texttt{size}, returning returns the number of objects read.
-
-\item[Fred] a person's name, e.g., there once was a dude named Fred
-  who separated usenix.sty from this file to allow for easy
-  inclusion.
-\end{description}
-
-\noindent
-The noindent at the start of this paragraph in its tex version makes
-it clear that it's a continuation of the preceding paragraph, as
-opposed to a new paragraph in its own right.
-
-
-\subsection{LaTeX-ing Your TeX File}
-%-----------------------------------
-
-People often use \texttt{pdflatex} these days for creating pdf-s from
-tex files via the shell. And \texttt{bibtex}, of course. Works for us.
-
-%-------------------------------------------------------------------------------
-\section*{Acknowledgments}
-%-------------------------------------------------------------------------------
-
-The USENIX latex style is old and very tired, which is why
-there's no \textbackslash{}acks command for you to use when
-acknowledging. Sorry.
-
-%-------------------------------------------------------------------------------
-\section*{Availability}
-%-------------------------------------------------------------------------------
-
-USENIX program committees give extra points to submissions that are
-backed by artifacts that are publicly available. If you made your code
-or data available, it's worth mentioning this fact in a dedicated
-section.
+Due to security and ethical considerations, we do not release proof-of-concept exploit code targeting real merchant applications, nor do we release data that could be used to directly identify vulnerable apps or merchants.

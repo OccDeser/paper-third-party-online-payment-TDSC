@@ -63,6 +63,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{pifont}
+\usepackage{environ}
+\usepackage{appendix}
 
 % --------- DEFINE COLORS ---------
 % Blue 系
@@ -137,6 +139,22 @@
 
 \newcommand{\TSymbolFr}[0]{\text{\textasciitilde}}
 
+\setlist[enumerate]{
+  itemsep=0pt,
+  topsep=2pt
+}
+
+\NewEnviron{tightflalign}{%
+  {%
+    \setlength{\abovedisplayskip}{6pt}%
+    \setlength{\belowdisplayskip}{6pt}%
+    \begin{flalign*}
+      \BODY
+    \end{flalign*}
+  }%
+}
+
+
 %-------------------------------------------------------------------------------
 \begin{document}
 %-------------------------------------------------------------------------------
@@ -175,10 +193,12 @@
 \input{sections/discussion.tex}
 \input{sections/related_work.tex}
 \input{sections/conclusion.tex}
+\input{sections/last.tex}
 
 %-------------------------------------------------------------------------------
 \bibliographystyle{plain}
 \bibliography{library}
+\input{sections/appendix.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

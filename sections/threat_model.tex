@@ -18,7 +18,7 @@ The threat model considered for our formal analysis and attack is defined as fol
 
 \subsection{Security Assumptions} \label{sec:security_assumptions}
 
-\paragraph{User Assumptions}
+\textbf{User Assumptions}
 In Section~\ref{sec:payment-ecosystem}, we describe that \emph{U} confirms the order information before authorizing the payment during the \emph{Authorization} phase.
 We assume that users can accurately determine whether the payment \emph{amount} and order \emph{description} shown on the interface of \emph{PS-App} are consistent with the goods they selected on \emph{MF}.
 % In particular, we assume that \emph{U} will not ignore or misinterpret the payment \emph{amount} or order \emph{description}, and thus will not be misled into authorizing a payment.
@@ -28,13 +28,13 @@ For instance, when purchasing a video game on Steam (a leading global digital ga
 One without relevant background knowledge may find it difficult to determine whether ``Valve Corporation'' is indeed the payee's account associated with ``Steam''.
 Therefore, we assume that users ignore the payee's account name when authorizing a payment.
 
-\paragraph{Payment System Assumptions}
+\textbf{Payment System Assumptions}
 The \emph{PS} comprises two components: the \emph{PS-App} and the \emph{PS-Server}. 
 We assume both the \emph{PS-App} and the \emph{PS-Server} are trusted and cannot be compromised by an adversary. 
 Furthermore, as they communicate via an internal secure channel, we assume the adversary cannot tamper with or forge messages exchanged between them. 
 To simplify subsequent analysis, we consider them as a single, unified \emph{PS} entity.
 
-\paragraph{Channel Assumptions}
+\textbf{Channel Assumptions}
 The developer manuals of various payment providers typically state that the \emph{MS} SHOULD be properly configured with security protocols such as HTTPS to ensure secure communication.
 This implies that all channels where \emph{MS} participates should be secure.
 We argue that this assumption is overly strict, as payment providers cannot fully guarantee the security of communications between users and merchants.

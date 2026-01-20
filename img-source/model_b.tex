@@ -12,10 +12,7 @@
 % ========================================
 %   Agents
 % ========================================
-\NewCoord{c_U}{0,0};
-\NewAgent{agent_U}{c_U}{\hspace{-0.5em} \faUser \; U};
-
-\NewCoordRightToC{c_MF}{c_U}{\AGENTSPAN/1.5};
+\NewCoord{c_MF}{0,0};
 \NewAgent{agent_MF}{c_MF}{\hspace{-0.5em} \faBasketShopping \; MF};
 
 \NewCoordRightToC{c_MS}{c_MF}{\AGENTSPAN};
@@ -28,32 +25,9 @@
 %   Messages
 % ========================================
 
-% Phase 1: Ordering
-% -------------- Divide Line --------------
-  \NewCoordRightToC{c_tmp}{agent_U.south}{-0.06\textwidth};
-  \NewCoordBelowToC{c_ldiv_1}{c_tmp}{\LINEHEIGHT/2};
-  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_1};
-  \NewCoordRightToC{c_rdiv_1}{c_tmp}{0.06\textwidth};
-  \DrawLine{LineDotted}{c_ldiv_1}{c_rdiv_1};
-% ----------------------------------------
-% ---------------- Label -----------------
-  \renewcommand{\LABELSIZE}{0.7}
-  \renewcommand{\LABELCOLOR}{\COMMONCOLOR}
-  \NewCoordBelowToC{c_tmp}{c_ldiv_1}{\LINEHEIGHT/3.5};
-  \NewCoordRightToC{c_label_1}{c_tmp}{1em};
-  \NewLabel{label_1}{c_label_1}{\romannumeral 1};
-% ----------------------------------------
-
-\NewCoordBelowToC{c_smsg_U_MF_1}{c_ldiv_1-|c_U}{\LINEHEIGHT/2.25};
-\NewCoordAlignToN{c_rmsg_U_MF_1}{agent_MF}{c_smsg_U_MF_1};
-\DrawArrow{ArrowDash, color=\COMMONCOLOR}{c_smsg_U_MF_1}{c_rmsg_U_MF_1}{};
-
-\NewCoordBelowToC{c_smsg_MF_MS_1}{c_rmsg_U_MF_1}{\LINEHEIGHT/2.25};
-\NewCoordAlignToN{c_rmsg_MF_MS_1}{agent_MS}{c_smsg_MF_MS_1};
-\DrawArrow{ArrowDash, color=\COMMONCOLOR}{c_smsg_MF_MS_1}{c_rmsg_MF_MS_1}{$goods$};
 % Phase 2: Prepayment
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{c_rmsg_MF_MS_1 -| c_ldiv_1};
+  \NewCoordRightToC{c_tmp}{agent_MF.south}{-0.06\textwidth};
   \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/3};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_2};
   \NewCoordRightToC{c_rdiv_2}{c_tmp}{0.06\textwidth};
@@ -114,69 +88,18 @@
 
 % Phase 3: Payment
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{action_PS1.south -| c_ldiv_1};
+  \NewCoord{c_tmp}{action_PS1.south -| c_ldiv_2};
   \NewCoordBelowToC{c_ldiv_3}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_3};
   \NewCoordRightToC{c_rdiv_3}{c_tmp}{0.06\textwidth};
   \DrawLine{LineDotted}{c_ldiv_3}{c_rdiv_3};
-% ----------------------------------------
-% ---------------- Label -----------------
-  \renewcommand{\LABELSIZE}{0.7}
-  \renewcommand{\LABELCOLOR}{\COMMONCOLOR}
-  \NewCoordBelowToC{c_tmp}{c_ldiv_3}{\LINEHEIGHT/5};
-  \NewCoordRightToC{c_label_3}{c_tmp}{1em};
-  \NewLabel{label_3}{c_label_3}{\romannumeral 3};
-% ----------------------------------------
-
-\NewCoordBelowToC{c_smsg_PS_U_1}{c_ldiv_3-|c_PS}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_PS_U_1}{agent_U}{c_smsg_PS_U_1};
-\DrawArrow{ArrowDash,color=\COMMONCOLOR}{c_smsg_PS_U_1}{c_rmsg_PS_U_1}{
-  $amount, description, account_{payee}, ...$
-};
-
-\NewCoordBelowToC{c_smsg_U_PS_1}{c_rmsg_PS_U_1}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_U_PS_1}{agent_PS}{c_smsg_U_PS_1};
-\DrawArrow{ArrowDash,color=\COMMONCOLOR}{c_smsg_U_PS_1}{c_rmsg_U_PS_1}{$password$};
-
-% Phase 4: Notification 
-% -------------- Divide Line --------------
-  \NewCoord{c_tmp}{c_smsg_U_PS_1 -| c_ldiv_1};
-  \NewCoordBelowToC{c_ldiv_4}{c_tmp}{\LINEHEIGHT/3};
-  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_4};
-  \NewCoordRightToC{c_rdiv_4}{c_tmp}{0.06\textwidth};
-  \DrawLine{LineDotted}{c_ldiv_4}{c_rdiv_4};
-% ----------------------------------------
-% ---------------- Label -----------------
-  \NewCoordBelowToC{c_tmp}{c_ldiv_4}{\LINEHEIGHT/5};
-  \NewCoordRightToC{c_label_4}{c_tmp}{1em};
-  \NewLabel{label_4}{c_label_4}{\romannumeral 4};
-% ----------------------------------------
-
-\NewCoordBelowToN{c_smsg_PS_MS_1}{c_label_4-|c_PS}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_PS_MS_1}{agent_MS}{c_smsg_PS_MS_1};
-\DrawArrow{ArrowDash, color=\COMMONCOLOR}{c_smsg_PS_MS_1}{c_rmsg_PS_MS_1}{
-  $result, S_{result}$
-};
-
-\NewCoordBelowToC{c_smsg_PS_U_2}{c_smsg_PS_MS_1}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_PS_U_2}{agent_U}{c_smsg_PS_U_2};
-\DrawArrow{ArrowDash, color=\COMMONCOLOR}{c_smsg_PS_U_2}{c_rmsg_PS_U_2}{
-  $\text{``Successful''}, amount, description, ...$
-};
-% -------------- Divide Line --------------
-  \NewCoord{c_tmp}{c_smsg_PS_U_2 -| c_ldiv_1};
-  \NewCoordBelowToC{c_ldiv_5}{c_tmp}{\LINEHEIGHT/3};
-  \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_5};
-  \NewCoordRightToC{c_rdiv_5}{c_tmp}{0.06\textwidth};
-  \DrawLine{LineDotted}{c_ldiv_5}{c_rdiv_5};
 % ----------------------------------------
 
 % ========================================
 %   Ends
 % ========================================
 \begin{scope}[on background layer]
-  \GetLowestCoord{c_lowest}{c_ldiv_5};
-  \DrawEnd{agent_U}{c_lowest};
+  \GetLowestCoord{c_lowest}{c_rdiv_3};
   \DrawEnd{agent_MF}{c_lowest};
   \DrawEnd{agent_MS}{c_lowest};
   \DrawEnd{agent_PS}{c_lowest};

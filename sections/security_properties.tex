@@ -27,31 +27,31 @@ Injective agreement on the order ensures that all involved parties process the s
 Violations of this property indicate that an adversary may have tampered with the order information or caused inconsistent views among the participants.
 Since this property involves three principals, we separately consider the agreements between \emph{PS} and \emph{MS}, and between \emph{U} and \emph{MS}.
 
-\paragraph{IA-O1~(\emph{PS} $\leftarrow$ \emph{MS}):} 
+\textbf{IA-O1~(\emph{PS} $\leftarrow$ \emph{MS}):} 
 This lemma captures injective agreement on the order from the perspective of \emph{PS}.
 If \emph{PS} accepts a payment request for an order allegedly issued by \emph{MS}, then \emph{MS} must have previously initiated a corresponding request for that order.
 Moreover, no other payment request for the same order can be accepted by \emph{PS}, ensuring uniqueness.
 The property is formalized as follows:
-\begin{flalign*}
+\begin{tightflalign}
   \TAll \; \text{\Tterm{ps}} & \text{\Tterm{ ms order \#i.}} \; \text{\TFact{PSCommit(ps, ms, order)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, ps, order)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{ps2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{PSCommit(ps2, ms2, order)@\#i2}}) 
-\end{flalign*}
+\end{tightflalign}
 Here, the \emph{Commit} and \emph{Running} facts follow the standard interpretation introduced in~\cite{Lowe1997AuthenticationHierarchy}.
 The fact \TFact{PSCommit(ps, ms, order)} denotes that \emph{PS} has accepted a payment request for \Tterm{order}, 
 while \TFact{MSRunning(ms, ps, order)} records that \emph{MS} has actually issued such a request.
 The term \Tterm{order} denotes all security-critical order information, including the merchant's order identifier, the payment amount, and the product description.
 
-\paragraph{IA-O2~(\emph{U} $\leftarrow$ \emph{MS}):} 
+\textbf{IA-O2~(\emph{U} $\leftarrow$ \emph{MS}):} 
 From the user’s perspective, injective agreement on the order ensures that the user and the merchant reach agreement on order information during the payment process, and that each order is processed exactly once.
 The formalization is as follows:
-\begin{flalign*}
+\begin{tightflalign}
   \TAll \; \text{\Tterm{u }} & \text{\Tterm{ms goods \#i.}} \; \text{\TFact{UMCommit(u, ms, goods)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, u, goods)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{u2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{UMCommit(u2, ms2, goods)@\#i2}}) 
-\end{flalign*}
+\end{tightflalign}
 Unlike the order information considered in IA-O1, IA-O2 only requires agreement between the user and the merchant on the purchased goods, since the user is primarily concerned with what is being bought.
 
 
@@ -60,14 +60,14 @@ Unlike the order information considered in IA-O1, IA-O2 only requires agreement 
 Injective agreement on user authorization ensures that each successful payment is backed by a unique and explicit authorization from the user.
 This property prevents both unauthorized payments and reuse of a single authorization to complete multiple transactions.
 
-\paragraph{IA-UA~(\emph{PS} $\leftarrow$ \emph{U}):}
+\textbf{IA-UA~(\emph{PS} $\leftarrow$ \emph{U}):}
 Specifically, if \emph{PS} completes a payment based on a password hash, then the corresponding password must have been input by \emph{U}, and each password input can authorize at most one payment:
-\begin{flalign*}
+\begin{tightflalign}
   \TAll \; \text{\Tterm{u }} & \text{\Tterm{p s \#i.}} \; \text{\TFact{PaymentComplete(u, h(p), s)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{UserInputPwd(u, p, s)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{u2 p2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{PaymentComplete(u2, h(p2), s)@\#i2}}) 
-\end{flalign*}
+\end{tightflalign}
 In this lemma, the fact \TFact{UserInputPwd(u, p, s)} represents that the user \Tterm{u} inputs the password \Tterm{p} in a session \Tterm{s} to authorize a payment.
 The fact \TFact{PaymentComplete(u, h(p), s)} denotes that \emph{PS} has received the hash value \Tterm{h(p)} of the password \Tterm{p} sent by \Tterm{u}, and has completed the payment.
 
@@ -78,24 +78,24 @@ Finally, injective agreement on the payment result guarantees that successful pa
 A violation of this property would allow an adversary to falsely convince the user or the merchant that a payment has been completed, even though no actual fund transfer has occurred.
 We again consider the perspectives of \emph{MS} and \emph{U} separately.
 
-\paragraph{IA-R1~(\emph{MS} $\leftarrow$ \emph{PS}):}
+\textbf{IA-R1~(\emph{MS} $\leftarrow$ \emph{PS}):}
 From the merchant's view, if \emph{MS} receives a successful payment notification for an order, then this notification must have been generated by \emph{PS}.
 Furthermore, \emph{MS} must not receive multiple successful notifications for the same order.
 This requirement is captured by the following lemma:
-\begin{flalign*}
+\begin{tightflalign}
   \TAll \; \text{\Tterm{ms}} & \text{\Tterm{ ps order \#i.}} \; \text{\TFact{MSCommit(ms, ps, order)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, ms, order)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{ms2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{MSCommit(ms2, ps2, order)@\#i2}}) 
-\end{flalign*}
+\end{tightflalign}
 
-\paragraph{IA-R2~(\emph{U} $\leftarrow$ \emph{PS}):}
+\textbf{IA-R2~(\emph{U} $\leftarrow$ \emph{PS}):}
 Similarly, from the user’s perspective, if \emph{U} observes a successful payment indication in the payment application, then \emph{PS} must have sent a corresponding notification.
 Each order can lead to at most one such notification.
 Formally:
-\begin{flalign*}
+\begin{tightflalign}
   \TAll \; \text{\Tterm{u }} & \text{\Tterm{ps goods \#i.}} \; \text{\TFact{UPCommit(u, ps, goods)@\#i}} &\\
   \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, u, goods)@\#j}} \; \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{u2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{UPCommit(u2, ps2, goods)@\#i2}}) 
-\end{flalign*}
+\end{tightflalign}

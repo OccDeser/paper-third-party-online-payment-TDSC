@@ -6,7 +6,7 @@
 
 \subsection{Cause Analysis}
 
-\paragraph{Superficial Causes}
+\textbf{Superficial Causes}
 From a superficial perspective, order tampering attacks arise from the existence of insecure communication channels between \emph{MS} and \emph{PS-App}.
 An attacker can intercept and tamper with order information along this channel, thereby misleading the user into authorizing an incorrect payment.
 At first glance, addressing this issue appears straightforward.
@@ -18,7 +18,7 @@ Similarly, merchants serve a vast user base with heterogeneous device environmen
 Therefore, defending against order tampering attacks solely by securing communication channels is, in practice, highly challenging.
 Consequently, mitigation is often reactive: once an insecure communication channel is identified, merchants and users are notified to apply patches.
 
-\paragraph{Root Causes}
+\textbf{Root Causes}
 The root cause of such attacks lies in the lack of an effective user-side authentication mechanism for order information in existing payment models.
 We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
 However, the user does not actually authenticate the order itself.
