@@ -24,7 +24,7 @@ However, we find that some merchant applications use implicit Intents in practic
 This enables an attacker to hijack payment requests by installing a malicious application on the victim's device that declares the same Intent-handling capabilities.
 
 
-\subsection{Order Tampering Attack}
+\subsection{Attack Execution}
 
 \begin{figure}[t]
   \centering
@@ -49,17 +49,15 @@ The attacker application is installed on the attacker device.
 \end{figure}
 
 Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the real-world order tampering attack.
-The attack procedure can be summarized as follows:
-\begin{enumerate} 
-  \item The user initiates a payment within a benign third-party Android application;
-  \item The merchant application transmits order parameters to the payment application using an implicit Intent;
-  \item The malicious application induces the user to select itself as the default handler (or automatically sets it via accessibility services);
-  \item The malicious application intercepts the Intent and forwards the captured payment parameters to the Attacker App;
-  \item The Attacker App constructs a new payment order based on attacker-specified parameters and returns it to the malicious application;
-  \item The malicious application embeds the tampered order parameters back into the Intent and launches the payment application;
-  \item The payment application receives the tampered order parameters and completes the payment process.
+The attack proceeds in four phases:
+\begin{enumerate}
+  \item A benign merchant application initiates a payment request by dispatching an implicit Intent containing payment parameters to the payment application;
+  \item By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information;
+  \item Using the extracted information, the attacker places a new order under an attacker-controlled account on the merchant platform and obtains a fresh set of payment parameters that preserve the original order information while being bound to the attacker's account;
+  \item The tampered payment parameters are then relayed to the payment application, which processes the request without detecting the modification.
 \end{enumerate}
-As a result, the attack successfully achieves order tampering, causing the user to ultimately pay for an order specified by the attacker.
+As a result, the attacker successfully tampers with the order, causing the user to complete a payment specified by the attacker rather than the original merchant.
+
 
 \subsection{Impact Assessment}
 To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
