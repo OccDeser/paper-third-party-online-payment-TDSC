@@ -26,9 +26,9 @@ TEMPLATE = r"""
 
 def to_latex_symbol(value):
     if value is True:
-        return r"\textcolor{green}{\ding{51}}"
+        return r"\textcolor{xgreen}{\ding{51}}"
     elif value is False:
-        return r"\textcolor{red}{\ding{55}}"
+        return r"\textcolor{xred}{\ding{55}}"
     else:
         return str(value)
     
@@ -55,7 +55,7 @@ def generate_lemma_results_table(json_file, latex_file):
       \textbf{Security Property Satisfaction of Third‑Party Online Payment Protocols.}
       Each protocol is evaluated under three channel security assumptions. 
       IA-O1/O2, IA-UA, IA-R1/R2 denote the security properties defined in Section~\ref{sec:security_properties}.
-      \textcolor{green}{\ding{51}} indicates that the security property is satisfied, while \textcolor{red}{\ding{55}} indicates a violation.
+      \textcolor{xgreen}{\ding{51}} indicates that the security property is satisfied, while \textcolor{xred}{\ding{55}} indicates a violation.
       Time reports the total analysis time.
     """
     header = " & ".join(["\\textbf{" + c + "}" for c in columns]) 
