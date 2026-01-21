@@ -2,32 +2,29 @@
 \section{Discussion}
 %-------------------------------------------------------------------------------
 
-In this paper, we reveal and formally verify the widely prevalent Order Tampering attack, and propose a user-side order authentication mechanism to fundamentally mitigate this class of attacks.
-The core idea is to introduce a user authentication public key, denoted as $Pk_{UA}$, for each user–merchant pair and bind it to the merchant identifier during the initial payment.
-It enables the user side to perform a secondary verification of the order origin and integrity.
-While preserving the existing payment experience, the proposed mechanism introduces order authentication as an explicit user-side trust anchor and narrows the attack surface from order tampering over arbitrary insecure channels to the compromise of locally bound keys, and significantly increasing the attack difficulty.
-Through formal verification, we show that under the assumption of insecure channels between \emph{MF}--\emph{MS} and \emph{MF}--\emph{PS}, the proposed model satisfies all the security properties defined in this work.
+In this paper, we identify a novel variant of order tampering attacks through formal analysis and demonstrate the attack in real-world payment systems.
+Our findings reveal a long-standing anti-pattern in the high-level protocol design of third-party online payment systems, namely the absence of user-side order authentication.
+To address this issue, we propose a new payment model that systematically eliminates this design deficiency.
 
 \textbf{Advantages.}
-From a protocol design perspective, our countermeasure exhibits three key advantages.
-First, \textbf{minimal trust reduction}: the set of channels that must be trusted is reduced from all channels to only the human–computer interaction channel and the channel used to communicate with the \emph{PS-Server}.
-Second, \textbf{backward compatibility}: our payment path closely resembles existing payment models, with only additional logic for signature verification and local key binding introduced at the payment side.
-Third, \textbf{formally provable security}: our Tamarin model demonstrates that the proposed countermeasure effectively prevents order tampering attacks and satisfies all the security properties defined in this paper.
+From a protocol design perspective, our payment model exhibits three key advantages.
+\textbf{(\rom{1}) minimal trust reduction.}
+At the design level, we reduce reliance on trusted external channels, ensuring payment security even under the weakened channel assumption.
+\textbf{(\rom{2}) backward compatibility.} 
+Our payment model is highly compatible with existing payment models, preserving their four-phase structure and facilitating incremental deployment and adoption by payment service providers.
+\textbf{(\rom{3}) formally provable security.} 
+Our formal analysis results demonstrate that our payment model effectively prevents order tampering attacks during regular payments and satisfies all security properties defined in this paper.
 
 \textbf{Limitations.} 
-We honestly present the limitations and trade-offs of the proposed countermeasure.
-(\rom{1}) \textbf{Security vulnerability during the initial payment}: 
-during the first payment, no public key has yet been bound on the user side, and thus order tampering attacks cannot be prevented. 
-As a result, the initial payment, similar to existing payment models, requires all communication channels to be secure.
-(\rom{2}) \textbf{User interaction cost during the initial payment}: 
-the initial binding requires presenting trust prompts to the user and obtaining explicit confirmation, which increases the user interaction overhead.
-(\rom{3}) \textbf{Signature and storage overhead}: 
-introducing additional signatures and local storage incurs computational and implementation complexity. 
-However, no new cryptographic primitives are introduced, and the signature algorithms can be directly reused from those already deployed in existing payment systems. 
-Moreover, modern servers and smartphones are sufficiently powerful to handle signing and verification operations, and the storage overhead is small.
-Therefore, the overall cost is acceptable in practical deployments.
-
-With respect to mitigating the vulnerabilities we identified, we recommend adopting a phased remediation strategy.
-In the short term, merchants and payment service providers should strengthen the protection of communication channels.
-On the Android platform, explicit Intents should be enforced to prevent the risk of implicit Intent hijacking.
-In the medium to long term, the proposed countermeasure can be gradually rolled out to high-value or high-risk merchants before being incrementally extended to all payment scenarios.
+We honestly present the limitations and trade-offs of our payment model.
+\textbf{(\rom{1}) Signature and storage overhead.}
+Our payment model introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
+However, no new cryptographic primitives are introduced, and we consider the resulting overhead to be acceptable in practice.
+\textbf{(\rom{2}) Additional user interaction during the initial payment.}
+During the initial payment, users are required to explicitly confirm their trust in the merchant, introducing additional user interaction.
+For regular payments, no extra interaction is required, and the overall user experience remains comparable to that of existing payment models.
+\textbf{(\rom{3}) No security improvement for the initial payment.}
+Our proposed model does not provide additional security guarantees for the initial payment.
+Instead, our design follows the widely adopted Trust-On-First-Use (TOFU) model, under which the initial interaction may be vulnerable to active network attacks.
+Once a legitimate payment context is established, however, any subsequent deviation can be reliably detected.
+Consequently, while an adversary may interfere with the initial payment, our scheme guarantees the integrity of subsequent payments and enables attack detection even if the first payment was compromised.

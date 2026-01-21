@@ -43,8 +43,6 @@ This observation reveals a fundamental design flaw in current payment models.
   \label{fig:our_model_regular}
 \end{figure}
 
-\input{tables/countermeasure.tex}
-
 To fundamentally address order tampering attacks, we design and propose a new third-party payment model that introduces a user-side order authentication mechanism to effectively prevent such attacks.
 Our payment model distinguishes between \emph{initial} and \emph{regular} payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.~\ref{fig:our_model_regular}, respectively.
 For a given merchant and user, the first payment initiated by the user is defined as an \emph{initial} payment, while all later payments are defined as \emph{regular} payments.
@@ -65,6 +63,8 @@ If such a binding exists, \emph{PS-App} verifies both signatures before promptin
 Otherwise, the application informs the user that the merchant is not trusted and asks whether to proceed with the payment.
 
 \subsection{Security Verification}
+
+\input{tables/countermeasure.tex}
 
 We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
 The analysis shows that under all three channel assumptions, our regular payment model effectively defends against order tampering attacks and satisfies all security properties.
