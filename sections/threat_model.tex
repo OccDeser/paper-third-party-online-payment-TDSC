@@ -2,54 +2,56 @@
 \section{Threat Model and Assumptions}
 %-------------------------------------------------------------------------------
 
-we first clarify the threat model and the security assumptions in this section.
+In this section, we define the threat model and security assumptions used in our formal analysis and attacks.
 
 \subsection{Threat Model}
 
-The threat model considered for our formal analysis and attack is defined as follows:
-\begin{enumerate}
-  \item The adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
+The threat model we considered is defined as follows:
+
+\textbf{Payment Parameter Acquisition.}
+  The adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
   This is feasible because merchant online platforms are typically open to public registration, allowing the adversary to easily register a legitimate account and purchase arbitrary goods to acquire valid payment parameters.
-  \item The adversary follows the standard Dolev--Yao model and is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
+
+\textbf{Compromised Insecure Channels.}
+  The adversary follows the standard Dolev--Yao model and is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
   In third-party online payment ecosystems, \emph{PS} cannot provide absolute security guarantees for all communication channels between external entities. 
-  We therefore assume weaker assumptions for such external channels and grant the adversary man-in-the-middle capabilities over these insecure channels. 
+  We therefore assume weak assumptions for such external channels and grant the adversary man-in-the-middle capabilities over these insecure channels. 
   We will discuss which channels are considered insecure in Section~\ref{sec:security_assumptions}.
-\end{enumerate}
 
 \subsection{Security Assumptions} \label{sec:security_assumptions}
 
-\textbf{User Assumptions}
-In Section~\ref{sec:payment-ecosystem}, we describe that \emph{U} confirms the order information before authorizing the payment during the \emph{Authorization} phase.
-We assume that users can accurately determine whether the payment \emph{amount} and order \emph{description} shown on the interface of \emph{PS-App} are consistent with the goods they selected on \emph{MF}.
-% In particular, we assume that \emph{U} will not ignore or misinterpret the payment \emph{amount} or order \emph{description}, and thus will not be misled into authorizing a payment.
-Another important piece of information displayed on the payment interface is the payee's account name.
-However, as this name does not necessarily correspond to the merchant's brand name, \emph{U} cannot reliably determine if the displayed account belongs to the intended merchant.
+Regarding the user, the payment system, and the communication channel, we make the following security assumptions:
+
+\textbf{User Assumptions.}
+As described in Section~\ref{sec:payment-ecosystem}, during the \emph{Authorization} phase, users review the order information before authorizing the payment.
+We assume that users can correctly verify whether the payment \emph{amount} and order \emph{description} displayed by the \emph{PS-App} match the goods selected on the \emph{MF}.
+Another key element displayed on the payment interface is the payee's account name. 
+However, since this name does not necessarily correspond to the merchant's brand name, \emph{U} cannot reliably verify whether the displayed account belongs to the intended merchant.
 For instance, when purchasing a video game on Steam (a leading global digital game distribution and social platform), the payee's name shown is ``Valve Corporation'' (the parent company) rather than ``Steam''.
-One without relevant background knowledge may find it difficult to determine whether ``Valve Corporation'' is indeed the payee's account associated with ``Steam''.
-Therefore, we assume that users ignore the payee's account name when authorizing a payment.
+Users without relevant background knowledge may find it difficult to determine whether ``Valve Corporation'' is indeed the payee account associated with ``Steam''.
+Therefore, we assume that users do not rely on the payee's account name when authorizing a payment.
 
-\textbf{Payment System Assumptions}
-The \emph{PS} comprises two components: the \emph{PS-App} and the \emph{PS-Server}. 
-We assume both the \emph{PS-App} and the \emph{PS-Server} are trusted and cannot be compromised by an adversary. 
-Furthermore, as they communicate via an internal secure channel, we assume the adversary cannot tamper with or forge messages exchanged between them. 
-To simplify subsequent analysis, we consider them as a single, unified \emph{PS} entity.
+\textbf{Payment System Assumptions.}
+The \emph{PS} comprises two components: the \emph{PS-App} and the \emph{PS-Server}.  
+We assume that the \emph{PS-App} and the \emph{PS-Server}, as well as the communication channel between them, are trusted. 
+Unless otherwise specified, we treat them as a single \emph{PS} entity in the subsequent analysis.
 
-\textbf{Channel Assumptions}
-The developer manuals of various payment providers typically state that the \emph{MS} SHOULD be properly configured with security protocols such as HTTPS to ensure secure communication.
-This implies that all channels where \emph{MS} participates should be secure.
-We argue that this assumption is overly strict, as payment providers cannot fully guarantee the security of communications between users and merchants.
-Therefore, we propose to relax the assumption of secure channels and analyze whether third-party payment systems can guarantee payment security even under partially insecure channels.
+\textbf{Channel Assumptions.}
+According to developer manuals of various payment providers, the \emph{MS} is recommended to be configured with security protocols such as HTTPS to ensure secure communication. 
+This implies that channels where \emph{MS} participates should be secure.
+However, we note that this assumption is overly strict, as a recommendation in the developer manual alone cannot provide a reliable guarantee of secure communication. 
+Therefore, in our analysis, we relax the security assumptions for certain channels.
 We consider the following communication channels to be potentially insecure:
 \begin{enumerate}
 \item[\Rom{1}.] \textbf{\emph{MF} $\Longleftrightarrow$ \emph{MS}:}
-  We assume that the communication channel between \emph{MF} and \emph{MS} is insecure.
+  We assume that the channel between \emph{MF} and \emph{MS} is insecure.
   This assumption is motivated by the fact that \emph{MF} operates on the user's device, and users should not be assumed to possess a high level of security awareness or to be able to defend against diverse threats in real-world network environments.
   In addition, given the large number of merchants involved, payment service providers cannot guarantee that all front-end and back-end communications of merchants are free from security vulnerabilities.
 \item[\Rom{2}.] \textbf{\emph{MF} $\Longleftrightarrow$ \emph{PS}:}
   The communication between \emph{MF} and \emph{PS} occurs during the \emph{Prepayment} phase, where \emph{MF} invokes the \emph{PS-App} to send payment parameters.
   However, this process is not absolutely secure.
   We observe that in many implementations, this interaction is vulnerable to hijacking attacks.
-  In fact, we have identified real-world attacks exploiting this vulnerability, which will be discussed in detail in Section~\ref{sec:real_world}.
-  Therefore, we assume that this channel is insecure.
+  Indeed, we have identified real-world attacks that exploit such vulnerabilities, which are discussed in detail in Section~\ref{sec:real_world}. 
+  Accordingly, we assume that this channel is insecure.
 \end{enumerate}
 

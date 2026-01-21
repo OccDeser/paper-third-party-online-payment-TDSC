@@ -3,15 +3,13 @@
 %-------------------------------------------------------------------------------
 
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main payment models, and finally introduce the model checking tool Tamarin-Prover\cite{Meier2013TAMARINProver} that we use.
+Then, we abstract two main high-level payment models, and finally introduce the model checking tool Tamarin-Prover\cite{Meier2013TAMARINProver} that we use.
 
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
-At present, there is no universally accepted regulatory standard governing third-party online payments, 
-as different payment providers maintain their own proprietary protocols and implementations. 
-Through extensive review of official documentation and developer guides\cite{WeChat2025APIV3,Alipay2025OpenPlatform}, 
-combined with practical analysis of payment workflows,
-we have summarized the typical ecosystem architecture of third-party online payments.
+At present, there is no universally adopted regulatory standard governing third-party online payments, and payment providers typically rely on their own proprietary protocols and implementations.
+Through a review of official documentation and developer guides\cite{WeChat2025APIV3,Alipay2025OpenPlatform}, combined with an analysis of payment workflows,
+we summarize a typical ecosystem architecture of third-party online payments.
 A typical third-party online payment ecosystem involves four main participants:
 
 \begin{figure}[t]
@@ -40,7 +38,7 @@ A typical third-party online payment ecosystem involves four main participants:
     we treat the application and server together as a single black-box system.
 \end{enumerate}
 
-As illustrated in Figure.~\ref{fig:third_party_payment}, we abstract a typical third-party payment process into the following phases:
+As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment process can be abstracted into the following phases:
 \begin{enumerate}
   \item[\rom{1}.] \textit{\textbf{Order Phase:}}
     \emph{U} purchases $goods$ and selects a payment provider on \emph{MF}. 
@@ -55,17 +53,13 @@ As illustrated in Figure.~\ref{fig:third_party_payment}, we abstract a typical t
     After the authorization phase, \emph{PS-Server} signs the payment result using its private key and sends the signed result to \emph{MS}.
     Meanwhile, the \emph{PS-App} also shows the payment result page to \emph{U}.
 \end{enumerate}
-
-% It is important to note that, during the \emph{Prepayment} phase, there are two primary approaches for \emph{MS} to generate payment parameters.
-% We classify these approaches into two payment models, which will be discussed in detail in Section~\ref{sec:payment-models}.
     
 \subsection{Payment Scenarios}
 
 \emph{PS-Server} obtains payment information from \emph{MF} via \emph{PS-App} on the \emph{U}'s mobile device.
-However, the communication methods between \emph{PS-App} and \emph{MF} vary due to the diverse forms in which \emph{MF} is implemented, 
+However, the communication methods between \emph{PS-App} and \emph{MF} differ depending on how \emph{MF} is implemented, 
 including native mobile applications, mobile web pages, and desktop web pages.
-These distinct forms differentiate corresponding payment scenarios, 
-for which payment providers have designed specific interaction methods between the \emph{MF} and the payment system (\emph{PS}). 
+These distinct forms result in different payment scenarios, and payment providers accordingly define specific interaction methods between the \emph{MF} and the payment system (\emph{PS}).
 In the following, we introduce three common payment scenarios:
 
 \textbf{In-app Payment.}
@@ -80,13 +74,13 @@ Similar to in-app payment, the merchant's mobile web page initiates a payment re
 \textbf{QR Code Payment.}
 QR code payment differs fundamentally from the previous two scenarios in terms of device interaction.
 In this case, the user browses the merchant's website using a desktop browser, while the payment is executed on a mobile device.
-Since the merchant's web page cannot directly redirect to a mobile payment application, the payment provider employs a QR code as a bridging mechanism between the PC and mobile platforms.
-After the user selects a product, the merchant website generates a payment QR code, which is scanned by the \emph{PS-App} to obtain the payment parameters and complete the transaction.
+Since a merchant's web page cannot directly redirect to a mobile payment application, the payment provider employs a QR code as an intermediary mechanism between the PC and mobile platforms. 
+After a user places an order, the merchant website generates a payment QR code, which is scanned by the \emph{PS-App} to obtain the payment parameters and complete the transaction.
  
 \subsection{Payment Models}\label{sec:payment-models}
 
 As discussed earlier, during the \emph{Prepayment} phase, protocol designs vary across different providers and scenarios.
-Here, we introduce two payment models adopted by two mainstream payment providers, WeChat Pay and Alipay, across three payment scenarios.
+Here, we introduce two high-level payment models adopted by the two mainstream payment providers, WeChat Pay and Alipay.
 
 \begin{figure}[t]
   \centering
@@ -105,21 +99,20 @@ Here, we introduce two payment models adopted by two mainstream payment provider
 \textbf{Payment Model A.}
 In this model, the payment parameters are generated by \emph{MS}.
 Figure.~\ref{fig:payment_model_a} illustrates in detail the process by which \emph{MS} generates the order information.
-Based on the information of the $goods$ selected by the user, 
-\emph{MS} calculates the payable $amount$ and the order $description$, and generates a unique order identifier~($id_{order}$). 
+Based on the $goods$ selected by the user, \emph{MS} calculates the payable $amount$ and the order $description$, and generates a unique order identifier~($id_{order}$). 
 These values, together with the merchant identifier~($id_{M}$), constitute the order information.
 \emph{MS} then signs the order information using its private key $Sk_{M}$, producing a signature value $sign_{order}$.
 The order information and $sign_{order}$ are directly used as the payment parameters $params$.
 During the subsequent \emph{Authorization} phase, \emph{PS} verifies $sign_{order}$ to confirm the integrity of the order information.
-Payment Model A is adopted by Alipay in the In-app Payment and Mobile Web Payment scenarios.
+Payment Model A is adopted by Alipay in the In-app and Mobile Web Payment scenarios.
 
 \textbf{Payment Model B.}
 In Model~B, the payment parameters are generated with the involvement of \emph{PS}.
 Similarly, \emph{MS} is required to sign the critical order information.
 However, unlike Model~A, the order information and its signature $sign_{order}$ cannot be directly used as payment parameters.
 Instead, they are sent to \emph{PS} as a prepayment request.
-After validating $sign_{order}$, \emph{PS} generates a unique prepayment identifier~($id_{prepay}$) for the payment order and returns it to \emph{MS}.
-\emph{MS} then concatenates $id_{M}$ with $id_{prepay}$ and signs the result again using $Sk_{M}$, producing a new signature value $sign_{prepay}$.
+After verifying $sign_{order}$, \emph{PS} generates a unique prepayment identifier~($id_{prepay}$) for the payment and returns it to \emph{MS}.
+\emph{MS} then concatenates $id_{M}$ with $id_{prepay}$ and signs the result again using $Sk_{M}$, producing a new signature $sign_{prepay}$.
 Finally, $id_{M}$, $id_{prepay}$ and $sign_{prepay}$ are sent to \emph{PS} as the payment parameters $params$ in subsequent phases.
 \emph{PS} verifies the validity of $sign_{prepay}$ to ensure the integrity of the payment request.
 Payment Model~B is adopted by Alipay in the QR Code Payment scenario and by WeChat Pay across all three payment scenarios.
