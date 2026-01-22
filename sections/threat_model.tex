@@ -8,15 +8,18 @@ In this section, we define the threat model and security assumptions used in our
 
 The threat model we considered is defined as follows:
 
-\textbf{Payment Parameter Acquisition.}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Payment Parameter Acquisition.}
   The adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
   This is feasible because merchant online platforms are typically open to public registration, allowing the adversary to easily register a legitimate account and purchase arbitrary goods to acquire valid payment parameters.
-
-\textbf{Compromised Insecure Channels.}
+  \item \textbf{Compromised Insecure Channels.}
   The adversary follows the standard Dolev--Yao model and is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
   In third-party online payment ecosystems, \emph{PS} cannot provide absolute security guarantees for all communication channels between external entities. 
   We therefore assume weak assumptions for such external channels and grant the adversary man-in-the-middle capabilities over these insecure channels. 
   We will discuss which channels are considered insecure in Section~\ref{sec:security_assumptions}.
+\end{enumerate}
+
+
 
 \subsection{Security Assumptions} \label{sec:security_assumptions}
 
@@ -42,7 +45,7 @@ This implies that channels where \emph{MS} participates should be secure.
 However, we note that this assumption is overly strict, as a recommendation in the developer manual alone cannot provide a reliable guarantee of secure communication. 
 Therefore, in our analysis, we relax the security assumptions for certain channels.
 We consider the following communication channels to be potentially insecure:
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item[\Rom{1}.] \textbf{\emph{MF} $\Longleftrightarrow$ \emph{MS}:}
   We assume that the channel between \emph{MF} and \emph{MS} is insecure.
   This assumption is motivated by the fact that \emph{MF} operates on the user's device, and users should not be assumed to possess a high level of security awareness or to be able to defend against diverse threats in real-world network environments.

@@ -3,7 +3,7 @@
 %-------------------------------------------------------------------------------
 
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main high-level payment models, and finally introduce the model checking tool Tamarin-Prover\cite{Meier2013TAMARINProver} that we use.
+Then, we abstract two main high-level payment models, and finally introduce the model checking tool Tamarin-Prover\cite{Meier2013TAMARINProver}.
 
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
@@ -18,12 +18,12 @@ A typical third-party online payment ecosystem involves four main participants:
     \caption{
         An Overview of a Typical Third-Party Online Payment. 
         Dashed arrows indicate optional messages, depending on the specific payment model.
-        Notation: $validate(p)$ denotes checking whether $p$ is valid; $continue()$ denotes continuing the execution of the protocol; $abort()$ denotes terminating the protocol; $make_payment()$ denotes the fund transfer operation; $random()$ denotes generating a random number; and $sign_k(m)$ denotes signing message $m$ with key $k$.
+        Notation: $validate(p)$ denotes checking whether $p$ is valid; $continue()$ denotes continuing the execution of the protocol; $abort()$ denotes terminating the protocol; $make\_payment()$ denotes the fund transfer operation; $random()$ denotes generating a random number; and $sign_k(m)$ denotes signing message $m$ with key $k$.
     }
     \label{fig:third_party_payment}
 \end{figure}
 
-\begin{enumerate} 
+\begin{enumerate}[leftmargin=*]
   \item \textit{\textbf{User (U):}}
     An individual who initiates the payment for goods or services.
   \item \textit{\textbf{Merchant Frontend (MF):}}
@@ -39,7 +39,7 @@ A typical third-party online payment ecosystem involves four main participants:
 \end{enumerate}
 
 As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment process can be abstracted into the following phases:
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
   \item[\rom{1}.] \textit{\textbf{Order Phase:}}
     \emph{U} purchases $goods$ and selects a payment provider on \emph{MF}. 
     The \emph{MF} sends the $goods$ and payment provider to \emph{MS}.

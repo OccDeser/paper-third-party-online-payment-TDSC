@@ -10,7 +10,7 @@ All properties considered in this section are instances of \emph{injective agree
 Injective agreement strengthens standard agreement by additionally requiring a one-to-one correspondence between protocol runs: 
 each successful local completion must correspond to a unique execution of the peer, thereby ruling out replay, duplication, or reuse of protocol messages.
 Formally, two types of atomic facts are necessary to define injective agreement:
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
   \item $\mathsf{Running}(A,B,x)$: 
     records that party $A$ is interacting with $B$ in a concrete execution of the protocol and that the interaction involves data $x$ (an objective execution fact);
   \item $\mathsf{Commit}(A,B,x)$:
