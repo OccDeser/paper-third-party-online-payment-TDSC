@@ -35,13 +35,13 @@ This observation \emph{motivates us to analyze the security of third-party onlin
 In this paper, we establish comprehensive symbolic models for third-party online payment protocols.
 By thoroughly examining the developer documentation of Alipay\cite{Alipay2025OpenPlatform} and WeChat Pay\cite{WeChat2025APIV3}, we abstract six representative payment protocol models across three core payment scenarios.
 Our model faithfully reflects the design details of real-world protocols and covers the complete payment workflow from order placement to payment completion.
-Based on the analyzed protocols, we abstract high-level design models for third-party payment protocols and investigate the common security issues at this level.
+Based on the analyzed protocols, \emph{we abstract high-level design models for third-party payment protocols and investigate the common security issues at this level.}
 In addition, to capture capabilities of the adversary in the real world, we explicitly model the details of the adversary's behavior.
 Particularly, we grant the adversary the ability to legitimately access merchant platforms to create orders and obtain payment parameters.
 
 We formally define a set of security properties for third-party online payment protocols from three dimensions: order, authorization, and result.
 Based on these properties, we conduct formal verification of the six real-world payment models under weakened channel security assumptions using the Tamarin Prover~\cite{Meier2013TAMARINProver}.
-Our analysis reveals a pervasive yet underexplored design anti-pattern: mainstream high-level payment models generally lack a mechanism that binds user payment authorization to the intended order.
+Our analysis reveals a pervasive yet underexplored design anti-pattern: \emph{mainstream high-level payment models generally lack a mechanism that binds user payment authorization to the intended order.}
 Consequently, once the communication channel between the user and the merchant is compromised, an adversary can induce the user to authorize an arbitrary order.
 
 Inspired by our formal analysis results, we identify a new variant of the Order Tampering Attack.
@@ -51,24 +51,31 @@ We develop proof-of-concept attack applications that exploit this vulnerability 
 To assess the severity of this issue, we conduct a measurement study covering 461 popular applications across multiple domains, including online shopping, online education, entertainment, and gaming.
 Our results show that more than $25\%$ of the sampled applications are vulnerable.
 These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
+\textcolor{red}{Disclosure statement.}
 
 To address these threats, we propose a deployable and backward-compatible payment model which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
 Under the weakened channel assumptions, we formally verify this model and show that it satisfies all the defined security properties.
-As a result, it prevents order tampering at the protocol design level while maintaining practical deployability.
+As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
 
 \noindent\textbf{Contributions.}
 We make the following contributions:
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Formal modeling and analysis.}
+  \item \textbf{Symbolic verification of payment protocols.}
     We develop a unified symbolic modeling framework for third-party online payment protocols and apply it to rigorously analyze representative real-world protocols under realistic adversary and channel assumptions.
-  \item \textbf{Discovery of a new attack.}
+    \textcolor{red}{Verification results.}
+  \item \textbf{Disclosure of a new Order tampering attack.}
     We discover a new variant of the Order Tampering Attack that arises from a fundamental design flaw in high-level payment models and our measurement study demonstrates that it potentially affects over 25\% of real-world applications.
-  \item \textbf{Design of a practical mitigation.}
+    \textcolor{red}{xxxxx}
+  \item \textbf{Proposal of a formal verified countermeasure.}
     We propose a deployable and backward-compatible user-side authentication mechanism, and formally prove that it eliminates order tampering at the protocol design level while preserving real-world applicability.
+    \textcolor{red}{xxxxx}
 \end{enumerate}
 
-\noindent\textbf{Disclosure.}
-We responsibly disclosed our findings to the security teams of Alipay and WeChat Pay.
-The reported vulnerabilities were acknowledged by both parties, and, at the time of writing, remediation efforts are actively underway.
-In addition, we notified the developers of xxx vulnerable merchant applications identified in our study and provided concrete security recommendations.
-We received positive responses from xxx of these developers, who indicated their intent to address the reported issues.
+% \noindent\textbf{Disclosure.}
+% We responsibly disclosed our findings to the security teams of Alipay and WeChat Pay.
+% The reported vulnerabilities were acknowledged by both parties, and, at the time of writing, remediation efforts are actively underway.
+% In addition, we notified the developers of xxx vulnerable merchant applications identified in our study and provided concrete security recommendations.
+% We received positive responses from xxx of these developers, who indicated their intent to address the reported issues.
+
+% Paper Structure.
+% The rest of this paper is organized as follows.

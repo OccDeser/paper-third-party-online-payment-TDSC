@@ -1,8 +1,10 @@
 %-------------------------------------------------------------------------------
-% \section{Countermeasures} 
+\section{Countermeasures} 
 %-------------------------------------------------------------------------------
+% In this section, we xxxx.
 
-% In this section, we analyze the causes of order tampering attacks and present our countermeasures.
+In this section, we analyze the causes of order tampering attacks and present our countermeasures.
+xxxx.
 
 \subsection{Cause Analysis}
 
@@ -28,7 +30,12 @@ The user's authorization is applied only to the act of payment transaction, rath
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
 This observation reveals a fundamental design flaw in current payment models.
 
-\subsection{Our Countermeasures}
+% \section{Countermeasures}
+
+
+\subsection{XXX}
+
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/cm_initial.pdf}
@@ -62,7 +69,7 @@ Then, \emph{PS-App} first checks whether a public key $pub_{UA}$ has already bee
 If such a binding exists, \emph{PS-App} verifies both signatures before prompting the user to confirm the order information and complete the payment.
 Otherwise, the application informs the user that the merchant is not trusted and asks whether to proceed with the payment.
 
-\subsection{Security Verification}
+\subsection{Symbolic Verification}
 
 \input{tables/countermeasure.tex}
 

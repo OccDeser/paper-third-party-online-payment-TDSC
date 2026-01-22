@@ -1,5 +1,5 @@
 %-------------------------------------------------------------------------------
-\section{Discussion}
+\subsection{Discussion}
 %-------------------------------------------------------------------------------
 
 In this paper, we identify a novel variant of order tampering attacks through formal analysis and demonstrate the attack in real-world payment systems.
@@ -9,9 +9,9 @@ To address this issue, we propose a new payment model that systematically elimin
 \textbf{Advantages.}
 From a protocol design perspective, our payment model exhibits three key advantages.
 \begin{enumerate}
-  \item \textbf{Minimal trust reduction.}
-At the design level, we reduce reliance on trusted external channels, ensuring payment security even under the weakened channel assumption.
-  \item \textbf{Backward compatibility.} 
+  \item \textcolor{red}{\textbf{Minimal trust reduction.}}
+At the design level, we reduce reliance on trusted external channels, ensuring payment security even under the weakened external channel assumption.
+  \item \textcolor{red}{\textbf{Backward compatibility.}}
 Our payment model is highly compatible with existing payment models, preserving their four-phase structure and facilitating incremental deployment and adoption by payment service providers.
   \item \textbf{Formally provable security.} 
 Our formal analysis results demonstrate that our payment model effectively prevents order tampering attacks during regular payments and satisfies all security properties defined in this paper.
