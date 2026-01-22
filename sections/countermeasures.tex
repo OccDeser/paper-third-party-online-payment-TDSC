@@ -1,10 +1,12 @@
 %-------------------------------------------------------------------------------
-\section{Countermeasures} 
+\section{Countermeasure} 
 %-------------------------------------------------------------------------------
 % In this section, we xxxx.
 
-In this section, we analyze the causes of order tampering attacks and present our countermeasures.
-xxxx.
+\modify{
+In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
+Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
+}
 
 \subsection{Cause Analysis}
 
@@ -30,23 +32,19 @@ The user's authorization is applied only to the act of payment transaction, rath
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
 This observation reveals a fundamental design flaw in current payment models.
 
-% \section{Countermeasures}
-
-
-\subsection{XXX}
-
+\subsection{Countermeasure Design}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/cm_initial.pdf}
-  \caption{Countermeasure Model For Initial Payment}
+  \caption{Initial Payment}
   \label{fig:our_model_initial}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{img/cm_regular.pdf}
-  \caption{Countermeasure Model For Regular Payment}
+  \caption{Regular Payment}
   \label{fig:our_model_regular}
 \end{figure}
 
@@ -64,7 +62,7 @@ If the user chooses to trust the merchant, \emph{PS-App} verifies both signature
 Otherwise, the payment process is aborted.
 
 In regular payments, the \emph{Prepayment} phase largely follows Payment Model~B.
-The only difference is that \emph{MS} additionally signs$id_{prepay}$ and $id_{M}$ using $priv_{UA}$.
+The only difference is that \emph{MS} additionally signs $id_{prepay}$ and $id_{M}$ using $priv_{UA}$.
 Then, \emph{PS-App} first checks whether a public key $pub_{UA}$ has already been bound locally to the merchant identifier.
 If such a binding exists, \emph{PS-App} verifies both signatures before prompting the user to confirm the order information and complete the payment.
 Otherwise, the application informs the user that the merchant is not trusted and asks whether to proceed with the payment.

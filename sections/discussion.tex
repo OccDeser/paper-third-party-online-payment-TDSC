@@ -8,18 +8,16 @@ To address this issue, we propose a new payment model that systematically elimin
 
 \textbf{Advantages.}
 From a protocol design perspective, our payment model exhibits three key advantages.
-\begin{enumerate}
-  \item \textcolor{red}{\textbf{Minimal trust reduction.}}
+\begin{enumerate}[leftmargin=*]
+  \item \modify{\textbf{Minimal trust assumptions.}}
 At the design level, we reduce reliance on trusted external channels, ensuring payment security even under the weakened external channel assumption.
-  \item \textcolor{red}{\textbf{Backward compatibility.}}
-Our payment model is highly compatible with existing payment models, preserving their four-phase structure and facilitating incremental deployment and adoption by payment service providers.
   \item \textbf{Formally provable security.} 
 Our formal analysis results demonstrate that our payment model effectively prevents order tampering attacks during regular payments and satisfies all security properties defined in this paper.
 \end{enumerate}
 
 \textbf{Limitations.} 
 We honestly present the limitations and trade-offs of our payment model.
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
   \item \textbf{Signature and storage overhead.}
 Our payment model introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
 However, no new cryptographic primitives are introduced, and we consider the resulting overhead to be acceptable in practice.

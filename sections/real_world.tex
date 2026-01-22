@@ -3,54 +3,51 @@
 \section{Real-World Attacks} \label{sec:real_world}
 %-------------------------------------------------------------------------------
 
-In this section, we present a real-world attack case that was identified and successfully carried out, inspired by our validation results.
-The vulnerability exploited by this attack is widely present on the Android platform, affecting a large number of mobile applications that adopt WeChat Pay and Alipay as third-party payment methods, and has been officially confirmed by the security teams of both WeChat Pay and Alipay.
+In this section, we present a real-world attack case that was identified and successfully launched, inspired by our verification results.
+The vulnerability exploited by this attack is widely prevalent on the Android platform, affecting a large number of mobile applications that adopt WeChat Pay and Alipay as third-party payment methods, and has been officially confirmed by the security teams of both WeChat Pay and Alipay.
 
-\subsection{A Vulnerability in Real-World}
+\subsection{A Real-World Vulnerability}
 
-Our formal analysis reveals that variant \Rom{2} of the order tampering attack demonstrates that an adversary can not only tamper with orders over the communication channel between \emph{MF} and the \emph{MS}, but also conduct similar attacks on the communication channel between the \emph{MF} and the \emph{PS-App}.
-Based on the above findings, we identify security implementation flaws in some merchant applications when integrating WeChat Pay or Alipay.
-
-When initiating a payment request, a merchant application needs to transmit order parameters to the payment service application via the Android Intent mechanism.
+\modify{
+Inspired by the Variant~\Rom{2} attack, we identified an exploitable vulnerability on the Android platform.
+When initiating a payment request, merchant's Android applications use the Android Intent mechanism to transmit payment parameters to the payment service application.
 As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the WeChat Pay and Alipay receive payment parameters from merchant applications.
-A merchant application typically constructs an Intent containing order information and uses it to launch the corresponding payment application.
+A merchant application typically constructs an Intent containing payment parameters and uses it to launch the corresponding payment application.
+}
 
-It should be noted that Intents can be classified into two categories: explicit Intents and implicit Intents. 
+It should be noted that Intents can be classified into two categories, explicit Intents and implicit Intents. 
 An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, allowing the system to match and select a responding component based on Intent Filters.
 The security risk primarily arises from the misuse of implicit Intents.
 
-When invoking payment functionality, a merchant application should use an explicit Intent to explicitly designate the official WeChat Pay or Alipay as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
+\modify{
+When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the WeChat Pay or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
 However, we find that some merchant applications use implicit Intents in practice.
-This enables an attacker to hijack payment requests by installing a malicious application on the victim's device that declares the same Intent-handling capabilities.
-
+This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious app that declares the same Intent handling capability.
+}
 
 \subsection{Attack Execution}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.75\linewidth]{img/setup.png}
-  \caption{Real-World Attack Setup}
+  \includegraphics[width=0.65\linewidth]{img/setup.png}
+  \caption{Attack setup. 
+    \ding{172} denotes the victim device, which installs the malicious app, a vulnerable merchant application, and a payment application. 
+    \ding{173} denotes the attacker device, which installs the attacker app. 
+    The screenshots shown on \ding{172} and \ding{173} correspond to the real interfaces of the malicious app and the attacker app, respectively.
+  }
   \label{fig:real_world_attack_devices}
 \end{figure}
 
-By exploiting the aforementioned vulnerability, an attacker can carry out the variant~\Rom{2} of the order tampering attack.
-To carry out this attack in the real world, we developed two Android applications.
-One is a malicious application~(Malicious App), which is used to intercept and tamper with payment requests.
-The other is an attacker application (Attacker App), which is responsible for generating payment orders for the attacker.
-We use two Android devices, as illustrated in Fig.~\ref{fig:real_world_attack_devices}: one serves as the victim device (Victim Device), and the other serves as the attacker device (Attacker Device).
-On the victim device, we install the malicious application, a vulnerable merchant application, and the payment app.
-The attacker application is installed on the attacker device.
+\modify{
+We developed two Android applications, a malicious app and an attacker app, to exploit the aforementioned vulnerability.
+Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
+The malicious app on device~\ding{172} is responsible for capturing and replaying payment parameters.
+The attacker app on device~\ding{173} places orders on the merchant platform and returns payment parameters to the malicious app.
+}
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{img/attack_flow.png}
-  \caption{Real-World Attack Flow}
-  \label{fig:real_world_attack_flow}
-\end{figure}
-
-Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the real-world order tampering attack.
+Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
 The attack proceeds in four phases:
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
   \item A benign merchant application initiates a payment request by dispatching an implicit Intent containing payment parameters to the payment application;
   \item By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information;
   \item Using the extracted information, the attacker places a new order under an attacker-controlled account on the merchant platform and obtains a fresh set of payment parameters that preserve the original order information while being bound to the attacker's account;
@@ -58,6 +55,12 @@ The attack proceeds in four phases:
 \end{enumerate}
 As a result, the attacker successfully tampers with the order, causing the user to complete a payment specified by the attacker rather than the original merchant.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{img/attack_flow.pdf}
+  \caption{Attack Flow.}
+  \label{fig:real_world_attack_flow}
+\end{figure}
 
 \subsection{Impact Assessment}
 To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
@@ -71,7 +74,10 @@ The vulnerable applications span a wide range of categories, including e-commerc
 More importantly, the cumulative number of downloads of these vulnerable applications reaches 265.85 billion, indicating that the vulnerability potentially affects a very large user base and poses a significant security risk in practice.
 
 \subsection{Responsible Disclosure}
-In December 2025, we responsibly reported this vulnerability to the security teams of WeChat Pay and Alipay, both of which acknowledged the issue and treated it with high priority.
-As of the time of writing, Alipay has committed to fixing the vulnerability by the end of January 2026, and WeChat Pay is likewise actively working on a patch.
-In addition, we contacted the developers of xxx affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
-We received positive responses from xxx developers, who indicated that they would update their applications promptly to address the issue.
+\outline{
+Following responsible disclosure guidelines, we reported the vulnerability to the security teams of WeChat Pay and Alipay in December 2025. 
+At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
+Alipay planned to deploy a fix by the end of January 2026.
+}
+In addition, we contacted the developers of 56 affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
+We received positive responses from 14 developers, who indicated that they would update their applications promptly to address the issue.
