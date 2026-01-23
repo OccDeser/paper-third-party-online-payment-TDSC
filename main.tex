@@ -131,7 +131,7 @@
 \newcommand{\Tterm}[1]{{\ttfamily #1}}
 \newcommand{\Tequation}[1]{{\ttfamily #1}}
 \newcommand{\Tfunction}[1]{{\ttfamily #1}}
-\newcommand{\Tamarin}[0]{\textsc{Tamarin}}
+\newcommand{\Tamarin}{Tamarin-Prover}
 
 \newcommand{\TFrTerm}[1]{{\Tterm{$\sim$#1}}}
 \newcommand{\TFactTerm}[2]{{\ttfamily #1}$(\,$\Tterm{#2}$\,)$}
@@ -162,8 +162,10 @@
 \soulregister\eqref7
 \soulregister\Rom7
 \soulregister\ding7
-\newcommand{\modify}[1]{\textcolor{blue!30!xblue}{\ul{#1}}}
-\newcommand{\outline}[1]{\textcolor{red!30!xred}{\ul{#1}}}
+\newcommand{\modify}[1]{#1}
+% \newcommand{\modify}[1]{\textcolor{blue!30!xblue}{\ul{#1}}}
+\newcommand{\outline}[1]{#1}
+% \newcommand{\outline}[1]{\textcolor{red!30!xred}{\ul{#1}}}
 
 
 
@@ -211,7 +213,7 @@
 %-------------------------------------------------------------------------------
 \bibliographystyle{plain}
 \bibliography{library}
-\input{sections/appendix.tex}
+% \input{sections/appendix.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

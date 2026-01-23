@@ -2,15 +2,13 @@
 \subsection{Discussion}
 %-------------------------------------------------------------------------------
 
-In this paper, we identify a novel variant of order tampering attacks through formal analysis and demonstrate the attack in real-world payment systems.
-Our findings reveal a long-standing anti-pattern in the high-level protocol design of third-party online payment systems, namely the absence of user-side order authentication.
-To address this issue, we propose a new payment model that systematically eliminates this design deficiency.
 
 \textbf{Advantages.}
 From a protocol design perspective, our payment model exhibits three key advantages.
 \begin{enumerate}[leftmargin=*]
-  \item \modify{\textbf{Minimal trust assumptions.}}
-At the design level, we reduce reliance on trusted external channels, ensuring payment security even under the weakened external channel assumption.
+  \item \textbf{Minimal trust assumptions.}
+  At the protocol design level, we minimize reliance on trusted channels.
+  The protocol is formally proven to guarantee payment security under weakened external channel assumptions.
   \item \textbf{Formally provable security.} 
 Our formal analysis results demonstrate that our payment model effectively prevents order tampering attacks during regular payments and satisfies all security properties defined in this paper.
 \end{enumerate}

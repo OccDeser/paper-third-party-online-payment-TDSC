@@ -3,10 +3,8 @@
 %-------------------------------------------------------------------------------
 % In this section, we xxxx.
 
-\modify{
 In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
 Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
-}
 
 \subsection{Cause Analysis}
 
@@ -27,7 +25,7 @@ The root cause of such attacks lies in the lack of an effective user-side authen
 We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
 However, the user does not actually authenticate the order itself.
 Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
-In other words, during the \emph{Payment} phase, the user performs no form of authentication of the order data.
+In other words, during the \emph{Authentication} phase, the user performs no form of authentication of the order data.
 The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
 This observation reveals a fundamental design flaw in current payment models.

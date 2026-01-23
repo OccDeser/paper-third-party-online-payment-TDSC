@@ -3,27 +3,24 @@
 \section{Real-World Attacks} \label{sec:real_world}
 %-------------------------------------------------------------------------------
 
-In this section, we present a real-world attack case that was identified and successfully launched, inspired by our verification results.
-The vulnerability exploited by this attack is widely prevalent on the Android platform, affecting a large number of mobile applications that adopt WeChat Pay and Alipay as third-party payment methods, and has been officially confirmed by the security teams of both WeChat Pay and Alipay.
+In this section, we present a real-world attack case that was identified inspired by our analysis results and successfully carried out in practice.
+We also introduce our measurement study to assess the scope and practical extent of the vulnerability's impact across affected systems.
+We further discuss the responsible vulnerability disclosure process.
 
 \subsection{A Real-World Vulnerability}
 
-\modify{
 Inspired by the Variant~\Rom{2} attack, we identified an exploitable vulnerability on the Android platform.
 When initiating a payment request, merchant's Android applications use the Android Intent mechanism to transmit payment parameters to the payment service application.
 As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the WeChat Pay and Alipay receive payment parameters from merchant applications.
 A merchant application typically constructs an Intent containing payment parameters and uses it to launch the corresponding payment application.
-}
 
 It should be noted that Intents can be classified into two categories, explicit Intents and implicit Intents. 
 An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, allowing the system to match and select a responding component based on Intent Filters.
 The security risk primarily arises from the misuse of implicit Intents.
 
-\modify{
 When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the WeChat Pay or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
 However, we find that some merchant applications use implicit Intents in practice.
 This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious app that declares the same Intent handling capability.
-}
 
 \subsection{Attack Execution}
 
@@ -38,12 +35,10 @@ This means that an attacker can hijack payment requests originally sent to a pay
   \label{fig:real_world_attack_devices}
 \end{figure}
 
-\modify{
 We developed two Android applications, a malicious app and an attacker app, to exploit the aforementioned vulnerability.
 Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
 The malicious app on device~\ding{172} is responsible for capturing and replaying payment parameters.
 The attacker app on device~\ding{173} places orders on the merchant platform and returns payment parameters to the malicious app.
-}
 
 Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
 The attack proceeds in four phases:
@@ -70,14 +65,12 @@ Among these versions, 419 support WeChat Pay and 401 support Alipay.
 Our analysis reveals that 64 WeChat Pay–enabled versions and 72 Alipay-enabled versions are vulnerable.
 In total, 116 app versions (more than 25\% of the analysed dataset) are found to be vulnerable, meaning that at least one of the integrated payment SDKs is affected.
 
-The vulnerable applications span a wide range of categories, including e-commerce, social networking, online education, and entertainment.
+The vulnerable applications span a wide range of categories, including e-commerce, online education, and entertainment.
 More importantly, the cumulative number of downloads of these vulnerable applications reaches 265.85 billion, indicating that the vulnerability potentially affects a very large user base and poses a significant security risk in practice.
 
 \subsection{Responsible Disclosure}
-\outline{
 Following responsible disclosure guidelines, we reported the vulnerability to the security teams of WeChat Pay and Alipay in December 2025. 
 At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
 Alipay planned to deploy a fix by the end of January 2026.
-}
 In addition, we contacted the developers of 56 affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
 We received positive responses from 14 developers, who indicated that they would update their applications promptly to address the issue.

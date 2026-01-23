@@ -3,7 +3,7 @@
 %-------------------------------------------------------------------------------
 
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main high-level payment models, and finally introduce the model checking tool Tamarin-Prover\cite{Meier2013TAMARINProver}.
+Then, we abstract two main high-level payment models, and finally introduce the model checking tool \Tamarin~\cite{Meier2013TAMARINProver}.
 
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
@@ -25,17 +25,17 @@ A typical third-party online payment ecosystem involves four main participants:
 
 \begin{enumerate}[leftmargin=*]
   \item \textit{\textbf{User (U):}}
-    An individual who initiates the payment for goods or services.
+    An individual who initiates a payment for goods or services.
   \item \textit{\textbf{Merchant Frontend (MF):}}
-    The interface through which the user interacts to select goods and initiate payment,
-    typically a website or mobile application.
+    The interface through which the user interacts to select goods and initiate the payment,
+    typically implemented as a website or mobile application.
   \item \textit{\textbf{Merchant Server (MS):}}
     The server-side component of the merchant that processes orders and communicates with the payment provider.
   \item \textit{\textbf{Third-Party Payment System (PS):}}
-    A service provider that handles the actual payment transactions (e.g., Alipay and WeChat Pay).
-    The \emph{PS} comprises a payment application (\emph{PS-App}) and a payment server (\emph{PS-Server}).
-    Because the interaction details between these components are proprietary and often carried over private secure channels,
-    we treat the application and server together as a single black-box system.
+    We refer to a payment transaction handling system provided by a payment service provider as \emph{PS}.
+    The \emph{PS} consists of a payment application (\emph{PS-App}) and a payment server (\emph{PS-Server}).
+    Since the internal interaction mechanisms are proprietary and the communication occurs over private secure channels, the two components cannot be individually inspected.
+    Thus, we treat the \emph{PS} as a unified black-box system.
 \end{enumerate}
 
 As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment process can be abstracted into the following phases:
@@ -118,15 +118,15 @@ Finally, $id_{M}$, $id_{prepay}$ and $sign_{prepay}$ are sent to \emph{PS} as th
 Payment Model~B is adopted by Alipay in the QR Code Payment scenario and by WeChat Pay across all three payment scenarios.
 
 
-\subsection{Tamarin Prover}
+\subsection{\Tamarin}
 
-Tamarin Prover is a symbolic verification framework widely used for analyzing real-world security protocols, 
+\Tamarin is a symbolic verification framework widely used for analyzing real-world security protocols, 
 including EMV~\cite{Radu2022EMVRelayProtection,Basin2021EMVStandard,Basin2021CardBrandMixup}, TLS~\cite{Cremers2016AutomatedTLS,Cremers2017ComprehensiveTLS,Lee2019maTLS}, Bluetooth~\cite{Shi2023FormalBLEPairing,Jangid2023ExtrapolatingBluetoothPasskey,Shi2026FormalBLESC}, and 5G-AKA~\cite{basin2018formal,cremers2019component}.
 It employs a multiset rewriting system to model protocol execution and adversary capabilities, providing a rich language for specifying security properties as first-order logic formulas over execution traces. 
-Tamarin supports unbounded protocol sessions, a Dolev-Yao style adversary, and is particularly suited for analyzing stateful protocols due to its native handling of mutable and persistent state.
+\Tamarin supports unbounded protocol sessions, a Dolev-Yao style adversary, and is particularly suited for analyzing stateful protocols due to its native handling of mutable and persistent state.
 
 \textbf{Terms and Facts.}
-In Tamarin, protocol messages are represented as \emph{terms}, which are built from variables, constants, and compound expressions formed by applying function symbols $f \in \Sigma$ to subterms.
+In \Tamarin, protocol messages are represented as \emph{terms}, which are built from variables, constants, and compound expressions formed by applying function symbols $f \in \Sigma$ to subterms.
 An equational theory over terms defines their algebraic properties and reducibility relations, thereby affecting pattern matching and substitution.
 For example, symmetric encryption is modeled by the equation $\text{\Tfunction{sdec}}(\text{\Tfunction{senc}}(m,k),k)=m$.
 The system state is captured using \emph{facts}, which are atomic predicates of the form \TFactTerm{F}{$t_1,\ldots,t_n$} that represent resources or observable events.
@@ -145,9 +145,9 @@ Its application yields a new state $S' = (S \setminus \{LF_1,\ldots,LF_m\}) \cup
 and records the action fact $AF(t_1, \ldots, t_k)$ in the execution trace.
 
 \textbf{Trace and Formulas.}
-In Tamarin, the global behavior of a protocol is characterized by traces, which are sequences of action facts generated by rule applications, 
+In \Tamarin, the global behavior of a protocol is characterized by traces, which are sequences of action facts generated by rule applications, 
 formally written as $\tau = \langle FA_1@t_1, FA_2@t_2, \dots, FA_n@t_n \rangle$, where $FA_i@t_i$ denotes an observable event occurring at time point $t_i$.
-Based on traces, Tamarin reasons about executions using first-order logic formulas, where \emph{restrictions} are used to specify global constraints over all possible executions.
+Based on traces, \Tamarin reasons about executions using first-order logic formulas, where \emph{restrictions} are used to specify global constraints over all possible executions.
 These constraints are predicate formulas over events and time points.
 Within this restricted semantic space, security properties are likewise expressed as first-order temporal logic formulas (lemmas), such as secrecy, authentication, or consistency properties, and are required to hold for all valid traces.
 For example, key secrecy can be formalized as:

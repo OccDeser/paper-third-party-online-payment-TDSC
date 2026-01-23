@@ -2,12 +2,12 @@
 \section{Conclusion}
 %-------------------------------------------------------------------------------
 
-Third-party online payment is a dominant payment mechanism in China and is widely adopted across mobile applications and online services.
-However, the high-level payment model underlying existing third-party payment protocols suffers from a long-standing and often overlooked anti-pattern: the lack of order authentication during user authorization, which enables order tampering attacks.
-Although this flaw may be concealed under the assumption of secure external channels, in practice, payment service providers cannot guarantee the security of external channels, thereby exposing practical attack vectors.
+Third-party online payment is a predominant payment mechanism and is widely adopted across a broad range of mobile applications and online services.
+However, the high-level payment model underlying existing third-party payment protocols suffers from a persistent and often overlooked anti-pattern, namely the lack of order authentication during user authorization, which directly enables order tampering attacks.
+Although this flaw may be concealed under the assumption of secure external channels, in practice, payment service providers cannot reliably guarantee the security of such external channels, thereby giving rise to concrete and practical attack vectors.
 
 In this paper, we study six widely deployed third-party payment protocols covering major payment providers and payment scenarios in China, and propose an abstract model that captures the core entities and interaction flows of the third-party payment ecosystem.
-We formalize a comprehensive set of security properties along three core dimensions and formally verify models of these protocols under weakened channel assumptions using Tamarin Prover.
+We formalize a comprehensive set of security properties along three core dimensions and formally verify models of these protocols under weakened channel assumptions using \Tamarin.
 Our analysis uncovers a novel variant of order tampering attacks.
 
 Guided by the formal analysis results, we identify a vulnerability on the Android platform and develop a proof-of-concept attack application that successfully performs  an order tampering attack in real-world payment environments.

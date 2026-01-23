@@ -10,8 +10,8 @@ The threat model we considered is defined as follows:
 
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Payment Parameter Acquisition.}
-  The adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
-  This is feasible because merchant online platforms are typically open to public registration, allowing the adversary to easily register a legitimate account and purchase arbitrary goods to acquire valid payment parameters.
+  We assume that the adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
+  This assumption is realistic, as most merchant platforms support public registration, allowing an adversary to create a account and complete purchases to acquire payment parameters.
   \item \textbf{Compromised Insecure Channels.}
   The adversary follows the standard Dolev--Yao model and is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
   In third-party online payment ecosystems, \emph{PS} cannot provide absolute security guarantees for all communication channels between external entities. 
@@ -51,10 +51,9 @@ We consider the following communication channels to be potentially insecure:
   This assumption is motivated by the fact that \emph{MF} operates on the user's device, and users should not be assumed to possess a high level of security awareness or to be able to defend against diverse threats in real-world network environments.
   In addition, given the large number of merchants involved, payment service providers cannot guarantee that all front-end and back-end communications of merchants are free from security vulnerabilities.
 \item[\Rom{2}.] \textbf{\emph{MF} $\Longleftrightarrow$ \emph{PS}:}
-  The communication between \emph{MF} and \emph{PS} occurs during the \emph{Prepayment} phase, where \emph{MF} invokes the \emph{PS-App} to send payment parameters.
-  However, this process is not absolutely secure.
-  We observe that in many implementations, this interaction is vulnerable to hijacking attacks.
-  Indeed, we have identified real-world attacks that exploit such vulnerabilities, which are discussed in detail in Section~\ref{sec:real_world}. 
-  Accordingly, we assume that this channel is insecure.
+  The communication between \emph{MF} and \emph{PS} is during the \emph{Prepayment} phase, where \emph{MF} invokes the \emph{PS-App} to send payment parameters. 
+  However, this process is not always secure. 
+  In many implementations, this interaction is vulnerable to hijacking attacks. Indeed, we identified real-world exploits, which are discussed in detail in Section~\ref{sec:real_world}. 
+  Thus, we assume that this channel is insecure.
 \end{enumerate}
 

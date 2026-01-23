@@ -1,10 +1,10 @@
 %-------------------------------------------------------------------------------
 \section{Payment Protocol Modeling}
 %-------------------------------------------------------------------------------
-We formally model the payment protocols of WeChat Pay and Alipay across three payment scenarios, and the complete models are available in an open-source repository~\cite{Repo2025FormalModels}.
-In this section, we present the key details in modeling third-party payment protocols.
-First, we describe the user model, which allows us to accurately capture users' evaluation of payment information and their authorization behavior within the symbolic model.
-Then, we introduce oracle models to capture the adversary's capability to obtain legitimate payment parameters.
+We formally model the payment protocols of WeChat Pay and Alipay in three payment scenarios, and the full models are available in an open-source repository~\cite{Repo2025FormalModels}.
+In this section, we present the key details for modeling third-party payment protocols.
+First, we describe the user model, which allows us to capture users' evaluation of payment information and their authorization behavior within the symbolic model.
+Then, we introduce the oracle model for the adversary to obtain legitimate payment parameters.
 
 % \subsection{Channel Model}
 % We introduce appropriate modifications to the standard secure channel model in order to systematically model different channels and security assumptions.
@@ -81,16 +81,29 @@ In practice, users do not possess such capabilities, nor do merchant platforms p
 Nevertheless, this idealized user model helps us focus on analyzing the security of the payment protocol itself, without conflating the analysis with errors that users may make.
 
 \subsection{Adversarial Capabilities Model}
-In our threat model, the adversary is capable of obtaining arbitrary legitimate payment parameters.
-In practice, the adversary acquires such legitimate payment parameters by normally accessing merchant platforms and placing orders to purchase goods.
-To intuitively model this behavior in the symbolic model, we introduce an \emph{Order Oracle}, defined by the following rule.
+In our threat model, the adversary is capable of obtaining legitimate payment parameters.
+In practice, the adversary acquires such legitimate payment parameters by accessing merchant platforms in a normal manner and placing orders to purchase goods.
+To intuitively model this behavior, we introduce an \emph{Order Oracle} within the symbolic framework, which is defined by the following rule:
 \begin{tightflalign}
 \text{\Tterm{Ru}}  & \text{\Tterm{le OrderOracle}} :        & \\
-  \TFacts{  & \text{\TFactTerm{In}{<amount, description>}, \TFactTerm{!Merchant}{$priv_M$}}} \\
+  \TFacts{  & \text{\TFactTerm{In}{<$amt$, $desc$>}, \TFactTerm{!Merchant}{$id_M$, $priv_M$}}} \\
             & \TEmpActFactSL{}                              \\
-  \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params(amount, description, $priv_M$)}}}}}
+  \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)}}}}}
 \end{tightflalign}
-By querying this oracle with an order amount $amount$ and an order description $description$, the adversary can obtain the corresponding legitimate payment parameters.
-The oracle is granted access to the merchant’s private key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
-The function \Tfunction{gen\_params(amount, description, $priv_M$)} represents the process by which the oracle generates payment parameters from $amount$ and $description$.
+By querying this oracle with an order amount $amt$ and an order description $desc$, the adversary can obtain the corresponding legitimate payment parameters.
+The oracle is granted access to the merchant's identifier $id_M$ and rivate key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
+The function \Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)} represents the process by which the oracle generates payment parameters from $amt$ and $desc$.
 This process is consistent with the procedure used by merchants to generate payment parameters in both Payment Model~A and Payment Model~B.
+We use equations to flexibly define this process in symbolic models.
+In protocols conforming to Model~A, the equation is defined as follows:
+\begin{tightflalign}
+  \text{\Tfunction{gen\_par}} & \text{\Tfunction{mas}}(amt, desc, id_M, priv_M) = \\
+  & amt \parallel desc \parallel id_M \parallel \text{\Tfunction{sign}}(amt \parallel desc \parallel id_M, priv_M)
+\end{tightflalign}
+For protocols under Model~B, the equation is as follows:
+\begin{tightflalign}
+  \text{\Tfunction{gen\_parmas}}(am&t, desc, id_M, priv_M)   = \\
+  & id_{prepay} \parallel id_M \parallel \text{\Tfunction{sign}}(id_{prepay} \parallel id_M, priv_M)
+\end{tightflalign}
+Here, our equation simplifies the actual generation process of payment parameters, such as the generation of $id_{prepay}$.
+In the modeling, we incorporate additional necessary parameters and computational steps according to the details of the actual protocol, ensuring the model's accuracy and completeness.
