@@ -2,18 +2,15 @@
 \section{Conclusion}
 %-------------------------------------------------------------------------------
 
-Third-party online payment is a predominant payment mechanism and is widely adopted across a broad range of mobile applications and online services.
-However, the high-level payment pattern underlying existing third-party payment protocols suffers from a persistent and often overlooked anti-pattern, namely the lack of order authentication during user authorization, which directly enables order tampering attacks.
-Although this flaw may be concealed under the assumption of secure external channels, in practice, payment service providers cannot reliably guarantee the security of such external channels, thereby giving rise to concrete and practical attack vectors.
+This work presents a systematic security analysis of third-party payment protocols, revealing a fundamental anti-pattern in their design: the absence of order authentication during user authorization.
+This design flaw directly enables order tampering attacks and persists across major payment ecosystems despite their widespread deployment.
 
-In this paper, we study six widely deployed third-party payment protocols covering major payment providers and payment scenarios in China, and propose an abstract model that captures the core entities and interaction flows of the third-party payment ecosystem.
-We formalize a comprehensive set of security properties along three core dimensions and formally verify models of these protocols under weakened channel assumptions using \Tamarin.
-Our analysis uncovers a novel variant of order tampering attacks.
+We formalize six widely deployed payment protocols from major Chinese payment providers using symbolic models that capture core entities and interaction flows.
+Through formal verification with \Tamarin under weakened channel assumptions, we identify a novel variant of order tampering attacks and establish a comprehensive security property framework spanning three dimensions.
 
-Guided by the formal analysis results, we identify a vulnerability on the Android platform and develop a proof-of-concept attack application that successfully performs  an order tampering attack in real-world payment environments.
-We confirm that two major payment providers, Alipay and WeChat Pay, are affected.
-To evaluate the scope of the impact, we conduct a measurement study on hundreds of popular applications and find that over $25\%$ of them are vulnerable.
-Following responsible disclosure, we report the vulnerability to the affected application developers as well as Alipay and WeChat Pay, and receive official confirmation from both providers.
+To validate our findings, we develop a proof-of-concept attack on Android that successfully tampers with payment orders in real-world environments, affecting both Alipay and WeChat Pay.
+A measurement study of hundreds of popular applications reveals that over 25\% are vulnerable to this attack.
+Following responsible disclosure, both payment providers have officially acknowledged the vulnerability.
 
-Finally, we propose a deployable and backward-compatible payment pattern that incorporates user-side order authentication and eliminates the identified design flaw.
-Formal verification shows that the proposed model satisfies all defined security properties under weakened channel assumptions.
+We further propose a deployable countermeasure that integrates user-side order authentication into the payment flow.
+Formal verification demonstrates that this enhanced design satisfies all security properties under weakened channel assumptions, providing a practical path toward more secure third-party payment systems.
