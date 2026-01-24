@@ -3,13 +3,14 @@
 %-------------------------------------------------------------------------------
 
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main high-level payment models, and finally introduce the model checking tool \Tamarin~\cite{Meier2013TAMARINProver}.
+Then, we abstract two main high-level payment models, and finally introduce \Tamarin~\cite{Meier2013TAMARINProver}.
 
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
-At present, there is no universally adopted regulatory standard governing third-party online payments, and payment providers typically rely on their own proprietary protocols and implementations.
-Through a review of official documentation and developer guides\cite{WeChat2025APIV3,Alipay2025OpenPlatform}, combined with an analysis of payment workflows,
-we summarize a typical ecosystem architecture of third-party online payments.
+Currentlly, there is no universally adopted regulatory standard governing third-party online payments, 
+and payment providers typically rely on proprietary protocols and implementations.
+By reviewing official documentation and developer guides~\cite{WeChat2025APIV3,Alipay2025OpenPlatform}, alongside an analysis of payment workflows,
+we summarize the typical ecosystem architecture of third-party online payment systems.
 A typical third-party online payment ecosystem involves four main participants:
 
 \begin{figure}[t]
@@ -25,7 +26,8 @@ A typical third-party online payment ecosystem involves four main participants:
 
 \begin{enumerate}[leftmargin=*]
   \item \textit{\textbf{User (U):}}
-    An individual who initiates a payment for goods or services.
+    % An individual who initiates a payment for goods or services.
+    An individual who initiates and authorizes payments for goods or services.
   \item \textit{\textbf{Merchant Frontend (MF):}}
     The interface through which the user interacts to select goods and initiate the payment,
     typically implemented as a website or mobile application.
