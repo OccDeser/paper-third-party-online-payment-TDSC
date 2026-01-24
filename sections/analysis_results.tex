@@ -34,21 +34,21 @@ This section presents and discusses the verification results of the above analys
 \subsubsection{Results}
 
 Table~\ref{tab:lemma-results} summarizes our analysis results.
-We find that two protocols following Payment Model~A fail to satisfy the IA-O1 property under all three channel assumptions. 
+We find that two protocols following payment pattern~A fail to satisfy the IA-O1 property under all three channel assumptions. 
 With respect to IA-O2, none of the six analyzed protocols we analysed satisfies this property under our channel assumptions.
 
 We further observe that the analysis results remain consistent across all three channel assumptions.
 This indicates that as long as any insecure channel exists, an adversary can successfully carry out an attack, 
 causing the user and the merchant to hold inconsistent views of the order information and thereby violating the IA-O1 and IA-O2 properties.
 
-Moreover, across all payment scenarios, protocols adopting Payment Model~A fail to satisfy both IA-O1 and IA-O2, while protocols following Payment Model~B fail to satisfy IA-O2.
-This demonstrates that protocol security is closely tied to the adopted payment model, whereas variations in payment scenarios have a limited impact on security.
+Moreover, across all payment scenarios, protocols adopting payment pattern~A fail to satisfy both IA-O1 and IA-O2, while protocols following payment pattern~B fail to satisfy IA-O2.
+This demonstrates that protocol security is closely tied to the adopted payment pattern, whereas variations in payment scenarios have a limited impact on security.
 All counterexamples violating IA-O1 and IA-O2 shows that each of them arises from an order tampering attack.
 
 \subsubsection{Order Tampering Attack}
 
 The order tampering attack was first identified by \cite{Yang2017FlawedImplementations} in the in-app payment scenario.
-Our formal analysis reveals that \emph{this attack is pervasive across all payment scenarios and all payment models}.
+Our formal analysis reveals that \emph{this attack is pervasive across all payment scenarios and all payment patterns}.
 As long as any insecure channel exists, an adversary can successfully launch this attack.
 Through an analysis of counterexamples violating IA-O1 and IA-O2, we identify two variants of the order tampering attack under different channel assumptions.
 Figure~\ref{fig:order_tampering_variants} illustrates these two variants.

@@ -3,7 +3,7 @@
 %-------------------------------------------------------------------------------
 
 Third-party online payment is a predominant payment mechanism and is widely adopted across a broad range of mobile applications and online services.
-However, the high-level payment model underlying existing third-party payment protocols suffers from a persistent and often overlooked anti-pattern, namely the lack of order authentication during user authorization, which directly enables order tampering attacks.
+However, the high-level payment pattern underlying existing third-party payment protocols suffers from a persistent and often overlooked anti-pattern, namely the lack of order authentication during user authorization, which directly enables order tampering attacks.
 Although this flaw may be concealed under the assumption of secure external channels, in practice, payment service providers cannot reliably guarantee the security of such external channels, thereby giving rise to concrete and practical attack vectors.
 
 In this paper, we study six widely deployed third-party payment protocols covering major payment providers and payment scenarios in China, and propose an abstract model that captures the core entities and interaction flows of the third-party payment ecosystem.
@@ -15,5 +15,5 @@ We confirm that two major payment providers, Alipay and WeChat Pay, are affected
 To evaluate the scope of the impact, we conduct a measurement study on hundreds of popular applications and find that over $25\%$ of them are vulnerable.
 Following responsible disclosure, we report the vulnerability to the affected application developers as well as Alipay and WeChat Pay, and receive official confirmation from both providers.
 
-Finally, we propose a deployable and backward-compatible payment model that incorporates user-side order authentication and eliminates the identified design flaw.
+Finally, we propose a deployable and backward-compatible payment pattern that incorporates user-side order authentication and eliminates the identified design flaw.
 Formal verification shows that the proposed model satisfies all defined security properties under weakened channel assumptions.
