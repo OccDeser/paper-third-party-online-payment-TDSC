@@ -33,18 +33,22 @@ From the perspective of payment service providers, \emph{adopting weaker securit
 This observation \emph{motivates us to analyze the security of third-party online payment protocols under weakened external channel security assumptions}.
 
 In this paper, we establish comprehensive symbolic models for third-party online payment protocols.
-Due to the absence of an industry-wide standard for online payments, we examined publicly available developer documentation of Alipay\cite{Alipay2025OpenPlatform} and WeChat Pay\cite{WeChat2025APIV3} and abstracted six representative payment protocol models covering three core payment scenarios.
-Our models faithfully reflect the design details of real-world protocols and covers the complete payment workflow from order placement to payment completion.
-Based on the analyzed protocols, \emph{we abstract high-level design models for third-party payment protocols and investigate the common security issues at this level.}
-In addition, to capture capabilities of the adversary in the real world, we explicitly model the details of the adversary's behavior.
-Particularly, we grant the adversary the ability to legitimately access merchant platforms to create orders and obtain payment parameters.
+Due to the absence of an industry-wide standard for online payments, we examined publicly available developer documentation of Alipay\cite{Alipay2025OpenPlatform} and WeChat Pay\cite{WeChat2025APIV3},
+abstracting six representative payment protocol models that cover three core payment scenarios.
+Our models faithfully reflect the design details of actual payment processes and cover the complete workflow, from order placement to payment completion.
+\textcolor{red}{Based on the analyzed protocols, \emph{we abstract high-level design models for third-party payment protocols and investigate the common security issues at this level.}}
+% In addition, to capture capabilities of the adversary in the real world, we explicitly model the details of the adversary's behavior.
+% Particularly, we grant the adversary the ability to legitimately access merchant platforms to create orders and obtain payment parameters.
+To realistically capture the capabilities of adversaries, \textcolor{red}{we explicitly model adversary's behaviors}\textcolor{blue}{(Only enable legitimate access to merchant platforms?)}.
+Particularly, we grant the adversary legitimate access to merchant platforms, enabling them to create orders and obtain payment parameters.
 
-We formally define a set of security properties for third-party online payment protocols from three dimensions: order, authorization, and result.
-Based on these properties, we conduct formal verification of the six real-world payment models under weakened channel security assumptions using the \Tamarin~\cite{Meier2013TAMARINProver}.
-Our analysis reveals a pervasive yet underexplored design anti-pattern: \emph{mainstream high-level payment models generally lack a mechanism that binds user payment authorization to the intended order.}
-Consequently, once the communication channel between the user and the merchant is compromised, an adversary can induce the user to authorize an arbitrary order.
+We formally define a set of security properties for third-party online payment protocols across three dimensions: order, authorization, and result.
+% Based on these properties, we conduct formal verification of the six real-world payment models under weakened channel security assumptions using the \Tamarin~\cite{Meier2013TAMARINProver}.
+We verify these properties in the six real-world payment models under weakened channel security assumptions using \Tamarin~\cite{Meier2013TAMARINProver}.
+Our analysis reveals a pervasive yet underexplored design anti-pattern: \emph{mainstream high-level payment models generally lack mechanisms that bind user payment authorization to the intended order.}
+Consequently, once the communication channel between the user and the merchant is compromised, an adversary can induce the user to authorize any order.
 
-Inspired by our formal analysis results, we identify a new variant of the order tampering attack.
+Motivated by the findings from our formal analysis, we identify a new variant of the order tampering attack.
 We observe that many merchant applications on Android incorrectly use implicit Intents to interact with payment applications.
 This misuse exposes the transmission of payment parameters to interception by malicious applications.
 We develop a proof-of-concept attack application that exploit this vulnerability and successfully perform order tampering attacks in real-world payment environments.
