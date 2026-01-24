@@ -38,14 +38,14 @@ abstracting six representative payment protocol models that cover three core pay
 Our models faithfully reflect the design details of actual payment processes and cover the complete workflow, from order placement to payment completion.
 % \textcolor{red}{Based on the analyzed protocols, \emph{we abstract high-level design models for third-party payment protocols and investigate the common security issues at this level.}}
 % From these six protocols, we derive two high-level design models and analyze the common security issues they exhibit.
-From these six protocols, we derive two high-level design paradigms and investigate their common security issues.
+From these six protocols, we derive two high-level design patterns and investigate their common security issues.
 To realistically capture the capabilities of adversaries, we explicitly model adversary's behaviors.
 Particularly, we grant the adversary legitimate access to merchant platforms, enabling them to create orders and obtain payment parameters.
 
 We formally define a set of security properties for third-party online payment protocols across three dimensions: order, authorization, and result.
-% Based on these properties, we conduct formal verification of the six real-world payment models under weakened channel security assumptions using the \Tamarin~\cite{Meier2013TAMARINProver}.
-We verify these properties in the six real-world payment models under weakened channel security assumptions using \Tamarin~\cite{Meier2013TAMARINProver}.
-Our analysis reveals a pervasive yet underexplored design anti-pattern: \emph{mainstream high-level payment models generally lack mechanisms that bind user payment authorization to the intended order.}
+% Based on these properties, we conduct formal verification of the six real-world payment patterns under weakened channel security assumptions using the \Tamarin~\cite{Meier2013TAMARINProver}.
+We verify these properties in the six real-world payment protocols under weakened channel security assumptions using \Tamarin~\cite{Meier2013TAMARINProver}.
+Our analysis reveals a pervasive yet underexplored design anti-pattern: \emph{mainstream high-level payment patterns generally lack mechanisms that bind user payment authorization to the intended order.}
 Consequently, once the communication channel between the user and the merchant is compromised, an adversary can induce the user to authorize any order.
 
 Motivated by the findings from our formal analysis, we identify a new variant of the order tampering attack.
@@ -60,8 +60,8 @@ We received acknowledgment from them, and at the time of writing, remediation ef
 Additionally, we notified the developers of 56 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
 
 To address these design flaws, 
-we propose a deployable payment model which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
-Under the weakened channel assumptions, we formally verify this model and show that it satisfies all the defined security properties.
+we propose a deployable payment pattern which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
+Under the weakened channel assumptions, we formally verify this pattern and show that it satisfies all the defined security properties.
 
 % As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
 
@@ -69,14 +69,14 @@ Under the weakened channel assumptions, we formally verify this model and show t
 We make the following contributions:
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Symbolic verification of payment protocols.}
-    We summarize the mainstream design paradigms of third-party online payment protocols and analyze six representative real-world third-party online payment protocols using symbolic models.
+    We summarize the mainstream design patterns of third-party online payment protocols and analyze six representative real-world third-party online payment protocols using symbolic models.
     Our formal analysis results reveal that, under realistic adversary and channel assumptions, the high-level design of all analyzed protocols is flawed and vulnerable to order tampering attacks.
   \item \textbf{Disclosure of a new order tampering attack.}
     Based on our formal analysis results, we identified a new variant of order tampering attacks and successfully demonstrated it in a real-world payment environment.
     Our further measurement study shows that this vulnerability affects more than 25\% of real-world applications.
   \item \textbf{Proposal of a formal verified countermeasure.}
-    We propose a new payment model as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws.
-    Formal verification results demonstrate that the proposed model can maintain robust security, even under weakened channel assumptions.
+    We propose a new payment pattern as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws.
+    Formal verification results demonstrate that the proposed pattern can maintain robust security, even under weakened channel assumptions.
 \end{enumerate}
 
 % \noindent\textbf{Disclosure.}

@@ -93,7 +93,7 @@ To intuitively model this behavior, we introduce an \emph{Order Oracle} within t
 By querying this oracle with an order amount $amt$ and an order description $desc$, the adversary can obtain the corresponding legitimate payment parameters.
 The oracle is granted access to the merchant's identifier $id_M$ and rivate key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
 The function \Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)} represents the process by which the oracle generates payment parameters from $amt$ and $desc$.
-This process is consistent with the procedure used by merchants to generate payment parameters in both Payment Model~A and Payment Model~B.
+This process is consistent with the procedure used by merchants to generate payment parameters in both payment pattern~A and payment pattern~B.
 We use equations to flexibly define this process in symbolic models.
 In protocols conforming to Model~A, the equation is defined as follows:
 \begin{tightflalign}

@@ -4,24 +4,24 @@
 
 
 \textbf{Advantages.}
-From a protocol design perspective, our payment model exhibits three key advantages.
+From a protocol design perspective, our payment pattern exhibits three key advantages.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Minimal trust assumptions.}
   At the protocol design level, we minimize reliance on trusted channels.
   The protocol is formally proven to guarantee payment security under weakened external channel assumptions.
   \item \textbf{Formally provable security.} 
-Our formal analysis results demonstrate that our payment model effectively prevents order tampering attacks during regular payments and satisfies all security properties defined in this paper.
+Our formal analysis results demonstrate that our payment pattern effectively prevents order tampering attacks during regular payments and satisfies all security properties defined in this paper.
 \end{enumerate}
 
 \textbf{Limitations.} 
-We honestly present the limitations and trade-offs of our payment model.
+We honestly present the limitations and trade-offs of our payment pattern.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Signature and storage overhead.}
-Our payment model introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
+Our payment pattern introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
 However, no new cryptographic primitives are introduced, and we consider the resulting overhead to be acceptable in practice.
   \item \textbf{Additional user interaction during the initial payment.}
 During the initial payment, users are required to explicitly confirm their trust in the merchant, introducing additional user interaction.
-For regular payments, no extra interaction is required, and the overall user experience remains comparable to that of existing payment models.
+For regular payments, no extra interaction is required, and the overall user experience remains comparable to that of existing payment patterns.
   \item \textbf{No security improvement for the initial payment.}
 Our proposed model does not provide additional security guarantees for the initial payment.
 Instead, our design follows the widely adopted Trust-On-First-Use (TOFU) model, under which the initial interaction may be vulnerable to active network attacks.
