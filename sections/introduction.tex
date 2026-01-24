@@ -49,17 +49,18 @@ Our analysis reveals a pervasive yet underexplored design anti-pattern: \emph{ma
 Consequently, once the communication channel between the user and the merchant is compromised, an adversary can induce the user to authorize any order.
 
 Motivated by the findings from our formal analysis, we identify a new variant of the order tampering attack.
-We observe that many merchant applications on Android incorrectly use implicit Intents to interact with payment applications.
+We observe that many merchant applications on Android improperly use implicit intents to interact with payment applications.
 This misuse exposes the transmission of payment parameters to interception by malicious applications.
 We develop a proof-of-concept attack application that exploit this vulnerability and successfully perform order tampering attacks in real-world payment environments.
-To assess the severity of this issue, we conduct a measurement study covering 461 popular applications across multiple domains, including online shopping, online education, entertainment, and gaming.
+To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
 Our results show that more than $25\%$ of the sampled applications are vulnerable.
 These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
-We responsibly disclosed our findings to the security teams of Alipay and WeChat Pay.
-We received acknowledgment from them, and at the time of writing this paper, remediation efforts were actively underway.
-In addition, we notified the developers of 56 vulnerable merchant applications identified in our study and provided them with concrete security recommendations.
+We responsibly disclosed our findings to the security teams at Alipay and WeChat Pay.
+We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
+Additionally, we notified the developers of 56 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
 
-To address these threats, we propose a deployable payment model which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
+To address these design flaws, 
+\textcolor{red}{we propose a deployable payment model which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.}
 Under the weakened channel assumptions, we formally verify this model and show that it satisfies all the defined security properties.
 
 % As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
@@ -68,14 +69,14 @@ Under the weakened channel assumptions, we formally verify this model and show t
 We make the following contributions:
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Symbolic verification of payment protocols.}
-    We developed a unified symbolic modeling framework for third-party online payment protocols and analyzed six representative real-world payment protocols.
-    Our formal analysis reveals that, under realistic adversary and channel assumptions, the high-level design of all analyzed protocols is flawed and vulnerable to order tampering attacks.
+    We developed a unified symbolic modeling \textcolor{red}{framework}\textcolor{blue}{(What is this?)} for third-party online payment protocols and analyzed six representative real-world payment protocols.
+    Our formal analysis results reveal that, under realistic adversary and channel assumptions, the high-level design of all analyzed protocols is flawed and vulnerable to order tampering attacks.
   \item \textbf{Disclosure of a new order tampering attack.}
-    Based on the results of our formal analysis, we identified a novel variant of order tampering attacks and successfully demonstrated it in a real-world payment environment.
+    Based on our formal analysis results, we identified a new variant of order tampering attacks and successfully demonstrated it in a real-world payment environment.
     Our further measurement study shows that this vulnerability affects more than 25\% of real-world applications.
   \item \textbf{Proposal of a formal verified countermeasure.}
-    We propose a new payment model as a countermeasure, which introduces a user-side order authentication mechanism to address the design flaws.
-    The formal verification results demonstrate that the proposed model can maintain sufficient security even under weakened channel assumptions.
+    We propose a new payment model as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws.
+    Formal verification results demonstrate that the proposed model can maintain robust security, even under weakened channel assumptions.
 \end{enumerate}
 
 % \noindent\textbf{Disclosure.}
