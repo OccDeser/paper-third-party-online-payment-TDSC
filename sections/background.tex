@@ -29,18 +29,19 @@ A typical third-party online payment ecosystem involves four main participants:
     % An individual who initiates a payment for goods or services.
     An individual who initiates and authorizes payments for goods or services.
   \item \textit{\textbf{Merchant Frontend (MF):}}
-    The interface through which the user interacts to select goods and initiate the payment,
+    The interface through which the user interacts to select goods and initiate payments,
     typically implemented as a website or mobile application.
   \item \textit{\textbf{Merchant Server (MS):}}
-    The server-side component of the merchant that processes orders and communicates with the payment provider.
+    The server-side component of the merchant that processes orders and communicates with payment providers.
   \item \textit{\textbf{Third-Party Payment System (PS):}}
-    We refer to a payment transaction handling system provided by a payment service provider as \emph{PS}.
-    The \emph{PS} consists of a payment application (\emph{PS-App}) and a payment server (\emph{PS-Server}).
-    Since the internal interaction mechanisms are proprietary and the communication occurs over private secure channels, the two components cannot be individually inspected.
-    Thus, we treat the \emph{PS} as a unified black-box system.
+    A payment transaction handling system provided by a payment service provider.
+    % We refer to a payment transaction handling system provided by a payment service provider as \emph{PS}.
+    The \emph{PS} comprises a payment application (\emph{PS-App}) and a payment server (\emph{PS-Server}).
+    Since the internal interaction mechanisms are proprietary and the communication occurs over private, secure channels, these two components cannot be individually inspected.
+    Therefore, we treat the \emph{PS} as a unified black-box system.
 \end{enumerate}
 
-As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment process can be abstracted into the following phases:
+As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment process can be abstracted into the following four phases:
 \begin{enumerate}[leftmargin=*]
   \item[\rom{1}.] \textit{\textbf{Order Phase:}}
     \emph{U} purchases $goods$ and selects a payment provider on \emph{MF}. 
