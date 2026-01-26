@@ -70,7 +70,7 @@
 \NewCoordBelowToC{c_act_MS1}{c_ldiv_2-|c_MS}{\LINEHEIGHT/2};
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_MS1}{c_act_MS1}{
   $id_{order} := random()$\\
-  $amount, description := caculate(goods)$\\
+  $amount, description := calculate(goods)$\\
   $order = id_{M} || id_{order} || amount || description$\\
   $S_{order} := sign_{priv_{M}}(order)$
 };
