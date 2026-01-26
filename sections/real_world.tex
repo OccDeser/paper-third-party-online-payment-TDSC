@@ -22,12 +22,16 @@ When requesting a payment, a merchant application should use an explicit Intent 
 However, we find that some merchant applications use implicit Intents in practice.
 This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious app that declares the same Intent handling capability.
 
+Intent hijacking is not specific to payment scenarios, but rather a systemic security risk inherent in the Android component communication mechanism.
+However, existing third-party online payment protocols are designed under the assumption that the communication channel between the merchant client and the payment application is trusted. 
+This channel assumption is unrealistic in real-world deployments.
+
 \subsection{Attack Execution}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.65\linewidth]{img/setup.png}
-  \caption{Attack setup. 
+  \caption{Attack Setup. 
     \ding{172} denotes the victim device, which installs the malicious app, a vulnerable merchant application, and a payment application. 
     \ding{173} denotes the attacker device, which installs the attacker app. 
     The screenshots shown on \ding{172} and \ding{173} correspond to the real interfaces of the malicious app and the attacker app, respectively.
@@ -52,7 +56,7 @@ As a result, the attacker successfully tampers with the order, causing the user 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{img/attack_flow.pdf}
+  \includegraphics[width=\linewidth]{img/attack_flow.png}
   \caption{Attack Flow.}
   \label{fig:real_world_attack_flow}
 \end{figure}
@@ -71,6 +75,5 @@ More importantly, the cumulative number of downloads of these vulnerable applica
 \subsection{Responsible Disclosure}
 Following responsible disclosure guidelines, we reported the vulnerability to the security teams of WeChat Pay and Alipay in December 2025. 
 At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
-Alipay planned to deploy a fix by the end of January 2026.
 In addition, we contacted the developers of 56 affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
 We received positive responses from 14 developers, who indicated that they would update their applications promptly to address the issue.
