@@ -20,36 +20,36 @@ The security risk primarily arises from the misuse of implicit Intents.
 
 When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the WeChat Pay or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
 However, we find that some merchant applications use implicit Intents in practice.
-This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious app that declares the same Intent handling capability.
+This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious application that declares the same Intent handling capability.
 
 Intent hijacking is not specific to payment scenarios, but rather a systemic security risk inherent in the Android component communication mechanism.
 However, existing third-party online payment protocols are designed under the assumption that the communication channel between the merchant client and the payment application is trusted. 
 This channel assumption is unrealistic in real-world deployments.
 
-\subsection{Attack Execution}
+\subsection{Attack Implementation}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.65\linewidth]{img/setup.png}
   \caption{Attack Setup. 
-    \ding{172} denotes the victim device, which installs the malicious app, a vulnerable merchant application, and a payment application. 
-    \ding{173} denotes the attacker device, which installs the attacker app. 
-    The screenshots shown on \ding{172} and \ding{173} correspond to the real interfaces of the malicious app and the attacker app, respectively.
+    \ding{172} denotes the victim device, which installs the malicious application, a vulnerable merchant application, and a payment application. 
+    \ding{173} denotes the attacker device, which installs the attacker application. 
+    The screenshots shown on \ding{172} and \ding{173} correspond to the real interfaces of the malicious application and the attacker application, respectively.
   }
   \label{fig:real_world_attack_devices}
 \end{figure}
 
-We developed two Android applications, a malicious app and an attacker app, to exploit the aforementioned vulnerability.
+We developed two Android applications, a malicious application and an attacker application, to exploit the aforementioned vulnerability.
 Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
-The malicious app on device~\ding{172} is responsible for capturing and replaying payment parameters.
-The attacker app on device~\ding{173} places orders on the merchant platform and returns payment parameters to the malicious app.
+The malicious application on device~\ding{172} is responsible for capturing and replaying payment parameters.
+The attacker application on device~\ding{173} places orders on the merchant platform and returns payment parameters to the malicious application.
 
 Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
 The attack proceeds in four phases:
 \begin{enumerate}[leftmargin=*]
   \item A benign merchant application initiates a payment request by dispatching an implicit Intent containing payment parameters to the payment application;
   \item By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information;
-  \item Using the extracted information, the attacker places a new order under an attacker-controlled account on the merchant platform and obtains a fresh set of payment parameters that preserve the original order information while being bound to the attacker's account;
+  \item Using the extracted information, the attacker application places a new order under an attacker-controlled account on the merchant platform and obtains a fresh set of payment parameters that preserve the original order information while being bound to the attacker's account;
   \item The tampered payment parameters are then relayed to the payment application, which processes the request without detecting the modification.
 \end{enumerate}
 As a result, the attacker successfully tampers with the order, causing the user to complete a payment specified by the attacker rather than the original merchant.
@@ -59,7 +59,7 @@ As a result, the attacker successfully tampers with the order, causing the user 
   \includegraphics[width=\linewidth]{img/attack_flow.pdf}
   \caption{Attack Flow.
     MA denotes the merchant application; 
-    Malicious App denotes the malicious application we developed;
+    Malicious Application denotes the malicious application we developed;
     PA denotes the payment application;
     MS denotes the merchant server;
   }
@@ -68,12 +68,11 @@ As a result, the attacker successfully tampers with the order, causing the user 
 
 \subsection{Impact Assessment}
 To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
-Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game, resulting in a total of 461 app versions.
+Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game, resulting in a total of 461 application versions.
 
 Among these versions, 419 support WeChat Pay and 401 support Alipay.
 Our analysis reveals that 64 WeChat Pay–enabled versions and 72 Alipay-enabled versions are vulnerable.
-In total, 116 app versions (more than 25\% of the analysed dataset) are found to be vulnerable, meaning that at least one of the integrated payment SDKs is affected.
-
+In total, 116 application versions (more than 25\% of the analysed dataset) are found to be vulnerable, meaning that at least one of the integrated payment SDKs is affected.
 The vulnerable applications span a wide range of categories, including e-commerce, online education, and entertainment.
 More importantly, the cumulative number of downloads of these vulnerable applications reaches 265.85 billion, indicating that the vulnerability potentially affects a very large user base and poses a significant security risk in practice.
 
