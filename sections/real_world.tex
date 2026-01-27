@@ -30,19 +30,34 @@ This channel assumption is unrealistic in real-world deployments.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.65\linewidth]{img/setup.png}
+  % --- 左侧子图：受害者设备 ---
+  \begin{subfigure}[b]{0.32\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/setup_1.png} % 请替换为受害者设备的图片路径
+    \caption{Victim Device}
+    \label{fig:victim_device}
+  \end{subfigure}
+  \hspace{3em}
+  % --- 右侧子图：攻击者设备 ---
+  \begin{subfigure}[b]{0.32\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/setup_2.png} % 请替换为攻击者设备的图片路径
+    \caption{Attacker Device}
+    \label{fig:attacker_device}
+  \end{subfigure}
+
   \caption{Attack Setup. 
-    \ding{172} denotes the victim device, which installs the malicious application, a vulnerable merchant application, and a payment application. 
-    \ding{173} denotes the attacker device, which installs the attacker application. 
-    The screenshots shown on \ding{172} and \ding{173} correspond to the real interfaces of the malicious application and the attacker application, respectively.
+    Device~\ref{fig:victim_device} denotes the victim device, which installs the malicious application, a vulnerable merchant application, and a payment application. 
+    Device~\ref{fig:attacker_device} denotes the attacker device, which installs the attacker application. 
+    The screenshots correspond to the real interfaces of the malicious and attacker applications, respectively.
   }
   \label{fig:real_world_attack_devices}
 \end{figure}
 
 We developed two Android applications, a malicious application and an attacker application, to exploit the aforementioned vulnerability.
 Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
-The malicious application on device~\ding{172} is responsible for capturing and replaying payment parameters.
-The attacker application on device~\ding{173} places orders on the merchant platform and returns payment parameters to the malicious application.
+The malicious application on device~\ref{fig:victim_device} is responsible for capturing and replaying payment parameters.
+The attacker application on device~\ref{fig:attacker_device} places orders on the merchant platform and returns payment parameters to the malicious application.
 
 Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
 The attack proceeds in four phases:
@@ -61,14 +76,16 @@ As a result, the attacker successfully tampers with the order, causing the user 
     MA denotes the merchant application; 
     Malicious Application denotes the malicious application we developed;
     PA denotes the payment application;
-    MS denotes the merchant server;
+    MS denotes the merchant server.
   }
   \label{fig:real_world_attack_flow}
 \end{figure}
 
 \subsection{Impact Assessment}
 To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
-Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game, resulting in a total of 461 application versions.
+Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game.
+For some applications, only one or two versions were available.
+In total, we collected 461 application versions.
 
 Among these versions, 419 support WeChat Pay and 401 support Alipay.
 Our analysis reveals that 64 WeChat Pay–enabled versions and 72 Alipay-enabled versions are vulnerable.
@@ -79,5 +96,5 @@ More importantly, the cumulative number of downloads of these vulnerable applica
 \subsection{Responsible Disclosure}
 Following responsible disclosure guidelines, we reported the vulnerability to the security teams of WeChat Pay and Alipay in December 2025. 
 At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
-In addition, we contacted the developers of 56 affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
+In addition, we contacted the 56 developers of affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
 We received positive responses from 14 developers, who indicated that they would update their applications promptly to address the issue.
