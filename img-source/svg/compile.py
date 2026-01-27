@@ -3,6 +3,7 @@ import subprocess
 from tqdm import tqdm
 from pathlib import Path
 from typing import List
+import sys
 
 def find_svg_files(path: str | Path = ".") -> List[Path]:
   path = Path(path)
@@ -17,7 +18,11 @@ def convert2pdf(svg_path: Path, pdf_path: Path) -> None:
     f"--export-filename={pdf_path}"
   ], check=True)
 
-svgs = find_svg_files()
+if not sys.argv[1:]:
+  svgs = find_svg_files()
+else:
+  svgs = [Path(arg) for arg in sys.argv[1:]]
+
 for svg in tqdm(svgs):
   pdf = svg.with_suffix(".pdf")
   pdf = os.path.join("..", "..", "img", pdf.name)
