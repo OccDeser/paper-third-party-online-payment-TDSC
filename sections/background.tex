@@ -150,8 +150,8 @@ Formally, a rule can be written as following:
   \TFacts{  LF_1,\ldots,LF_m } \TActFactsSL{AF(t_1, \ldots, t_k)} \TFacts{  RF_1, \ldots, RF_n } &
 \end{tightflalign}
 Given a current state multiset $S$, the rule can be enabled when $LF_1,\ldots,LF_m \subseteq S$.
-\textcolor{red}{Its application yields a new state $S' = (S \setminus \{LF_1,\ldots,LF_m\}) \cup \{RF_1, \ldots, RF_n\}$,}
-and records the action fact $AF(t_1, \ldots, t_k)$ in the execution trace.
+Its application yields a new state $S' = (S \setminus \text{\funcText{linear}}(\{LF_1,\ldots,LF_m\})) \cup \{RF_1, \ldots, RF_n\}$,
+and records the action fact $AF(t_1, \ldots, t_k)$ in the execution trace, where \text{\funcText{linear}} extracts the linear facts from a set of facts.
 
 \textbf{Trace and Formulas.}
 In \Tamarin, the global behavior of a protocol is captured by traces, which are sequences of action facts.
