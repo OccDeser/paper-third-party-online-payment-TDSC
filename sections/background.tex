@@ -44,22 +44,23 @@ A typical third-party online payment ecosystem involves four main participants:
 As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment process can be abstracted into the following four phases:
 \begin{enumerate}[leftmargin=*]
   \item[\rom{1}.] \textit{\textbf{Order Phase:}}
-    \emph{U} purchases $goods$ and selects a payment provider on \emph{MF}. 
-    The \emph{MF} sends the $goods$ and payment provider to \emph{MS}.
+    The user \emph{U} selects $goods$ and chooses a payment provider on the \emph{MF}. 
+    The \emph{MF} sends the information of $goods$ and the selected payment provider to the \emph{MS}.
   \item[\rom{2}.] \textit{\textbf{Prepayment Phase:}} 
-    Based on the received information, \emph{MS} generates the corresponding payment parameters $params$ and returns them to \emph{MF}. 
-    \emph{MF} forwards $params$ to the corresponding \emph{PS}.
-  \item[\rom{3}.] \textbf{Authorization Phase:} 
-    The \emph{PS} presents the order information (including product description, payment amount, and payee's account) to \emph{U} on the payment interface for confirmation. 
-    After verifying the order details, \emph{U} enters the payment $password$ on the \emph{PS-App} to authorize and complete the transaction.
+    Upon receiving the information, the \emph{MS} generates the corresponding payment parameters $params$ and returns them to the \emph{MF},
+    which subsequently forwards $params$ to the corresponding \emph{PS}.
+    % \emph{MF} forwards $params$ to the corresponding \emph{PS}.
+  \item[\rom{3}.] \textbf{\textit{Authorization Phase:}} 
+    The \emph{PS} displays the order information, including product description, payment amount, and payee's account, to \emph{U} via the \emph{PS-App} for confirmation. 
+    After verifying the order details, \emph{U} enters the payment $password$ in the \emph{PS-App} to authorize the transaction.
   \item[\rom{4}.] \textit{\textbf{Notification Phase:}}  
-    After the authorization phase, \emph{PS-Server} signs the payment result using its private key and sends the signed result to \emph{MS}.
-    Meanwhile, the \emph{PS-App} also shows the payment result page to \emph{U}.
+    Upon successful authorization, the \emph{PS-Server} signs the payment result using its private key and sends the signed result to the \emph{MS}.
+    Simultaneously, the \emph{PS-App} displays the payment result to \emph{U}.
 \end{enumerate}
     
 \subsection{Payment Scenarios}
 
-\emph{PS-Server} obtains payment information from \emph{MF} via \emph{PS-App} on the \emph{U}'s mobile device.
+The \emph{PS-Server} obtains payment information from the \emph{MF} via \emph{PS-App} on the \emph{U}'s mobile device.
 However, the communication methods between \emph{PS-App} and \emph{MF} differ depending on how \emph{MF} is implemented, 
 including native mobile applications, mobile web pages, and desktop web pages.
 These distinct forms result in different payment scenarios, and payment providers accordingly define specific interaction methods between the \emph{MF} and the payment system (\emph{PS}).
