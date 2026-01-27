@@ -89,12 +89,12 @@ In total, we collected 461 application versions.
 
 Among these versions, 419 support WeChat Pay and 401 support Alipay.
 Our analysis reveals that 64 WeChat Pay–enabled versions and 72 Alipay-enabled versions are vulnerable.
-In total, 116 application versions (more than 25\% of the analysed dataset) are found to be vulnerable, meaning that at least one of the integrated payment SDKs is affected.
-The vulnerable applications span a wide range of categories, including e-commerce, online education, and entertainment.
+Out of 53 applications, a total of 116 versions representing more than 25\% of the analyzed dataset support at least one vulnerable payment method. 
+These vulnerable applications span a wide range of categories, including e-commerce, online education, and entertainment.
 More importantly, the cumulative number of downloads of these vulnerable applications reaches 265.85 billion, indicating that the vulnerability potentially affects a very large user base and poses a significant security risk in practice.
 
 \subsection{Responsible Disclosure}
 Following responsible disclosure guidelines, we reported the vulnerability to the security teams of WeChat Pay and Alipay in December 2025. 
 At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
-In addition, we contacted the 56 developers of affected Android applications and games, recommending the use of explicit Intents to ensure the secure transmission of payment requests.
-We received positive responses from 14 developers, who indicated that they would update their applications promptly to address the issue.
+We identified contact information for 41 affected Android applications and issued security notifications to their developers, detailing the underlying risks and corresponding mitigation strategies. 
+Among these, 17 developers responded promptly, and one developer explicitly committed to fixing the vulnerability.
