@@ -2,21 +2,21 @@
 \section{Threat Model and Assumptions}
 %-------------------------------------------------------------------------------
 
-In this section, we define the threat model and security assumptions used in our formal analysis and attacks.
+In this section, we introduce the threat model and security assumptions used in our formal analysis and attacks.
 
 \subsection{Threat Model}
-
-The threat model we considered is defined as follows:
+In this paper, we consider the following adversary model.
 
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Payment Parameter Acquisition.}
-  We assume that the adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
-  This assumption is realistic, as most merchant platforms support public registration, allowing an adversary to create a account and complete purchases to acquire payment parameters.
+  We assume that adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
+  This assumption is realistic, as most merchant platforms support public registration, allowing adversaries to create accounts and complete purchases to acquire payment parameters.
   \item \textbf{Compromised Insecure Channels.}
-  The adversary follows the standard Dolev--Yao model and is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
+  The adversary follows the standard Dolev-Yao model, where the adversary is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
   In third-party online payment ecosystems, \emph{PS} cannot provide absolute security guarantees for all communication channels between external entities. 
-  We therefore assume weak assumptions for such external channels and grant the adversary man-in-the-middle capabilities over these insecure channels. 
-  We will discuss which channels are considered insecure in Section~\ref{sec:security_assumptions}.
+  Therefore, we adopt weak assumptions for such external channels and grant the adversary man-in-the-middle capabilities over these insecure channels. 
+  % We will discuss which channels are considered insecure in Section~\ref{sec:security_assumptions}.
+  The specific channels considered insecure are discussed in Section~\ref{sec:security_assumptions}.
 \end{enumerate}
 
 
@@ -26,11 +26,11 @@ The threat model we considered is defined as follows:
 Regarding the user, the payment system, and the communication channel, we make the following security assumptions:
 
 \textbf{User Assumptions.}
-As described in Section~\ref{sec:payment-ecosystem}, during the \emph{Authorization} phase, users review the order information before authorizing the payment.
+During the \emph{Authorization} phase, users review the order information before authorizing the payment.
 We assume that users can correctly verify whether the payment \emph{amount} and order \emph{description} displayed by the \emph{PS-App} match the goods selected on the \emph{MF}.
 Another key element displayed on the payment interface is the payee's account name. 
 However, since this name does not necessarily correspond to the merchant's brand name, \emph{U} cannot reliably verify whether the displayed account belongs to the intended merchant.
-For instance, when purchasing a video game on Steam (a leading global digital game distribution and social platform), the payee's name shown is ``Valve Corporation'' (the parent company) rather than ``Steam''.
+For instance, when purchasing a video game on Steam (a leading global digital game distribution and social platform), the payee's name shown is ``Valve Corporation'' (the parent company of Steam) rather than ``Steam''.
 Users without relevant background knowledge may find it difficult to determine whether ``Valve Corporation'' is indeed the payee account associated with ``Steam''.
 Therefore, we assume that users do not rely on the payee's account name when authorizing a payment.
 
