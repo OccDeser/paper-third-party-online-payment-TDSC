@@ -71,7 +71,7 @@
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_MS1}{c_act_MS1}{
   $id_{order} := random()$\\
   $pub_{UA}, priv_{UA}= asymmetric\_key\_pair()$\\
-  $amount, description := caculate(goods)$\\
+  $amount, description := calculate(goods)$\\
   $order = id_{M} || id_{order} || amount || description$\\
   $S_{initial} := sign_{priv_{M}}(pub_{UA}||order)$
 };

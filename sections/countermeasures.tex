@@ -21,14 +21,14 @@ Therefore, defending against order tampering attacks solely by securing communic
 Consequently, mitigation is often reactive: once an insecure communication channel is identified, merchants and users are notified to apply patches.
 
 \textbf{Root Causes}
-The root cause of such attacks lies in the lack of an effective user-side authentication mechanism for order information in existing payment patterns.
+The root cause of such attacks lies in the lack of a user-side authentication mechanism for order information in existing payment patterns.
 We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
-However, the user does not actually authenticate the order itself.
+However, the user does not actually authenticate the order.
 Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
 In other words, during the \emph{Authentication} phase, the user performs no form of authentication of the order data.
 The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
-This observation reveals a fundamental design flaw in current payment patterns.
+This observation reveals a design flaw in current payment patterns.
 
 \subsection{Countermeasure Design}
 
@@ -46,10 +46,9 @@ This observation reveals a fundamental design flaw in current payment patterns.
   \label{fig:our_model_regular}
 \end{figure}
 
-To fundamentally address order tampering attacks, we design and propose a new third-party payment pattern that introduces a user-side order authentication mechanism to effectively prevent such attacks.
-Our payment pattern distinguishes between \emph{initial} and \emph{regular} payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.~\ref{fig:our_model_regular}, respectively.
+To fundamentally address order tampering attacks, we design and propose a new third-party payment protocol that introduces a user-side order authentication mechanism to effectively prevent such attacks.
+Our payment protocol distinguishes between \emph{initial} and \emph{regular} payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.~\ref{fig:our_model_regular}, respectively.
 For a given merchant and user, the first payment initiated by the user is defined as an \emph{initial} payment, while all later payments are defined as \emph{regular} payments.
-Our model is backward compatible with existing payment patterns, preserves most of their workflows, and enables payment service providers to deploy it incrementally without modifying the existing payment process.
 
 At the beginning of the \emph{Prepayment} phase of a user's initial payment, \emph{MS} generates a public–private key pair $(priv_{UA}, pub_{UA})$ for \emph{U}, and then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them to \emph{PS}.
 Then, \emph{PS} temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~($id_{prepay}$) to the merchant.
@@ -70,7 +69,7 @@ Otherwise, the application informs the user that the merchant is not trusted and
 \input{tables/countermeasure.tex}
 
 We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
-The analysis shows that under all three channel assumptions, our regular payment pattern effectively defends against order tampering attacks and satisfies all security properties.
+The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
 This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
-Although our initial payment pattern does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, 
+Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, 
 the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
