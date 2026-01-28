@@ -40,12 +40,12 @@ In in-app payment, the workflow can be summarized in the following steps:
 % In mobile web payment, the workflow follows Steps 1–7 as described above, except for Step 3, which differs as follows:
 In mobile web payment, the workflow is as follows:
 
-\noindent\textbf{Step 1-2.} xxx % same as in-app payment.
+\noindent\textbf{Step 1--2.} Same as in-app payment.
 
 \noindent\textbf{Step 3.} The mobile web page triggers \emph{PS-App} via a URL scheme. 
 % 应该是web page 通过 URL scheme 启动 PS-App，并传递支付参数。
 
-\noindent\textbf{Step 4-7.} xxx % same as in-app payment.
+\noindent\textbf{Step 4-7.} Same as in-app payment.
 
 \begin{figure}[h]
     \centering
@@ -54,9 +54,13 @@ In mobile web payment, the workflow is as follows:
     \label{fig:qr_code_payment}
 \end{figure}
 
-In contrast, QR code payment adheres to the same general workflow, while Step 3 exhibits a distinct execution.
+In QR code payment, the workflow is as follows:
+
+\noindent\textbf{Step 1--2.} Same as in-app payment.
 
 \noindent\textbf{Step 3.} The merchant web page generates and displays a payment QR code encoding the invocation information, and the user scans the QR code using a mobile device to launch \emph{PS-App}.
+
+\noindent\textbf{Step 4-7.} Same as in-app payment.
 
 \section{Alipay Protocols}
 
@@ -66,44 +70,44 @@ In this section, we present the real protocl of Alipay for the three payment sce
     \centering
     \includegraphics[width=\linewidth]{img/alipay_app.pdf}
     \caption{Alipay In-App Payment. \\
-    Notation: $validate(x)$ denotes checking whether $x$ is valid; $continue()$ denotes proceeding with the protocol, whereas $abort()$ denotes terminating the protocol; $random()$ denotes generating a fresh random value;$sign_{k}(m)$ denotes signing message $m$ using key $k$; $hash()$ denotes a cryptographic hash function; $make\_payment()$ denotes the fund transfer operation;}
+    Notation: $validate(x)$ denotes checking whether $x$ is valid; $continue()$ denotes proceeding with the protocol, whereas $abort()$ denotes terminating the protocol; $random()$ denotes generating a fresh random value;$sign_{k}(m)$ denotes signing message $m$ using key $k$; $hash()$ denotes a cryptographic hash function; $make\_payment()$ denotes the fund transfer operation;
+    $goods$ denotes the selected items.
+    $out\_trade\_no$ denotes the order number of the \emph{MS}.
+    $total\_amount$ denotes the payment amount.
+    $subject$ denotes the order title.
+    $app\_id$ denotes the merchant application identifier.
+    $notify\_url$ denotes the merchant callback endpoint.
+    $orderStr$ denotes the payment order string.
+    $account$ denotes the payee account identifier.
+    $password$ denotes the user authentication secret used for payment authorization.
+    $trade\_no$ denotes the Alipay transaction number.
+    $priv_{M}$ denotes the private key of \emph{MS}.
+    $priv_{A}$ denotes the private key of \emph{APS}.}
     \label{fig:alipay_in_app_payment}
 \end{figure}
 
 % 搞到 Caption里面
 In Alipay in-app payment, the system involves the following entities: the user (\emph{U}), the merchant application (\emph{MA}), the merchant server (\emph{MS}), the Alipay payment application (\emph{APA}), and the Alipay payment server (\emph{APS}).
 
-\textbf{Parameters.}
-$goods$ denotes the selected items.
-$out\_trade\_no$ denotes the order number of the \emph{MS}.
-$total\_amount$ denotes the payment amount.
-$subject$ denotes the order title.
-$app\_id$ denotes the merchant application identifier.
-$notify\_url$ denotes the merchant callback endpoint.
-$orderStr$ denotes the payment order string.
-$account$ denotes the payee account identifier.
-$password$ denotes the user authentication secret used for payment authorization.
-$trade\_no$ denotes the Alipay transaction number.
-$priv_{M}$ denotes the private key of \emph{MS}.
-$priv_{A}$ denotes the private key of \emph{APS}.
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/alipay_mobile_web.pdf}
-    \caption{Alipay Mobile Web Payment.}
+    \caption{Alipay Mobile Web Payment.\\
+    Notation: $form$ denotes the HTML form.}
     \label{fig:alipay_mobile_web_payment}
 \end{figure}
 
-In Alipay mobile web payment, the system involves the following entities: the \emph{U}, the merchant mobile web (\emph{MW}), the \emph{MS}, the \emph{APA}, the \emph{APS}. Here, \emph{form} denotes an HTML form.
+In Alipay mobile web payment, the system involves the following entities: the \emph{U}, the merchant mobile web (\emph{MW}), the \emph{MS}, the \emph{APA}, the \emph{APS}.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/alipay_order_code.pdf}
-    \caption{Alipay QR Code Payment.}
+    \caption{Alipay QR Code Payment.\\
+    Notation: $qr\_code$ denotes the QR code image.}
     \label{fig:alipay_qr_code_payment}
 \end{figure}
 
-In Alipay QR code payment, the system involves the following entities: the \emph{U}, the merchant PC web (\emph{PW}), the \emph{MS}, the \emph{APA}, the \emph{APS}. Here, \emph{qr\_code} denotes the QR code.
+In Alipay QR code payment, the system involves the following entities: the \emph{U}, the merchant PC web (\emph{PW}), the \emph{MS}, the \emph{APA}, the \emph{APS}.
 
 \section{Wechat Pay Protocols}
 
@@ -113,41 +117,41 @@ In this section, we present the real protocl of Wechat Pay for the three payment
     \centering
     \includegraphics[width=\linewidth]{img/wechat_pay_app.pdf}
     \caption{Wechat Pay In-App Payment. \\
-    Notation: $enc_{k}(m)$ denotes encrypting message $m$ under key $k$ using \textsf{AES} symmetric encryption;}
+    Notation: 
+    $amount$ denotes the payment amount.
+    $description$ denotes the order description.
+    $appid$ denotes the merchant application identifier.
+    $mchid$ denotes the merchant identifier.
+    $prepay\_id$ denotes the prepayment token.
+    $trade\_no$ denotes the Alipay transaction number.
+    $id$ denotes the number of callback notification.
+    $transaction\_id$ denotes the Wechat Pay transaction number.
+    $summary$ denotes the summary notes for callback content.
+    $nonce_{1}/nonce_{2}$ denotes a fresh nonce for replay protection.
+    $enc_{k}(m)$ denotes encrypting message $m$ under key $k$ using \textsf{AES} symmetric encryption.
+    $APIV3$ denotes the symmetric key shared between \emph{MS} and \emph{WPS}.
+    $priv_{w}$ denotes the private key of \emph{WPS}.}
     \label{fig:wechat_pay_in_app_payment}
 \end{figure}
 
 In Wechat Pay in-app payment, the system involves the following entities: the \emph{U}, the \emph{MA}, the \emph{MS}, the Wechat payment system (\emph{WPS}).
 
-\textbf{Parameters.}
-$amount$ denotes the payment amount.
-$description$ denotes the order description.
-$appid$ denotes the merchant application identifier.
-$mchid$ denotes the merchant identifier.
-$prepay\_id$ denotes the prepayment token.
-$trade\_no$ denotes the Alipay transaction number.
-$id$ denotes the number of callback notification.
-$transaction\_id$ denotes the Wechat Pay transaction number.
-$summary$ denotes the summary notes for callback content.
-$nonce_{1}/nonce_{2}$ denotes a fresh nonce for replay protection.
-$APIV3$ denotes the symmetric key shared between \emph{MS} and \emph{WPS}.
-$priv_{w}$ denotes the private key of \emph{WPS}.
-
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/wechat_pay_h5.pdf}
-    \caption{Wechat Pay Mobile Web Payment.}
+    \caption{Wechat Pay Mobile Web Payment.\\
+    Notation: $h5\_url$ denotes the URL scheme}
     \label{fig:wechat_pay_mobile_web_payment}
 \end{figure}
 
-In Wechat Pay mobile web payment, the system involves the following entities: the \emph{U}, the \emph{MW}, the \emph{MS}, the Wechat payment system (\emph{WPS}). Here, \emph{h5\_url} denotes the URL scheme.
+In Wechat Pay mobile web payment, the system involves the following entities: the \emph{U}, the \emph{MW}, the \emph{MS}, the \emph{WPS}.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/wechat_pay_native.pdf}
-    \caption{Wechat Pay QR Code Payment.}
+    \caption{Wechat Pay QR Code Payment.\\
+    Notation: $code\_url$ denotes the QR code.}
     \label{fig:wechat_pay_qr_code_payment}
 \end{figure}
 
-In Wechat Pay QR code payment, the system involves the following entities: the \emph{U}, the \emph{PW}, the \emph{MS}, the \emph{WPS}. Here, \emph{code\_url} denotes the QR code.
+In Wechat Pay QR code payment, the system involves the following entities: the \emph{U}, the \emph{PW}, the \emph{MS}, the \emph{WPS}.
