@@ -3,13 +3,13 @@
 %-------------------------------------------------------------------------------
 
 In this section, we formally define the security properties of third-party online payment protocols.
-The core security goal of such protocols is to ensure that the user, the merchant, and the payment service provider reach a consistent and unambiguous view of a transaction.
-In particular, the protocol must guarantee that (a) all parties agree on the payment order being processed, (b) each payment is explicitly authorized by the user, and (c) the reported payment result faithfully reflects the actual fund transfer.
+The core security goal of protocols is to ensure that the user, the merchant, and the payment service provider reach a consistent view of a transaction.
+The protocol must guarantee that (a) all parties agree on the payment order being processed, (b) each payment is authorized by the user, and (c) the reported payment result faithfully reflects the actual fund transfer.
 
 All properties considered in this section are instances of \emph{injective agreement}~\cite{Lowe1997AuthenticationHierarchy}.
-Injective agreement strengthens standard agreement by additionally requiring a one-to-one correspondence between protocol runs: 
-each successful local completion must correspond to a unique execution of the peer, thereby ruling out replay, duplication, or reuse of protocol messages.
-Formally, two types of atomic facts are necessary to define injective agreement:
+Injective agreement strengthens standard agreement by requiring a one-to-one correspondence between protocol runs: 
+each successful local completion must correspond to a unique execution of the peer, ruling out replay, duplication, or reuse of protocol messages.
+Two types of atomic facts are necessary to define injective agreement:
 \begin{enumerate}[leftmargin=*]
   \item $\mathsf{Running}(A,B,x)$: 
     records that party $A$ is interacting with $B$ in a concrete execution of the protocol and that the interaction involves data $x$ (an objective execution fact);

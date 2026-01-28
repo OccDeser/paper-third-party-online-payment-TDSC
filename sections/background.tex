@@ -13,17 +13,6 @@ By reviewing official documentation and developer guides~\cite{WeChat2025APIV3,A
 we summarize the typical ecosystem architecture of third-party online payment systems.
 A typical third-party online payment ecosystem involves four main participants:
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/tpp_process.pdf}
-    \caption{
-        An Overview of a Typical Third-Party Online Payment. 
-        Dashed arrows indicate optional messages, depending on the specific payment pattern.
-        Notation: $validate(p)$ denotes checking whether $p$ is valid; $continue()$ denotes continuing the execution of the protocol; $abort()$ denotes terminating the protocol; $make\_payment()$ denotes the fund transfer operation; $random()$ denotes generating a random number; and $sign_k(m)$ denotes signing message $m$ with key $k$.
-    }
-    \label{fig:third_party_payment}
-\end{figure}
-
 \begin{enumerate}[leftmargin=*]
   \item \textit{\textbf{User (U):}}
     % An individual who initiates a payment for goods or services.
@@ -82,6 +71,17 @@ In this scenario, the user browses the merchant's website using a desktop browse
 Since the merchant's web page cannot directly redirect to a mobile payment application, the payment provider employs a QR code as an intermediary between the PC and mobile platforms. 
 After placing an order, the merchant website generates a payment QR code, which the user scans with the \emph{PS-App} to obtain the payment parameters.
  
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{img/tpp_process.pdf}
+    \caption{
+        An Overview of a Typical Third-Party Online Payment. 
+        Dashed arrows indicate optional messages, depending on the specific payment pattern.
+        Notation: $validate(p)$ denotes checking whether $p$ is valid; $continue()$ denotes continuing the execution of the protocol; $abort()$ denotes terminating the protocol; $make\_payment()$ denotes the fund transfer operation; $random()$ denotes generating a random number; and $sign_k(m)$ denotes signing message $m$ with key $k$.
+    }
+    \label{fig:third_party_payment}
+\end{figure}
+
 \subsection{Payment Patterns}\label{sec:payment-models}
 During the \emph{Prepayment} phase, the generation methods of payment parameters vary across different providers and scenarios.
 We introduce two high-level payment patterns adopted by the two leading payment providers, WeChat Pay and Alipay.
@@ -149,9 +149,9 @@ Formally, a rule can be written as following:
 \begin{tightflalign}
   \TFacts{  LF_1,\ldots,LF_m } \TActFactsSL{AF(t_1, \ldots, t_k)} \TFacts{  RF_1, \ldots, RF_n } &
 \end{tightflalign}
-Given a current state multiset $S$, the rule can be enabled when $LF_1,\ldots,LF_m \subseteq S$.
-Its application yields a new state $S' = (S \setminus \text{\funcText{linear}}(\{LF_1,\ldots,LF_m\})) \cup \{RF_1, \ldots, RF_n\}$,
-and records the action fact $AF(t_1, \ldots, t_k)$ in the execution trace, where \text{\funcText{linear}} extracts the linear facts from a set of facts.
+Given a current state multiset $S$, the rule is enabled when $LF_1,\ldots,LF_m \subseteq S$.
+We use the function \funcText{linear} to denotes the linear facts from a set of facts.
+The application of the rule produces a new state $S' = (S \setminus \text{\funcText{linear}}(\{LF_1,\ldots,LF_m\})) \cup \{RF_1, \ldots, RF_n\}$, and appends the action facts $AF(t_1, \ldots, t_k)$ to the execution trace.
 
 \textbf{Trace and Formulas.}
 In \Tamarin, the global behavior of a protocol is captured by traces, which are sequences of action facts.

@@ -57,7 +57,7 @@ Then, \emph{PS} temporarily stores $pub_{UA}$ together with the order informatio
 Upon receiving $id_{prepay}$, \emph{MS} generates two signatures over the payment parameters using $pub_M$ and $pub_{UA}$, respectively, and sends signatures and $id_{prepay}$ to \emph{MF}
 During the \emph{Authentication} phase, \emph{PS-Server} send the order information together with $pub_{UA}$ to \emph{PS-App}.
 At this point, \emph{PS-App} notifies the user that this is the first payment to the merchant and asks whether this merchant should be trusted.
-If the user chooses to trust the merchant, \emph{PS-App} verifies both signatures and, upon successful verification, binds $pub_{UA}$ to the merchant identifier and stores it locally;.
+If the user chooses to trust the merchant, \emph{PS-App} verifies both signatures and, upon successful verification, binds $pub_{UA}$ to the merchant identifier and stores it locally.
 Otherwise, the payment process is aborted.
 
 In regular payments, the \emph{Prepayment} phase largely follows payment pattern~B.
@@ -68,10 +68,11 @@ Otherwise, the application informs the user that the merchant is not trusted and
 
 \subsection{Symbolic Verification}
 
-\input{tables/countermeasure.tex}
 
 We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
 The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
 This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
 Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, 
 the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
+
+\input{tables/countermeasure.tex}
