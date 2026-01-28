@@ -32,7 +32,7 @@ Another key element displayed on the payment interface is the payee's account na
 However, since this name does not necessarily correspond to the merchant's brand name, \emph{U} cannot reliably verify whether the displayed account belongs to the intended merchant.
 For instance, when purchasing a video game on Steam (a leading global digital game distribution and social platform), the payee's name shown is ``Valve Corporation'' (the parent company of Steam) rather than ``Steam''.
 Users without relevant background knowledge may find it difficult to determine whether ``Valve Corporation'' is indeed the payee account associated with ``Steam''.
-Therefore, we assume that users do not rely on the payee's account name when authorizing a payment.
+Therefore, we assume that users do not rely on the payee's account name when
 
 \textbf{Payment System Assumptions.}
 The \emph{PS} comprises two components: the \emph{PS-App} and the \emph{PS-Server}.  
@@ -51,9 +51,8 @@ We consider the following communication channels to be potentially insecure:
   This assumption is motivated by the fact that \emph{MF} operates on the user's device, and users should not be assumed to possess a high level of security awareness or to be able to defend against diverse threats in real-world network environments.
   In addition, given the large number of merchants involved, payment service providers cannot guarantee that all front-end and back-end communications of merchants are free from security vulnerabilities.
 \item[\Rom{2}.] \textbf{\emph{MF} $\Longleftrightarrow$ \emph{PS}:}
-  The communication between \emph{MF} and \emph{PS} is during the \emph{Prepayment} phase, where \emph{MF} invokes the \emph{PS-App} to send payment parameters. 
-  However, this process is not always secure. 
-  In many implementations, this interaction is vulnerable to hijacking attacks. Indeed, we identified real-world exploits, which are discussed in detail in Section~\ref{sec:real_world}. 
+  The communication between \emph{MF} and \emph{PS} occurs during the \emph{Prepayment} phase, in which \emph{MF} invokes the \emph{PS-App} to send payment parameters.
+  This interaction is vulnerable to hijacking attacks in practice, as evidenced by real-world exploits discussed in Section~\ref{sec:real_world}.
   Thus, we assume that this channel is insecure.
 \end{enumerate}
 

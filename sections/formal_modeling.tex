@@ -52,8 +52,8 @@ For the same goods (note that this does not refer to the same product model), a 
 Therefore, in our model, we use a fresh value as an abstract representation of the goods.
 The following rule models the user's goods ordering behavior:
 \begin{tightflalign}
-      &\TFacts{ \text{\TFact{Fr}}(\TSymbolFr goods)} \TEmpActFactSL{} & 
-      &\TFacts{
+      \TFacts{ \text{\TFact{Fr}}(\TSymbolFr goods)} \TEmpActFactSL{}  
+      \TFacts{
         \text{\TFact{Order}}(\TSymbolFr goods),
         \text{\TFact{SOut}}(..., \TSymbolFr goods)
       }
