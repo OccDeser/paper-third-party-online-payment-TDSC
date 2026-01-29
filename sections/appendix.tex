@@ -7,38 +7,29 @@
 Three third-party online payment scenarios were discussed in Section~\ref{sec:payment-scenarios}.
 We provide detailed workflow diagrams for each of these payment scenarios, as shown in Figures~\ref{fig:inapp_payment}--\ref{fig:qr_code_payment}.
 
-In in-app payment, shown in \ref{fig:inapp_payment}, the workflow is as follows:
+In in-app payment, as shown in Figure~\ref{fig:inapp_payment}, the workflow is as follows:
+
 \begin{enumerate}[leftmargin=3.5em]
-  % add words
-  \item[\textbf{Step 1}.] The user selects goods and initiates a purchase request at the merchant application.
-  \item[\textbf{Step 2}.] The merchant frontend communicates with the merchant server to create the order and derive payment-relevant information.
-  \item[\textbf{Step 3}.] Merchant application invokes \emph{PS-App} through the payment provider's SDK.
-  \item[\textbf{Step 4}.] The user authorizes the payment within \emph{PS-App}, typically by entering a payment password.
-  \item[\textbf{Step 5}.] \emph{PS-App} submits the payment request to \emph{PS-Server} for validation and execution.
-  \item[\textbf{Step 6}.] The \emph{PS-Server} performs the funds transfer.
-  \item[\textbf{Step 7}.] The \emph{PS-Server} sends a callback notification to merchant server. 
+    \item[\textbf{Step 1}.] The user selects goods in the merchant application and initiates a purchase request.
+    \item[\textbf{Step 2}.] The merchant application communicates with the merchant server to create the order and obtain the payment-relevant information required for the subsequent payment process.
+    \item[\textbf{Step 3}.] The merchant application invokes the payment provider's SDK to launch \emph{PS-App} and delivers the payment information to \emph{PS-App}.
+    \item[\textbf{Step 4}.] The user authorizes the payment within \emph{PS-App} by entering the payment password.
+    \item[\textbf{Step 5}.] \emph{PS-App} submits the payment request to \emph{PS-Server}, which validates the request and proceeds with payment execution.
+    \item[\textbf{Step 6}.] The \emph{PS-Server} performs the funds transfer to complete the transaction.
+    \item[\textbf{Step 7}.] The \emph{PS-Server} sends a callback notification to the merchant server, enabling the merchant server to update the order status accordingly.
 \end{enumerate}
 
-  % add words
-In mobile web payment, the workflow is mostly similar to that of in-app payment.
-In mobile web payment, the workflow is mostly similar to that of in-app payment.
-In mobile web payment, the workflow is mostly similar to that of in-app payment.
-In mobile web payment, the workflow is mostly similar to that of in-app payment.
-The differences lie in \textbf{Step 3}, where a specific URL scheme is used to launch \emph{PS-App} from the mobile web browser.
+    % add words
+In mobile web payment, as shown in Figure~\ref{fig:mobile_web_payment}, the workflow is mostly similar to that of in-app payment.
+The main difference lies in \textbf{Step 3}: the mobile web page launches \emph{PS-App} via a dedicated URL scheme registered by \emph{PS-App} at the operating system level.
 
-In QR code payment, the workflow differs from the previous two payment scenarios.
-The workflow is as follows:
+In QR code payment, as shown in Fig.~\ref{fig:qr_code_payment}, the workflow differs from the previous two scenarios mainly in \textbf{Steps 1--3}, which are described below.
+The remaining steps follow the in-app payment workflow.
 \begin{enumerate}[leftmargin=3.5em]
-  \item[\textbf{Step 1}.] xxx
-  \item[\textbf{Step 2}.] xxx
-  \item[\textbf{Step 2}.] xxx
-  \item[\textbf{Step 2}.] xxx
-  \item[\textbf{Step 2}.] xxx
-  \item[\textbf{Step 2}.] xxx
-  \item[\textbf{Step 2}.] xxx
-  \item[\textbf{Step 2}.] xxx
+    \item[\textbf{Step 1}.] The user selects goods in the merchant webpage and initiates a purchase request.
+    \item[\textbf{Step 2}.] The merchant webpage communicates with the merchant server to create the order and obtain the payment-relevant information required for the subsequent payment process.
+    \item[\textbf{Step 3}.] The merchant webpage displays a QR code encoding the payment information. The user scans the QR code on the mobile device, which launches \emph{PS-App} and transfers the payment information to \emph{PS-App}.
 \end{enumerate}
-
 
 \begin{figure}[t]
     \centering
@@ -51,7 +42,7 @@ The workflow is as follows:
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/pays2.pdf}
-    \caption{Payment Scenario \Rom{2} -- Mobile Web payment
+    \caption{Payment Scenario \Rom{2} -- Mobile Web Payment
     }
     \label{fig:mobile_web_payment}
 \end{figure}
@@ -73,6 +64,8 @@ We examined the actual protocol workflows of Alipay and WeChat Pay across three 
 Due to space constraints, we present a condensed version here.
 The full versions are available in the open-source repository~\cite{third_payment_model_2026}.
 
+Across the protocol diagrams, the involved entities include the user (\emph{U}), the merchant application (\emph{MA}), the merchant server (\emph{MS}), the merchant mobile web (\emph{MW}), and the merchant PC web (\emph{PW}). 
+Specifically, for Alipay we denote the payment application and server as the \emph{APA} and \emph{APS}, respectively, whereas for WeChat Pay we denote the payment system as \emph{WPS}.
 
 \begin{figure*}[t]
     \centering
@@ -98,7 +91,19 @@ The full versions are available in the open-source repository~\cite{third_paymen
         \label{fig:alipay_qr_code_payment}
     \end{subfigure}
 
-    \caption{Alipay Payment Methods}
+    \caption{Alipay Payment Methods\\
+    Notations:
+    $hash()$: a cryptographic hash function.
+    $out\_trade\_no$: the order number of the \emph{MS}.
+    $total\_amount$: the payment amount.
+    $subject$: the order title.
+    $app\_id$: the merchant application identifier.
+    $notify\_url$: the merchant callback endpoint.
+    $orderStr$: the payment order string.
+    $trade\_no$: the Alipay transaction number.
+    $form$: the HTML form.
+    $qr\_code$: the QR code.
+    }
     \label{fig:alipay_payment_methods}
 \end{figure*}
 
@@ -126,7 +131,21 @@ The full versions are available in the open-source repository~\cite{third_paymen
         \label{fig:wechat_pay_qr_code_payment}
     \end{subfigure}
 
-    \caption{Wechat Pay Payment Methods}
+    \caption{Wechat Pay Payment Methods\\
+    Notations:
+    $appid$: the merchant application identifier.
+    $mchid$: the merchant identifier.
+    $description$: the order description.
+    $prepay\_id$: the prepayment token.
+    $id$: the number of callback notification.
+    $transaction\_id$: the Wechat Pay transaction number.
+    $summary$: the summary notes for callback content.
+    $nonce/nonce_{1}/nonce_{2}$: a fresh nonce for replay protection.
+    $enc_{k}(m)$: encrypting message $m$ under key $k$ using \textsf{AES} symmetric encryption.
+    $APIV3$: the symmetric key shared between \emph{MS} and \emph{WPS}.
+    $h5\_url$: an intermediate URL for invoking the WeChat Pay cashier page; the merchant H5 page accesses this URL to launch the WeChat client and complete the payment.
+    $code\_url$: the URL to be encoded into the QR code.
+    }
     \label{fig:wechat_pay_payment_methods}
 \end{figure*}
 
