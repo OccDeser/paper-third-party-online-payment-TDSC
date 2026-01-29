@@ -2,7 +2,7 @@
 \usepackage{fontawesome7}
 \input{common.tex}
 
-\renewcommand{\AGENTSPAN}{0.18\textwidth}
+\renewcommand{\AGENTSPAN}{0.19\textwidth}
 \newcommand{\COMMONCOLOR}{gray}
 \newcommand{\SPECIALCOLOR}{black}
 
@@ -28,7 +28,7 @@
 % Phase 2: Prepayment
 % -------------- Divide Line --------------
   \NewCoordRightToC{c_tmp}{agent_MF.south}{-0.06\textwidth};
-  \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/3};
+  \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_2};
   \NewCoordRightToC{c_rdiv_2}{c_tmp}{0.06\textwidth};
   \DrawLine{LineDotted}{c_ldiv_2}{c_rdiv_2};
@@ -45,9 +45,9 @@
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_MS1}{c_act_MS1}{
   $id_{order} := random()$\\
   $amount, description := calculate(goods)$\\
-  $order = id_{M} || id_{order} || amount || description$\\
+  $order = id_{M} \parallel id_{order} \parallel amount \parallel description$\\
   $S_{order} := sign_{priv_{M}}(order)$\\
-  $params := order || S_{order}$
+  $params := order \parallel S_{order}$
 };
 
 \NewCoordBelowToN{c_smsg_MS_MF_2}{action_MS1}{\LINEHEIGHT};

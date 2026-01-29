@@ -92,6 +92,8 @@
 \newcommand{\DrawLine}[3]{\draw[#1] (#2) -- (#3)}
 \newcommand{\DrawArrow}[4]{\draw[#1] (#2) -- (#3) node[midway,above=-3pt]{\contour{white}{#4}}}
 
+\newcommand{\Str}[1]{\text{\small\texttt{"#1"}}}
+
 \makeatletter
 \newcommand{\GetLowestCoord}[2]{%
     \global\pgf@ya=999pt%

@@ -2,7 +2,7 @@
 \usepackage{fontawesome7}
 \input{common.tex}
 
-\renewcommand{\AGENTSPAN}{0.18\textwidth}
+\renewcommand{\AGENTSPAN}{0.19\textwidth}
 \newcommand{\COMMONCOLOR}{black}
 \newcommand{\SPECIALCOLOR}{black}
 
@@ -15,7 +15,7 @@
 \NewCoord{c_U}{0,0};
 \NewAgent{agent_U}{c_U}{\hspace{-0.5em} \faUser \; U};
 
-\NewCoordRightToC{c_MF}{c_U}{\AGENTSPAN/1.5};
+\NewCoordRightToC{c_MF}{c_U}{\AGENTSPAN*0.6};
 \NewAgent{agent_MF}{c_MF}{\hspace{-0.5em} \faBasketShopping \; MF};
 
 \NewCoordRightToC{c_MS}{c_MF}{\AGENTSPAN};
@@ -54,7 +54,7 @@
 % Phase 2: Prepayment
 % -------------- Divide Line --------------
   \NewCoord{c_tmp}{c_rmsg_MF_MS_1 -| c_ldiv_1};
-  \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/3};
+  \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_2};
   \NewCoordRightToC{c_rdiv_2}{c_tmp}{0.06\textwidth};
   \DrawLine{LineDotted}{c_ldiv_2}{c_rdiv_2};
@@ -72,8 +72,8 @@
   $id_{order} := random()$\\
   $pub_{UA}, priv_{UA}= asymmetric\_key\_pair()$\\
   $amount, description := calculate(goods)$\\
-  $order = id_{M} || id_{order} || amount || description$\\
-  $S_{initial} := sign_{priv_{M}}(pub_{UA}||order)$
+  $order = id_{M} \parallel id_{order} \parallel amount \parallel description$\\
+  $S_{initial} := sign_{priv_{M}}(pub_{UA}\parallel order)$
 };
 
 \NewCoordBelowToN{c_smsg_MS_PS_2}{action_MS1}{\LINEHEIGHT};
@@ -94,8 +94,8 @@
 
 \NewCoordBelowToC{c_act_MS_2}{c_rmsg_PS_MS_1}{\LINEHEIGHT/2};
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_MS2}{c_act_MS_2}{
-  $S_{prepay} := sign_{priv_{M}}(id_{prepay} || id_{M} || pub_{UA})$\\
-  $params := id_{prepay} || id_{M} || pub_{UA} || S_{prepay}$
+  $S_{prepay} := sign_{priv_{M}}(id_{prepay} \parallel id_{M} \parallel pub_{UA})$\\
+  $params := id_{prepay} \parallel id_{M} \parallel pub_{UA} \parallel S_{prepay}$
 };
 
 \NewCoordBelowToN{c_smsg_MS_MF_1}{action_MS2}{\LINEHEIGHT};
@@ -130,7 +130,7 @@
 \NewCoordBelowToC{c_smsg_PS_U_1}{c_ldiv_3-|c_PS}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_PS_U_1}{agent_U}{c_smsg_PS_U_1};
 \DrawArrow{Arrow}{c_smsg_PS_U_1}{c_rmsg_PS_U_1}{
-  ``Do you trust this transaction?''
+  \Str{Do you trust this transaction?}
 };
 
 \NewCoordBelowToC{c_act_U_2}{c_rmsg_PS_U_1}{\LINEHEIGHT/2};
@@ -138,7 +138,7 @@
 
 \NewCoordBelowToN{c_smsg_U_PS_1}{action_U2}{\LINEHEIGHT/2};
 \NewCoordAlignToN{c_rmsg_U_PS_1}{agent_PS}{c_smsg_U_PS_1};
-\DrawArrow{Arrow}{c_smsg_U_PS_1}{c_rmsg_U_PS_1}{``Confirmed''};
+\DrawArrow{Arrow}{c_smsg_U_PS_1}{c_rmsg_U_PS_1}{\Str{Confirmed}};
 
 \NewCoordBelowToC{c_smsg_PS_U_1}{c_rmsg_U_PS_1-|c_PS}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_PS_U_1}{agent_U}{c_smsg_PS_U_1};
@@ -162,7 +162,7 @@
 % Phase 4: Notification 
 % -------------- Divide Line --------------
   \NewCoord{c_tmp}{action_PS2.south -| c_ldiv_1};
-  \NewCoordBelowToC{c_ldiv_4}{c_tmp}{\LINEHEIGHT/3};
+  \NewCoordBelowToC{c_ldiv_4}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_4};
   \NewCoordRightToC{c_rdiv_4}{c_tmp}{0.06\textwidth};
   \DrawLine{LineDotted}{c_ldiv_4}{c_rdiv_4};
@@ -176,8 +176,8 @@
 \NewCoordBelowToC{c_act_PS3}{c_ldiv_4-|c_PS}{\LINEHEIGHT/2};
 \NewAction{action_PS3}{c_act_PS3}{
   $id_{trade} := random()$\\
-  $result := \text{``success''} || id_{trade} || id_{M}$ \\
-  \quad\quad\quad $|| id_{order}|| amount || pub_{UA}$\\
+  $result := \Str{success} \parallel id_{trade} \parallel id_{M}$ \\
+  \quad\quad\quad $\parallel id_{order}\parallel amount \parallel pub_{UA}$\\
   $S_{result} := sign_{priv_{P}}(result)$
 };
 
@@ -195,11 +195,11 @@
 \NewCoordBelowToC{c_smsg_PS_U_2}{action_MS3.south-|c_PS}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_PS_U_2}{agent_U}{c_smsg_PS_U_2};
 \DrawArrow{ArrowDash, color=\COMMONCOLOR}{c_smsg_PS_U_2}{c_rmsg_PS_U_2}{
-  $\text{``Successful''}, amount, description, ...$
+  $\Str{Successful}, amount, description, ...$
 };
 % -------------- Divide Line --------------
   \NewCoord{c_tmp}{c_smsg_PS_U_2 -| c_ldiv_1};
-  \NewCoordBelowToC{c_ldiv_5}{c_tmp}{\LINEHEIGHT/3};
+  \NewCoordBelowToC{c_ldiv_5}{c_tmp}{\LINEHEIGHT/2};
   \NewCoordAlignToN{c_tmp}{agent_PS}{c_ldiv_5};
   \NewCoordRightToC{c_rdiv_5}{c_tmp}{0.06\textwidth};
   \DrawLine{LineDotted}{c_ldiv_5}{c_rdiv_5};

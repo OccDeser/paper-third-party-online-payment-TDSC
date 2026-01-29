@@ -72,10 +72,10 @@
 \NewAction{action_MS1}{c_act_MS1}{
   $out\_trade\_no := random()$\\
   $total\_amount, subject := calculate(goods)$\\
-  $order = app\_id || out\_trade\_no || total\_amount$ \\
-  \quad\quad\quad $|| subject || notify\_url$\\
+  $order = app\_id \parallel subject \parallel total\_amount$ \\
+  \quad\quad\quad $\parallel out\_trade\_no \parallel notify\_url$\\
   $S_{order} := sign_{priv_{M}}(order)$\\
-  $orderStr := order || S_{order}$
+  $orderStr := order \parallel S_{order}$
 };
 
 \NewCoordBelowToN{c_smsg_MS_MA_2}{action_MS1}{\LINEHEIGHT};
@@ -113,7 +113,7 @@
 
 \NewCoordBelowToC{c_smsg_APS_APA_1}{c_ldiv_3-|c_APS}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_APS_APA_1}{agent_APA}{c_smsg_APS_APA_1};
-\DrawArrow{Arrow}{c_smsg_APS_APA_1}{c_rmsg_APS_APA_1}{$\text{``Request passowrd''}$};
+\DrawArrow{Arrow}{c_smsg_APS_APA_1}{c_rmsg_APS_APA_1}{$\Str{Request password}$};
 
 \NewCoordBelowToC{c_smsg_APA_U_1}{c_rmsg_APS_APA_1}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_APA_U_1}{agent_U}{c_smsg_APA_U_1};
@@ -154,8 +154,8 @@
 \NewCoordBelowToC{c_act_APS3}{c_ldiv_4-|c_APS}{\LINEHEIGHT/2};
 \NewAction{action_APS3}{c_act_APS3}{
   $trade\_no := random()$\\
-  $result := \text{``success''} || app\_id || out\_trade\_no$ \\
-  \quad\quad\quad\quad $|| trade\_no|| total\_amount$\\
+  $result := \Str{success} \parallel app\_id \parallel trade\_no$ \\
+  \quad\quad\quad\quad $\parallel out\_trade\_no \parallel total\_amount$\\
   $S_{result} := sign_{priv_{A}}(result)$
 };
 
@@ -177,7 +177,7 @@
 \NewCoordBelowToN{c_smsg_APA_U_2}{action_APA1}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_APA_U_2}{agent_U}{c_smsg_APA_U_2};
 \DrawArrow{Arrow}{c_smsg_APA_U_2}{c_rmsg_APA_U_2}{
-  $\text{``Successful''}, total\_amount, subject, ...$
+  $\Str{Successful}, total\_amount, subject, ...$
 };
 
 % -------------- Divide Line --------------
@@ -199,13 +199,6 @@
   \DrawEnd{agent_APA}{c_lowest};
   \DrawEnd{agent_APS}{c_lowest};
 \end{scope}
-
-\NewCoordBelowToC{c_notation}{c_lowest-|c_ldiv_5}{\LINEHEIGHT};
-\NewNode{anchor=north west,align=flush left}{notation}{c_notation}{
-  Notations: \\
-  \quad\quad $validate(x)$: checking whether $x$ is valid; \\
-  \quad\quad $continue()$ denotes proceeding with the protocol
-};
 
 \end{tikzpicture}
 \end{document}

@@ -139,8 +139,8 @@
 \NewCoordBelowToC{c_act_PS3}{c_ldiv_4-|c_PS}{\LINEHEIGHT/2};
 \NewAction{action_PS3}{c_act_PS3}{
   $id_{trade} := random()$\\
-  $result := \text{``success''} || id_{trade} || id_{M}$ \\
-  \quad\quad\quad\quad $|| id_{order}|| amount$\\
+  $result := \Str{success} \parallel id_{trade} \parallel id_{M}$ \\
+  \quad\quad\quad\quad $\parallel id_{order}\parallel amount$\\
   $S_{result} := sign_{priv_{P}}(result)$
 };
 
@@ -151,7 +151,7 @@
 \NewCoordBelowToC{c_smsg_PS_U_2}{c_smsg_PS_MS_1}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_PS_U_2}{agent_U}{c_smsg_PS_U_2};
 \DrawArrow{Arrow}{c_smsg_PS_U_2}{c_rmsg_PS_U_2}{
-  $\text{``Successful''}, amount, description, ...$
+  $\Str{Successful}, amount, description, ...$
 };
 
 % -------------- Divide Line --------------

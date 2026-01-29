@@ -16,13 +16,13 @@
 \NewCoordRightToC{c_PW}{c_U}{\AGENTSPAN*1.35};
 \NewAgent{agent_PW}{c_PW}{\hspace{-0.5em} \faBasketShopping \; PW};
 
-\NewCoordRightToC{c_MS}{c_PW}{\AGENTSPAN*1.35};
+\NewCoordRightToC{c_MS}{c_PW}{\AGENTSPAN*1.38};
 \NewAgent{agent_MS}{c_MS}{\hspace{-0.5em} \faServer \; MS};
 
-\NewCoordRightToC{c_APA}{c_MS}{\AGENTSPAN*1.35};
+\NewCoordRightToC{c_APA}{c_MS}{\AGENTSPAN*1.38};
 \NewAgent{agent_APA}{c_APA}{\hspace{-0.5em} \faSackDollar \; APA};
 
-\NewCoordRightToC{c_APS}{c_APA}{\AGENTSPAN*1.35};
+\NewCoordRightToC{c_APS}{c_APA}{\AGENTSPAN*1.29};
 \NewAgent{agent_APS}{c_APS}{\hspace{-0.5em} \faDatabase \; APS};
 
 % ========================================
@@ -72,10 +72,10 @@
 \NewAction{action_MS1}{c_act_MS1}{
   $out\_trade\_no := random()$\\
   $total\_amount, subject := calculate(goods)$\\
-  $order = app\_id || out\_trade\_no || total\_amount$ \\
-  \quad\quad\quad $|| subject || \text{``QR\_CODE\_OFFLINE''}$\\
+  $order = app\_id \parallel subject \parallel out\_trade\_no$ \\
+  \quad\quad\quad $\parallel total\_amount \parallel \Str{QR\_CODE\_OFFLINE}$\\
   $S_{order} := sign_{priv_{M}}(order)$\\
-  $orderStr := order || S_{order}$
+  $orderStr := order \parallel S_{order}$
 };
 
 \NewCoordBelowToN{c_smsg_MS_APS_1}{action_MS1}{\LINEHEIGHT};
@@ -88,8 +88,8 @@
   \quad $continue()$\\
   \textbf{else} $abort()$\\
   $trade\_no := random()$\\
-  $qr\_code := total\_amount || subject $\\
-  \quad\quad\quad $|| trade\_no$
+  $qr\_code := total\_amount \parallel subject $\\
+  \quad\quad\quad $\parallel trade\_no$
 };
 
 \NewCoordBelowToN{c_smsg_APS_MS_1}{action_APS1}{\LINEHEIGHT};
@@ -157,8 +157,8 @@
 \NewCoordBelowToC{c_act_APS3}{c_ldiv_4-|c_APS}{\LINEHEIGHT/2};
 \NewAction{action_APS3}{c_act_APS3}{
   $trade\_no := random()$\\
-  $result := \text{``success''} || app\_id || out\_trade\_no$ \\
-  \quad\quad\quad\quad $|| trade\_no|| total\_amount$\\
+  $result := \Str{success} \parallel app\_id \parallel trade\_no$ \\
+  \quad\quad\quad\quad $\parallel out\_trade\_no \parallel total\_amount$\\
   $S_{result} := sign_{priv_{A}}(result)$
 };
 
@@ -180,7 +180,7 @@
 \NewCoordBelowToN{c_smsg_APA_U_2}{action_APA1}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_APA_U_2}{agent_U}{c_smsg_APA_U_2};
 \DrawArrow{Arrow}{c_smsg_APA_U_2}{c_rmsg_APA_U_2}{
-  $\text{``Successful''}, total\_amount, subject, ...$
+  $\Str{Successful}, total\_amount, subject, ...$
 };
 
 % -------------- Divide Line --------------

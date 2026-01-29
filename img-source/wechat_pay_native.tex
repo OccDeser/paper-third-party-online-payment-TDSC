@@ -13,13 +13,13 @@
 \NewCoord{c_U}{0,0};
 \NewAgent{agent_U}{c_U}{\hspace{-0.5em} \faUser \; U};
 
-\NewCoordRightToC{c_PW}{c_U}{\AGENTSPAN*1.35};
+\NewCoordRightToC{c_PW}{c_U}{\AGENTSPAN*1.25};
 \NewAgent{agent_PW}{c_PW}{\hspace{-0.5em} \faBasketShopping \; PW};
 
 \NewCoordRightToC{c_MS}{c_PW}{\AGENTSPAN*1.35};
 \NewAgent{agent_MS}{c_MS}{\hspace{-0.5em} \faServer \; MS};
 
-\NewCoordRightToC{c_WPS}{c_MS}{\AGENTSPAN*1.35};
+\NewCoordRightToC{c_WPS}{c_MS}{\AGENTSPAN*1.4};
 \NewAgent{agent_WPS}{c_WPS}{\hspace{-0.5em} \faSackDollar \; WPS};
 
 % ========================================
@@ -69,10 +69,10 @@
 \NewAction{action_MS1}{c_act_MS1}{
   $out\_trade\_no, nonce := random()$\\
   $amount, description := calculate(goods)$ \\
-  $body := appid || mchid || description || nonce $\\
-  \quad\quad\quad $ || out\_trade\_no || notify\_url || amount$\\
+  $body := appid \parallel mchid \parallel description \parallel nonce $\\
+  \quad\quad\quad $ \parallel out\_trade\_no \parallel notify\_url \parallel amount$\\
   $S_{body} := sign_{priv_{M}}(body)$\\
-  $message := mchid || S_{body} || body$
+  $message := mchid \parallel S_{body} \parallel body$
 };
 
 \NewCoordBelowToN{c_smsg_MS_WPS_1}{action_MS1}{\LINEHEIGHT};
@@ -149,17 +149,17 @@
 \NewAction{action_WPS3}{c_act_WPS3}{
   $id, transaction\_id, summary := random()$\\
   $nonce_{1}, nocne_{2} := random()$\\
-  $data := appid || mchid || out\_trade\_no $\\
-  \quad\quad\quad $|| transaction\_id || amount || nonce_{1}$\\
+  $data := appid \parallel mchid \parallel out\_trade\_no $\\
+  \quad\quad\quad $\parallel transaction\_id \parallel amount \parallel nonce_{1}$\\
   $E_{data} := enc_{APIV3}(data)$\\
-  $result := id || nonce_{1} || summary || nonce_{2}|| E_{data}$\\
+  $result := id \parallel nonce_{1} \parallel summary \parallel nonce_{2}\parallel E_{data}$\\
   $S_{result} := sign_{priv_{W}}(result)$
 };
 
 \NewCoordBelowToN{c_smsg_WPS_U_2}{action_WPS3}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_WPS_U_2}{agent_U}{c_smsg_WPS_U_2};
 \DrawArrow{Arrow}{c_smsg_WPS_U_2}{c_rmsg_WPS_U_2}{
-  $\text{``Successful''}, amount, description, ...$
+  $\Str{Successful}, amount, description, ...$
 };
 
 \NewCoordBelowToC{c_smsg_WPS_MS_1}{c_smsg_WPS_U_2}{\LINEHEIGHT};
@@ -176,7 +176,7 @@
 \NewCoordBelowToN{c_smsg_MS_WPS_2}{action_MS3}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_MS_WPS_2}{agent_WPS}{c_smsg_MS_WPS_2};
 \DrawArrow{Arrow}{c_smsg_MS_WPS_2}{c_rmsg_MS_WPS_2}{
-  $\text{``Successful''}$
+  $\Str{Successful}$
 };
 
 % -------------- Divide Line --------------
