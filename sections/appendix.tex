@@ -4,154 +4,129 @@
 
 \section{Payment Scenarios Illustrations}
 
-To aid in understanding the different third-party online payment scenarios discussed in \ref{sec:payment-scenarios}, we have drawn illustrative diagrams for the three payment scenarios, namely Payment Scenario \Rom{1} (In-app Payment), Payment Scenario \Rom{2} (Mobile Web Payment), and Payment Scenario \Rom{3} (QR Code Payment), as shown in Figures~\ref{fig:inapp_payment}--\ref{fig:qr_code_payment}. 
+Three third-party online payment scenarios were discussed in Section~\ref{sec:payment-scenarios}.
+We provide detailed workflow diagrams for each of these payment scenarios, as shown in Figures~\ref{fig:inapp_payment}--\ref{fig:qr_code_payment}.
 
-\begin{figure}[h]
+In in-app payment, shown in \ref{fig:inapp_payment}, the workflow is as follows:
+\begin{enumerate}[leftmargin=3.5em]
+  % add words
+  \item[\textbf{Step 1}.] The user selects goods and initiates a purchase request at the merchant application.
+  \item[\textbf{Step 2}.] The merchant frontend communicates with the merchant server to create the order and derive payment-relevant information.
+  \item[\textbf{Step 3}.] Merchant application invokes \emph{PS-App} through the payment provider's SDK.
+  \item[\textbf{Step 4}.] The user authorizes the payment within \emph{PS-App}, typically by entering a payment password.
+  \item[\textbf{Step 5}.] \emph{PS-App} submits the payment request to \emph{PS-Server} for validation and execution.
+  \item[\textbf{Step 6}.] The \emph{PS-Server} performs the funds transfer.
+  \item[\textbf{Step 7}.] The \emph{PS-Server} sends a callback notification to merchant server. 
+\end{enumerate}
+
+  % add words
+In mobile web payment, the workflow is mostly similar to that of in-app payment.
+In mobile web payment, the workflow is mostly similar to that of in-app payment.
+In mobile web payment, the workflow is mostly similar to that of in-app payment.
+In mobile web payment, the workflow is mostly similar to that of in-app payment.
+The differences lie in \textbf{Step 3}, where a specific URL scheme is used to launch \emph{PS-App} from the mobile web browser.
+
+In QR code payment, the workflow differs from the previous two payment scenarios.
+The workflow is as follows:
+\begin{enumerate}[leftmargin=3.5em]
+  \item[\textbf{Step 1}.] xxx
+  \item[\textbf{Step 2}.] xxx
+  \item[\textbf{Step 2}.] xxx
+  \item[\textbf{Step 2}.] xxx
+  \item[\textbf{Step 2}.] xxx
+  \item[\textbf{Step 2}.] xxx
+  \item[\textbf{Step 2}.] xxx
+  \item[\textbf{Step 2}.] xxx
+\end{enumerate}
+
+
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/pays1.pdf}
-    \caption{Payment Scenario \Rom{1} --- In-app Payment}
+    \caption{Payment Scenario \Rom{1} -- In-app Payment
+    }
     \label{fig:inapp_payment}
 \end{figure}
 
-In in-app payment, the workflow can be summarized in the following steps:
-
-\noindent\textbf{Step 1.} The user selects goods and initiates a purchase request at the merchant application.
-
-\noindent\textbf{Step 2.} The merchant frontend communicates with the merchant server to create the order and derive payment-relevant information.
-
-% 正文里有的不用解释。不要用中文引号 ’，后面都一样
-\noindent\textbf{Step 3.} Merchant application invokes \emph{PS-App} through the payment provider's SDK.
-
-\noindent\textbf{Step 4.} The user authorizes the payment within \emph{PS-App}, typically by entering a payment password.
-
-\noindent\textbf{Step 5.} \emph{PS-App} submits the payment request to the payment server (\emph{PS-Server}) for validation and execution.
-
-\noindent\textbf{Step 6.} The \emph{PS-Server} performs the funds transfer.
-
-\noindent\textbf{Step 7.} The \emph{PS-Server} sends a callback notification to merchant server.
-
-\begin{figure}[h]
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/pays2.pdf}
-    \caption{Payment Scenario \Rom{2} --- Mobile Web Payment}
+    \caption{Payment Scenario \Rom{2} -- Mobile Web payment
+    }
     \label{fig:mobile_web_payment}
 \end{figure}
 
-% In mobile web payment, the workflow follows Steps 1–7 as described above, except for Step 3, which differs as follows:
-In mobile web payment, the workflow is as follows:
-
-\noindent\textbf{Step 1--2.} Same as in-app payment.
-
-\noindent\textbf{Step 3.} The mobile web page triggers \emph{PS-App} via a URL scheme. 
-% 应该是web page 通过 URL scheme 启动 PS-App，并传递支付参数。
-
-\noindent\textbf{Step 4-7.} Same as in-app payment.
-
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\linewidth]{img/pays3.pdf}
-    \caption{Payment Scenario \Rom{3} --- QR Code Payment}
+    \caption{Payment Scenario \Rom{3} -- QR Code Payment
+    }
     \label{fig:qr_code_payment}
 \end{figure}
 
-In QR code payment, the workflow is as follows:
 
-\noindent\textbf{Step 1--2.} Same as in-app payment.
 
-\noindent\textbf{Step 3.} The merchant web page generates and displays a payment QR code encoding the invocation information, and the user scans the QR code using a mobile device to launch \emph{PS-App}.
+\newpage
+\section{Alipay \& WeChat Pay Protocols}
 
-\noindent\textbf{Step 4-7.} Same as in-app payment.
+We examined the actual protocol workflows of Alipay and WeChat Pay across three payment scenarios and documented them in detailed diagrams. 
+Due to space constraints, we present a condensed version here.
+The full versions are available in the open-source repository~\cite{third_payment_model_2026}.
 
-\section{Alipay Protocols}
 
-In this section, we present the real protocl of Alipay for the three payment scenarios, as shown in Figures~\ref{fig:alipay_in_app_payment}--\ref{fig:alipay_qr_code_payment}. 
-
-\begin{figure}[t]
+\begin{figure*}[t]
     \centering
-    \includegraphics[width=\linewidth]{img/alipay_app.pdf}
-    \caption{Alipay In-App Payment. \\
-    Notation: $validate(x)$ denotes checking whether $x$ is valid; $continue()$ denotes proceeding with the protocol, whereas $abort()$ denotes terminating the protocol; $random()$ denotes generating a fresh random value;$sign_{k}(m)$ denotes signing message $m$ using key $k$; $hash()$ denotes a cryptographic hash function; $make\_payment()$ denotes the fund transfer operation;
-    $goods$ denotes the selected items.
-    $out\_trade\_no$ denotes the order number of the \emph{MS}.
-    $total\_amount$ denotes the payment amount.
-    $subject$ denotes the order title.
-    $app\_id$ denotes the merchant application identifier.
-    $notify\_url$ denotes the merchant callback endpoint.
-    $orderStr$ denotes the payment order string.
-    $account$ denotes the payee account identifier.
-    $password$ denotes the user authentication secret used for payment authorization.
-    $trade\_no$ denotes the Alipay transaction number.
-    $priv_{M}$ denotes the private key of \emph{MS}.
-    $priv_{A}$ denotes the private key of \emph{APS}.}
-    \label{fig:alipay_in_app_payment}
-\end{figure}
 
-% 搞到 Caption里面
-In Alipay in-app payment, the system involves the following entities: the user (\emph{U}), the merchant application (\emph{MA}), the merchant server (\emph{MS}), the Alipay payment application (\emph{APA}), and the Alipay payment server (\emph{APS}).
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/alipay_app.pdf}
+        \caption{Alipay In-App Payment}
+        \label{fig:alipay_in_app_payment}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/alipay_mobile_web.pdf}
+        \caption{Alipay Mobile Web Payment}
+        \label{fig:alipay_mobile_web_payment}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/alipay_order_code.pdf}
+        \caption{Alipay QR Code Payment}
+        \label{fig:alipay_qr_code_payment}
+    \end{subfigure}
 
-\begin{figure}[t]
+    \caption{Alipay Payment Methods}
+    \label{fig:alipay_payment_methods}
+\end{figure*}
+
+\begin{figure*}[t]
     \centering
-    \includegraphics[width=\linewidth]{img/alipay_mobile_web.pdf}
-    \caption{Alipay Mobile Web Payment.\\
-    Notation: $form$ denotes the HTML form.}
-    \label{fig:alipay_mobile_web_payment}
-\end{figure}
 
-In Alipay mobile web payment, the system involves the following entities: the \emph{U}, the merchant mobile web (\emph{MW}), the \emph{MS}, the \emph{APA}, the \emph{APS}.
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/wechat_pay_app.pdf}
+        \caption{In-App Payment}
+        \label{fig:wechat_pay_in_app_payment}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/wechat_pay_h5.pdf}
+        \caption{Mobile Web Payment}
+        \label{fig:wechat_pay_mobile_web_payment}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/wechat_pay_native.pdf}
+        \caption{QR Code Payment}
+        \label{fig:wechat_pay_qr_code_payment}
+    \end{subfigure}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/alipay_order_code.pdf}
-    \caption{Alipay QR Code Payment.\\
-    Notation: $qr\_code$ denotes the QR code image.}
-    \label{fig:alipay_qr_code_payment}
-\end{figure}
+    \caption{Wechat Pay Payment Methods}
+    \label{fig:wechat_pay_payment_methods}
+\end{figure*}
 
-In Alipay QR code payment, the system involves the following entities: the \emph{U}, the merchant PC web (\emph{PW}), the \emph{MS}, the \emph{APA}, the \emph{APS}.
-
-\section{Wechat Pay Protocols}
-
-In this section, we present the real protocl of Wechat Pay for the three payment scenarios, as shown in Figures~\ref{fig:wechat_pay_in_app_payment}--\ref{fig:wechat_pay_qr_code_payment}. 
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/wechat_pay_app.pdf}
-    \caption{Wechat Pay In-App Payment. \\
-    Notation: 
-    $amount$ denotes the payment amount.
-    $description$ denotes the order description.
-    $appid$ denotes the merchant application identifier.
-    $mchid$ denotes the merchant identifier.
-    $prepay\_id$ denotes the prepayment token.
-    $trade\_no$ denotes the Alipay transaction number.
-    $id$ denotes the number of callback notification.
-    $transaction\_id$ denotes the Wechat Pay transaction number.
-    $summary$ denotes the summary notes for callback content.
-    $nonce_{1}/nonce_{2}$ denotes a fresh nonce for replay protection.
-    $enc_{k}(m)$ denotes encrypting message $m$ under key $k$ using \textsf{AES} symmetric encryption.
-    $APIV3$ denotes the symmetric key shared between \emph{MS} and \emph{WPS}.
-    $priv_{w}$ denotes the private key of \emph{WPS}.}
-    \label{fig:wechat_pay_in_app_payment}
-\end{figure}
-
-In Wechat Pay in-app payment, the system involves the following entities: the \emph{U}, the \emph{MA}, the \emph{MS}, the Wechat payment system (\emph{WPS}).
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/wechat_pay_h5.pdf}
-    \caption{Wechat Pay Mobile Web Payment.\\
-    Notation: $h5\_url$ denotes the URL scheme}
-    \label{fig:wechat_pay_mobile_web_payment}
-\end{figure}
-
-In Wechat Pay mobile web payment, the system involves the following entities: the \emph{U}, the \emph{MW}, the \emph{MS}, the \emph{WPS}.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/wechat_pay_native.pdf}
-    \caption{Wechat Pay QR Code Payment.\\
-    Notation: $code\_url$ denotes the QR code.}
-    \label{fig:wechat_pay_qr_code_payment}
-\end{figure}
-
-In Wechat Pay QR code payment, the system involves the following entities: the \emph{U}, the \emph{PW}, the \emph{MS}, the \emph{WPS}.
