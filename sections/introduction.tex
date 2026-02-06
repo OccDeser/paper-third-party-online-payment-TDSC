@@ -29,7 +29,7 @@ Attackers can alter payment parameters without invalidating the signature by exp
 (3) \emph{Payment Result Forgery and UI Confusion}: 
 Attackers can inject forged ``payment success'' messages or leverage UI overlay attacks, H5 redirection, and script injection to mislead merchants or users about the transaction status, enabling free purchases or misdirected payments~\cite{Ulqinaku2019ScanAndPayAndroid, Yang2017FlawedImplementations}.
 These studies reveal a critical issue: the cryptographic mechanisms employed by current third-party online payment protocols are insufficient to withstand threats arising from insecure external channels.
-From the perspective of payment service providers, \emph{adopting weaker security assumptions for external channels better reflects the relities of modern payment environments}.
+From the perspective of payment service providers, \emph{adopting weaker security assumptions for external channels reflects the relities of modern payment environments better}.
 This observation \emph{motivates us to analyze the security of third-party online payment protocols under weakened external channel security assumptions}.
 
 In this paper, we establish comprehensive symbolic models for third-party online payment protocols.
@@ -57,7 +57,7 @@ Our results show that more than $25\%$ of the sampled applications are vulnerabl
 These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
 We responsibly disclosed our findings to the security teams at Alipay and WeChat Pay.
 We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
-Additionally, we notified the developers of 56 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
+Additionally, we notified the developers of 41 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
 
 To address these design flaws, 
 we propose a deployable payment pattern which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
