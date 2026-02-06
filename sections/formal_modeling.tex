@@ -102,7 +102,7 @@ In protocols conforming to Model~A, the equation is defined as follows:
 \end{tightflalign}
 For protocols under Model~B, the equation is as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_parmas}}(am&t, desc, id_M, priv_M)   = \\
+  \text{\Tfunction{gen\_parmas}}(am&t, desc, id_M, priv_M, id_{prepay})   = \\
   & id_{prepay} \parallel id_M \parallel \text{\Tfunction{sign}}(id_{prepay} \parallel id_M, priv_M)
 \end{tightflalign}
 Here, our equation simplifies the actual generation process of payment parameters, such as the generation of $id_{prepay}$.
