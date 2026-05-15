@@ -19,8 +19,8 @@
 \NewCoordRightToC{c_MS}{c_MA}{\AGENTSPAN*1.35};
 \NewAgent{agent_MS}{c_MS}{\hspace{-0.5em} \faServer \; MS};
 
-\NewCoordRightToC{c_WPS}{c_MS}{\AGENTSPAN*1.4};
-\NewAgent{agent_WPS}{c_WPS}{\hspace{-0.5em} \faSackDollar \; WPS};
+\NewCoordRightToC{c_BPS}{c_MS}{\AGENTSPAN*1.4};
+\NewAgent{agent_BPS}{c_BPS}{\hspace{-0.5em} \faSackDollar \; BPS};
 
 % ========================================
 %   Messages
@@ -30,7 +30,7 @@
 % -------------- Divide Line --------------
   \NewCoordRightToC{c_tmp}{agent_U.south}{-\AGENTSPAN/2};
   \NewCoordBelowToC{c_ldiv_1}{c_tmp}{\LINEHEIGHT/2};
-  \NewCoordAlignToN{c_tmp}{agent_WPS}{c_ldiv_1};
+  \NewCoordAlignToN{c_tmp}{agent_BPS}{c_ldiv_1};
   \NewCoordRightToC{c_rdiv_1}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_1}{c_rdiv_1};
 % ----------------------------------------
@@ -55,7 +55,7 @@
 % -------------- Divide Line --------------
   \NewCoord{c_tmp}{c_rmsg_MA_MS_1 -| c_ldiv_1};
   \NewCoordBelowToC{c_ldiv_2}{c_tmp}{\LINEHEIGHT/2};
-  \NewCoordAlignToN{c_tmp}{agent_WPS}{c_ldiv_2};
+  \NewCoordAlignToN{c_tmp}{agent_BPS}{c_ldiv_2};
   \NewCoordRightToC{c_rdiv_2}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_2}{c_rdiv_2};
 % ----------------------------------------
@@ -75,23 +75,23 @@
   $message := mchid \parallel S_{body} \parallel body$
 };
 
-\NewCoordBelowToN{c_smsg_MS_WPS_1}{action_MS1}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_MS_WPS_1}{agent_WPS}{c_smsg_MS_WPS_1};
-\DrawArrow{Arrow}{c_smsg_MS_WPS_1}{c_rmsg_MS_WPS_1}{$message$};
+\NewCoordBelowToN{c_smsg_MS_BPS_1}{action_MS1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_MS_BPS_1}{agent_BPS}{c_smsg_MS_BPS_1};
+\DrawArrow{Arrow}{c_smsg_MS_BPS_1}{c_rmsg_MS_BPS_1}{$message$};
 
-\NewCoordBelowToC{c_act_WPS1}{c_rmsg_MS_WPS_1}{\LINEHEIGHT/2};
-\NewAction{action_WPS1}{c_act_WPS1}{
+\NewCoordBelowToC{c_act_BPS1}{c_rmsg_MS_BPS_1}{\LINEHEIGHT/2};
+\NewAction{action_BPS1}{c_act_BPS1}{
   \textbf{if} $validate(message)$ \textbf{then}\\
   \quad $continue()$\\
   \textbf{else} $abort()$\\
   $prepay\_id := random()$
 };
 
-\NewCoordBelowToN{c_smsg_WPS_MS_1}{action_WPS1}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_WPS_MS_1}{agent_MS}{c_smsg_WPS_MS_1};
-\DrawArrow{Arrow}{c_smsg_WPS_MS_1}{c_rmsg_WPS_MS_1}{$prepay\_id$};
+\NewCoordBelowToN{c_smsg_BPS_MS_1}{action_BPS1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_BPS_MS_1}{agent_MS}{c_smsg_BPS_MS_1};
+\DrawArrow{Arrow}{c_smsg_BPS_MS_1}{c_rmsg_BPS_MS_1}{$prepay\_id$};
 
-\NewCoordBelowToC{c_act_MS2}{c_rmsg_WPS_MS_1}{\LINEHEIGHT/2};
+\NewCoordBelowToC{c_act_MS2}{c_rmsg_BPS_MS_1}{\LINEHEIGHT/2};
 \NewAction{action_MS2}{c_act_MS2}{
   $nonceStr := random()$\\
   $params := appid \parallel nonceStr \parallel prepay\_id$\\
@@ -103,12 +103,12 @@
 \NewCoordAlignToN{c_rmsg_MS_MA_1}{agent_MA}{c_smsg_MS_MA_1};
 \DrawArrow{Arrow}{c_smsg_MS_MA_1}{c_rmsg_MS_MA_1}{$request$};
 
-\NewCoordBelowToC{c_smsg_MA_WPS_1}{c_rmsg_MS_MA_1}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_MA_WPS_1}{agent_WPS}{c_smsg_MA_WPS_1};
-\DrawArrow{Arrow}{c_smsg_MA_WPS_1}{c_rmsg_MA_WPS_1}{$request$};
+\NewCoordBelowToC{c_smsg_MA_BPS_1}{c_rmsg_MS_MA_1}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_MA_BPS_1}{agent_BPS}{c_smsg_MA_BPS_1};
+\DrawArrow{Arrow}{c_smsg_MA_BPS_1}{c_rmsg_MA_BPS_1}{$request$};
 
-\NewCoordBelowToC{c_act_WPS2}{c_rmsg_MA_WPS_1}{\LINEHEIGHT/2};
-\NewAction{action_WPS2}{c_act_WPS2}{
+\NewCoordBelowToC{c_act_BPS2}{c_rmsg_MA_BPS_1}{\LINEHEIGHT/2};
+\NewAction{action_BPS2}{c_act_BPS2}{
   \textbf{if} $validate(request)$ \textbf{then}\\
   \quad $continue()$\\
   \textbf{else} $abort()$
@@ -116,9 +116,9 @@
 
 % Phase 3: Payment
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{action_WPS2.south -| c_ldiv_1};
+  \NewCoord{c_tmp}{action_BPS2.south -| c_ldiv_1};
   \NewCoordBelowToC{c_ldiv_3}{c_tmp}{\LINEHEIGHT/2};
-  \NewCoordAlignToN{c_tmp}{agent_WPS}{c_ldiv_3};
+  \NewCoordAlignToN{c_tmp}{agent_BPS}{c_ldiv_3};
   \NewCoordRightToC{c_rdiv_3}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_3}{c_rdiv_3};
 % ----------------------------------------
@@ -128,19 +128,19 @@
   \NewLabel{label_3}{c_label_3}{\romannumeral 3};
 % ----------------------------------------
 
-\NewCoordBelowToC{c_smsg_WPS_U_1}{c_ldiv_3-|c_WPS}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_WPS_U_1}{agent_U}{c_smsg_WPS_U_1};
-\DrawArrow{Arrow}{c_smsg_WPS_U_1}{c_rmsg_WPS_U_1}{$amount, description, account, ...$};
+\NewCoordBelowToC{c_smsg_BPS_U_1}{c_ldiv_3-|c_BPS}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_BPS_U_1}{agent_U}{c_smsg_BPS_U_1};
+\DrawArrow{Arrow}{c_smsg_BPS_U_1}{c_rmsg_BPS_U_1}{$amount, description, account, ...$};
 
-\NewCoordBelowToC{c_act_U_2}{c_rmsg_WPS_U_1}{\LINEHEIGHT/2};
+\NewCoordBelowToC{c_act_U_2}{c_rmsg_BPS_U_1}{\LINEHEIGHT/2};
 \NewAction{action_U2}{c_act_U_2}{Enter $password$};
 
-\NewCoordBelowToN{c_smsg_U_WPS_1}{action_U2}{\LINEHEIGHT/2};
-\NewCoordAlignToN{c_rmsg_U_WPS_1}{agent_WPS}{c_smsg_U_WPS_1};
-\DrawArrow{Arrow}{c_smsg_U_WPS_1}{c_rmsg_U_WPS_1}{$password$};
+\NewCoordBelowToN{c_smsg_U_BPS_1}{action_U2}{\LINEHEIGHT/2};
+\NewCoordAlignToN{c_rmsg_U_BPS_1}{agent_BPS}{c_smsg_U_BPS_1};
+\DrawArrow{Arrow}{c_smsg_U_BPS_1}{c_rmsg_U_BPS_1}{$password$};
 
-\NewCoordBelowToC{c_act_WPS2}{c_rmsg_U_WPS_1}{\LINEHEIGHT/2};
-\NewAction{action_WPS2}{c_act_WPS2}{
+\NewCoordBelowToC{c_act_BPS2}{c_rmsg_U_BPS_1}{\LINEHEIGHT/2};
+\NewAction{action_BPS2}{c_act_BPS2}{
   \textbf{if} validate($password$) \textbf{then} \\
   \quad $make\_payment()$\\
   \textbf{else} $abort()$
@@ -148,9 +148,9 @@
 
 % Phase 4: Notification 
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{action_WPS2.south -| c_ldiv_1};
+  \NewCoord{c_tmp}{action_BPS2.south -| c_ldiv_1};
   \NewCoordBelowToC{c_ldiv_4}{c_tmp}{\LINEHEIGHT/2};
-  \NewCoordAlignToN{c_tmp}{agent_WPS}{c_ldiv_4};
+  \NewCoordAlignToN{c_tmp}{agent_BPS}{c_ldiv_4};
   \NewCoordRightToC{c_rdiv_4}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_4}{c_rdiv_4};
 % ----------------------------------------
@@ -160,8 +160,8 @@
   \NewLabel{label_4}{c_label_4}{\romannumeral 4};
 % ----------------------------------------
 
-\NewCoordBelowToC{c_act_WPS3}{c_ldiv_4-|c_WPS}{\LINEHEIGHT/2};
-\NewAction{action_WPS3}{c_act_WPS3}{
+\NewCoordBelowToC{c_act_BPS3}{c_ldiv_4-|c_BPS}{\LINEHEIGHT/2};
+\NewAction{action_BPS3}{c_act_BPS3}{
   $id, transaction\_id, summary := random()$\\
   $nonce_{1}, nocne_{2} := random()$\\
   $data := appid \parallel mchid \parallel out\_trade\_no $\\
@@ -171,33 +171,33 @@
   $S_{result} := sign_{priv_{W}}(result)$
 };
 
-\NewCoordBelowToN{c_smsg_WPS_U_2}{action_WPS3}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_WPS_U_2}{agent_U}{c_smsg_WPS_U_2};
-\DrawArrow{Arrow}{c_smsg_WPS_U_2}{c_rmsg_WPS_U_2}{
+\NewCoordBelowToN{c_smsg_BPS_U_2}{action_BPS3}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_BPS_U_2}{agent_U}{c_smsg_BPS_U_2};
+\DrawArrow{Arrow}{c_smsg_BPS_U_2}{c_rmsg_BPS_U_2}{
   $\Str{Successful}, amount, description, ...$
 };
 
-\NewCoordBelowToC{c_smsg_WPS_MS_1}{c_smsg_WPS_U_2}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_WPS_MS_1}{agent_MS}{c_smsg_WPS_MS_1};
-\DrawArrow{Arrow}{c_smsg_WPS_MS_1}{c_rmsg_WPS_MS_1}{$result, S_{result}$};
+\NewCoordBelowToC{c_smsg_BPS_MS_1}{c_smsg_BPS_U_2}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_BPS_MS_1}{agent_MS}{c_smsg_BPS_MS_1};
+\DrawArrow{Arrow}{c_smsg_BPS_MS_1}{c_rmsg_BPS_MS_1}{$result, S_{result}$};
 
-\NewCoordBelowToC{c_act_MS3}{c_rmsg_WPS_MS_1}{\LINEHEIGHT/2};
+\NewCoordBelowToC{c_act_MS3}{c_rmsg_BPS_MS_1}{\LINEHEIGHT/2};
 \NewAction{action_MS3}{c_act_MS3}{
   \textbf{if} validate($result$) \textbf{then} \\
   \quad $continue()$\\
   \textbf{else} $abort()$
 };
 
-\NewCoordBelowToN{c_smsg_MS_WPS_2}{action_MS3}{\LINEHEIGHT};
-\NewCoordAlignToN{c_rmsg_MS_WPS_2}{agent_WPS}{c_smsg_MS_WPS_2};
-\DrawArrow{Arrow}{c_smsg_MS_WPS_2}{c_rmsg_MS_WPS_2}{
+\NewCoordBelowToN{c_smsg_MS_BPS_2}{action_MS3}{\LINEHEIGHT};
+\NewCoordAlignToN{c_rmsg_MS_BPS_2}{agent_BPS}{c_smsg_MS_BPS_2};
+\DrawArrow{Arrow}{c_smsg_MS_BPS_2}{c_rmsg_MS_BPS_2}{
   $\Str{Successful}$
 };
 
 % -------------- Divide Line --------------
-  \NewCoord{c_tmp}{c_rmsg_MS_WPS_2 -| c_ldiv_1};
+  \NewCoord{c_tmp}{c_rmsg_MS_BPS_2 -| c_ldiv_1};
   \NewCoordBelowToC{c_ldiv_5}{c_tmp}{\LINEHEIGHT/2};
-  \NewCoordAlignToN{c_tmp}{agent_WPS}{c_ldiv_5};
+  \NewCoordAlignToN{c_tmp}{agent_BPS}{c_ldiv_5};
   \NewCoordRightToC{c_rdiv_5}{c_tmp}{\AGENTSPAN/2};
   \DrawLine{LineDotted}{c_ldiv_5}{c_rdiv_5};
 % ----------------------------------------
@@ -210,7 +210,7 @@
   \DrawEnd{agent_U}{c_lowest};
   \DrawEnd{agent_MA}{c_lowest};
   \DrawEnd{agent_MS}{c_lowest};
-  \DrawEnd{agent_WPS}{c_lowest};
+  \DrawEnd{agent_BPS}{c_lowest};
 \end{scope}
 
 \end{tikzpicture}

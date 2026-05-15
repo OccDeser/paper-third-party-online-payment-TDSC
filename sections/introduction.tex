@@ -8,7 +8,7 @@ According to the latest industry report by iResearch~\cite{Iresearch2025ChinaThi
 the transaction volume of China's personal third-party payment market has reached 67 trillion Chinese yuan (approximately 9.6 trillion US dollars) in 2025, 
 with online payments accounting for more than $50\%$ of the total.
 Among all third-party payment platforms, 
-Alipay~\cite{alipay2026official} and WeChat Pay~\cite{wechatpay2026official} are the two dominant payment service providers in China, consistently occupying the top tier of the third-party payment market.
+Alipay~\cite{alipay2026official} and Vendor~B are the two dominant payment service providers in China, consistently occupying the top tier of the third-party payment market.
 
 A typical third-party payment ecosystem comprises the User~(\emph{U}), the Merchant Frontend~(\emph{MF}), the Merchant backend Server~(\emph{MS}), and the Payment System~(\emph{PS}).
 This ecosystem supports multiple payment scenarios, including in-app payments, mobile web payments, and QR-code-based payments.
@@ -33,7 +33,7 @@ From the perspective of payment service providers, \emph{adopting weaker securit
 This observation \emph{motivates us to analyze the security of third-party online payment protocols under weakened external channel security assumptions}.
 
 In this paper, we establish comprehensive symbolic models for third-party online payment protocols.
-Due to the absence of an industry-wide standard for online payments, we examined publicly available developer documentation of Alipay\cite{Alipay2025OpenPlatform} and WeChat Pay\cite{WeChat2025APIV3},
+Due to the absence of an industry-wide standard for online payments, we examined publicly available developer documentation of Alipay\cite{Alipay2025OpenPlatform} and Vendor~B,
 abstracting six representative payment protocol models that cover three core payment scenarios.
 Our models faithfully reflect the design details of actual payment processes and cover the complete workflow, from order placement to payment completion.
 % \textcolor{red}{Based on the analyzed protocols, \emph{we abstract high-level design models for third-party payment protocols and investigate the common security issues at this level.}}
@@ -55,7 +55,7 @@ We develop a proof-of-concept attack application that exploit this vulnerability
 To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
 Our results show that more than $25\%$ of the sampled applications are vulnerable.
 These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
-We responsibly disclosed our findings to the security teams at Alipay and WeChat Pay.
+We responsibly disclosed our findings to the security teams at Alipay and Vendor~B.
 We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
 Additionally, we notified the developers of 41 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
 
@@ -80,7 +80,7 @@ We make the following contributions:
 \end{enumerate}
 
 % \noindent\textbf{Disclosure.}
-% We responsibly disclosed our findings to the security teams of Alipay and WeChat Pay.
+% We responsibly disclosed our findings to the security teams of Alipay and Vendor~B.
 % The reported vulnerabilities were acknowledged by both parties, and, at the time of writing, remediation efforts are actively underway.
 % In addition, we notified the developers of xxx vulnerable merchant applications identified in our study and provided concrete security recommendations.
 % We received positive responses from xxx of these developers, who indicated their intent to address the reported issues.

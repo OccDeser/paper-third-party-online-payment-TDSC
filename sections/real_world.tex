@@ -11,14 +11,14 @@ We further discuss the responsible vulnerability disclosure process.
 
 Inspired by the Variant~\Rom{2} attack, we identified an exploitable vulnerability on the Android platform.
 When initiating a payment request, merchant's Android applications use the Android Intent mechanism to transmit payment parameters to the payment service application.
-As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the WeChat Pay and Alipay receive payment parameters from merchant applications.
+As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the Vendor~B and Alipay receive payment parameters from merchant applications.
 A merchant application typically constructs an Intent containing payment parameters and uses it to launch the corresponding payment application.
 
 It should be noted that Intents can be classified into two categories, explicit Intents and implicit Intents. 
 An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, allowing the system to match and select a responding component based on Intent Filters.
 The security risk primarily arises from the misuse of implicit Intents.
 
-When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the WeChat Pay or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
+When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the Vendor~B or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
 However, we find that some merchant applications use implicit Intents in practice.
 This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious application that declares the same Intent handling capability.
 
@@ -82,19 +82,19 @@ As a result, the attacker successfully tampers with the order, causing the user 
 \end{figure}
 
 \subsection{Impact Assessment}
-To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the WeChat Pay or Alipay SDK.
+To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the Vendor~B or Alipay SDK.
 Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game.
 For some applications, only one or two versions were available.
 In total, we collected 461 application versions.
 
-Among these versions, 419 support WeChat Pay and 401 support Alipay.
-Our analysis reveals that 64 WeChat Pay–enabled versions and 72 Alipay-enabled versions are vulnerable.
+Among these versions, 419 support Vendor~B and 401 support Alipay.
+Our analysis reveals that 64 Vendor~B–enabled versions and 72 Alipay-enabled versions are vulnerable.
 Out of 53 applications, a total of 116 versions representing more than 25\% of the analyzed dataset support at least one vulnerable payment method. 
 These vulnerable applications span a wide range of categories, including e-commerce, online education, and entertainment.
 Their cumulative download count reaches 265.85 billion, indicating that the vulnerability potentially affects a very large user base and poses a significant security risk in practice.
 
 \subsection{Responsible Disclosure}
-Following responsible disclosure guidelines, we reported the vulnerability to the security teams of WeChat Pay and Alipay in December 2025. 
+Following responsible disclosure guidelines, we reported the vulnerability to the security teams of Vendor~B and Alipay in December 2025. 
 At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
 We identified contact information for 41 affected Android applications and issued security notifications to their developers, detailing the underlying risks and corresponding mitigation strategies. 
 Among these, 17 developers responded promptly, and one developer explicitly committed to fixing the vulnerability.

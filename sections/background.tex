@@ -9,7 +9,7 @@ Then, we abstract two main high-level payment models, and finally introduce \Tam
 
 Currentlly, there is no universally adopted regulatory standard governing third-party online payments, 
 and payment providers typically rely on proprietary protocols and implementations.
-By reviewing official documentation and developer guides~\cite{WeChat2025APIV3,Alipay2025OpenPlatform}, alongside an analysis of payment workflows,
+By reviewing official documentation and developer guides~\cite{Alipay2025OpenPlatform}, alongside an analysis of payment workflows,
 we summarize the typical ecosystem architecture of third-party online payment systems.
 A typical third-party online payment ecosystem involves four main participants:
 
@@ -84,7 +84,7 @@ After placing an order, the merchant website generates a payment QR code, which 
 
 \subsection{Payment Patterns}\label{sec:payment-models}
 During the \emph{Prepayment} phase, the generation methods of payment parameters vary across different providers and scenarios.
-We introduce two high-level payment patterns adopted by the two leading payment providers, WeChat Pay and Alipay.
+We introduce two high-level payment patterns adopted by the two leading payment providers, Vendor~B and Alipay.
 
 \begin{figure}[t]
   \centering
@@ -120,7 +120,7 @@ After verifying $S_{order}$, the \emph{PS} generates a unique prepayment identif
 The \emph{MS} then concatenates $id_{M}$ with $id_{prepay}$ and signs the result using $priv_{M}$, producing the signature $S_{prepay}$.
 Finally, $id_{M}$, $id_{prepay}$ and $S_{prepay}$ are sent to the \emph{PS} as the payment parameters.
 The \emph{PS} verifies the validity of $S_{prepay}$ to ensure the integrity of the payment request.
-Payment pattern~B is adopted by Alipay in the QR Code Payment scenario and by WeChat Pay across all three payment scenarios.
+Payment pattern~B is adopted by Alipay in the QR Code Payment scenario and by Vendor~B across all three payment scenarios.
 
 
 \subsection{\Tamarin}
