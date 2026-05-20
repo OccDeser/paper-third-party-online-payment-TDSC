@@ -8,7 +8,7 @@ This design flaw directly enables order tampering attacks and persists across ma
 We formalize six widely deployed payment protocols from major Chinese payment providers using symbolic models that capture core entities and interaction flows.
 Through formal verification with \Tamarin under weakened channel assumptions, we identify a novel variant of order tampering attacks and establish a comprehensive security property framework spanning three dimensions.
 
-To validate our findings, we develop a proof-of-concept attack on Android that successfully tampers with payment orders in real-world environments, affecting both Alipay and Vendor~B.
+To validate our findings, we develop a proof-of-concept attack on Android that successfully tampers with payment orders in real-world environments, affecting both Alipay and PSP-B.
 A measurement study of hundreds of popular applications reveals that over 25\% are vulnerable to this attack.
 Following responsible disclosure, both payment providers have officially acknowledged the vulnerability.
 

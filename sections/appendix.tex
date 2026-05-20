@@ -58,9 +58,9 @@ The remaining steps follow the in-app payment workflow.
 
 
 \newpage
-\section{Alipay \& Vendor~B Protocols}
+\section{Alipay \& PSP-B Protocols}
 
-We examined the actual protocol workflows of Alipay and Vendor~B across three payment scenarios and documented them in detailed diagrams. 
+We examined the actual protocol workflows of Alipay and PSP-B across three payment scenarios and documented them in detailed diagrams. 
 Due to space constraints, we present a condensed version here.
 The full versions are available in the open-source repository~\cite{third_payment_model_2026}.
 
@@ -68,7 +68,7 @@ Across the protocol diagrams, the involved entities include the user (\emph{U}),
 
 For Alipay, as shown in Figure~\ref{fig:alipay_payment_methods}, we explicitly distinguish the payment-side components as the Alipay payment application (\emph{APA}) and the Alipay payment server (\emph{APS}).
 
-For Vendor~B, as shown in Figure~\ref{fig:wechat_pay_payment_methods}, we denote the payment-side component as the Vendor~B system (\emph{BPS}). In our diagrams, \emph{BPS} abstracts the payment-side functionality that is externally visible to the merchant and the user across scenarios.
+For PSP-B, as shown in Figure~\ref{fig:wechat_pay_payment_methods}, we denote the payment-side component as the PSP-B system (\emph{BPS}). In our diagrams, \emph{BPS} abstracts the payment-side functionality that is externally visible to the merchant and the user across scenarios.
 
 
 \begin{figure*}[t]
@@ -117,38 +117,38 @@ For Vendor~B, as shown in Figure~\ref{fig:wechat_pay_payment_methods}, we denote
     \begin{subfigure}[b]{0.33\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/wechat_pay_app.pdf}
-        \caption{Vendor~B In-App Payment}
+        \caption{PSP-B In-App Payment}
         \label{fig:wechat_pay_in_app_payment}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.33\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/wechat_pay_h5.pdf}
-        \caption{Vendor~B Mobile Web Payment}
+        \caption{PSP-B Mobile Web Payment}
         \label{fig:wechat_pay_mobile_web_payment}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.33\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/wechat_pay_native.pdf}
-        \caption{Vendor~B QR Code Payment}
+        \caption{PSP-B QR Code Payment}
         \label{fig:wechat_pay_qr_code_payment}
     \end{subfigure}
 
-    \caption{Vendor~B Payment Methods.
+    \caption{PSP-B Payment Methods.
     Notations:
     $appid$: the merchant application identifier.
     $mchid$: the merchant identifier.
     $description$: the order description, which is displayed to the user during payment.
     $prepay\_id$: the prepayment token.
     $id$: the number of callback notification.
-    $transaction\_id$: the Vendor~B transaction number.
+    $transaction\_id$: the PSP-B transaction number.
     $summary$: the summary notes for callback content.
     $nonce/nonce_{1}/nonce_{2}$: a fresh nonce for replay protection.
     $enc_{k}(m)$: encrypting message $m$ under key $k$ using \textsf{AES} symmetric encryption.
     $APIV3$: the symmetric key shared between \emph{MS} and \emph{BPS}.
     $priv_{W}$: the private key of \emph{BPS}.
-    $h5\_url$: an intermediate URL for invoking the Vendor~B cashier page; the merchant H5 page accesses this URL to launch the Vendor~B client and complete the payment.
+    $h5\_url$: an intermediate URL for invoking the PSP-B cashier page; the merchant H5 page accesses this URL to launch the PSP-B client and complete the payment.
     $code\_url$: the URL to be encoded into the QR code.
     }
     \label{fig:wechat_pay_payment_methods}
