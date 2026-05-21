@@ -1,0 +1,184 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Artifact Appendix Template for Usenix Security'25 AE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \appendix
+
+\section{Artifact Appendix}
+This artifact appendix provides a roadmap for evaluating the artifact
+associated with our paper, ``When Authorization Loses Its Meaning: Breaking and 
+Fixing Third-Party Online Payments''. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Abstract}
+This artifact provides the formal models and verification
+framework used to analyze the security of third-party online payment protocols.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Description \& Requirements}
+This section describes the steps and requirements needed to set up the artifact and reproduce the experiments.
+
+\subsubsection{Security, privacy, and ethical concerns}
+None. The formal models in this artifact are derived exclusively from publicly available developer documentation of the studied payment platforms.
+No reverse engineering, no inspection of proprietary or internal documents, and no testing against live accounts or production systems was performed.
+
+\subsubsection{How to access}
+The artifact is archived on Zenodo and can be accessed through the following DOI: \url{https://doi.org/10.5281/zenodo.20303820}.
+
+\subsubsection{Hardware dependencies}
+An x86-64 machine with at least 8 CPU cores, 32~GB of RAM, and 10~GB of free disk space.
+
+\subsubsection{Software dependencies}
+Ubuntu 24.04 with Docker installed. 
+
+\subsubsection{Benchmarks}
+None
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Set-up}
+
+This section describes the installation and basic test steps required to prepare
+the environment for evaluating the artifact.
+
+\subsubsection{Installation}
+\begin{enumerate}
+    \item Pull our pre-built Docker image.
+\begin{verbatim}
+$ docker pull ghcr.io/luojiazhishu\
+/tamarin-docker/toolbox:latest
+\end{verbatim}
+    \item Download and extract the artifact archive from Zenodo (\url{https://doi.org/10.5281/zenodo.20303820}). 
+    After extraction, the directory structure is as follows:
+\begin{Verbatim}[baselinestretch=0.85]
+.
+|-- models
+|   |-- base
+|   |-- countermeasures
+|   |-- secure_ms_channel
+|   `-- secure_ps_channel
+|-- results
+|   |-- base
+|   |-- countermeasures
+|   |-- secure_ms_channel
+|   `-- secure_ps_channel
+|-- scripts
+|   |-- fix.py
+|   |-- parse.py
+|   `-- run.py
+|-- Makefile
+`-- README.md
+\end{Verbatim}
+\end{enumerate}
+
+The top-level entries are organized as follows:
+\begin{itemize}[itemsep=1pt, topsep=2pt, parsep=0pt, partopsep=0pt]
+    \item \texttt{./models/}: Tamarin formal models. The subdirectories \texttt{secure\_ms\_channel/}, \texttt{secure\_ps\_channel/}, and \\
+    \texttt{base/} correspond to three channel security assumptions,
+    each containing six payment-protocol models (two payment providers $\times$ three payment scenarios) --- 18 protocol models in total. The formal models of our proposed countermeasures are under \texttt{countermeasures/}.
+    \item \texttt{./scripts/}: Helper scripts for running Tamarin and aggregating its output into JSON/CSV summaries.
+    \item \texttt{./results/}: Verification results produced by Tamarin, mirroring the subdirectory layout of \texttt{./models/}.
+    \item \texttt{./Makefile}: Entry point that orchestrates the full evaluation pipeline.
+\end{itemize}
+
+\subsubsection{Basic Test}
+To verify the environment, run:
+
+\begin{verbatim}
+$ docker run --rm ghcr.io/luojiazhishu\
+/tamarin-docker/toolbox:latest \
+  tamarin-prover test
+\end{verbatim}
+
+If the installation is successful, the command output contains the following test summary:
+\begin{verbatim}
+*** TEST SUMMARY ***
+All tests successful.
+The tamarin-prover should work as intended.
+
+           :-) happy proving (-:
+\end{verbatim}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Evaluation workflow}
+The evaluation workflow involves formal model verification using the Tamarin Prover.
+
+\subsubsection{Major Claims}
+
+\begin{compactdesc}
+
+    \item[(C1):] The verification results of six third-party online payment protocols under three channel assumptions reproduce Table~1 in the paper. Supported by experiment \textbf{(E1)}.
+
+    \item[(C2):] The verification results of our countermeasures reproduce Table~2 in the paper. Supported by experiment \textbf{(E1)}.
+
+
+\end{compactdesc}
+
+\subsubsection{Experiments}
+
+% use paralist for more compact list format: for more details check here:
+% https://texfaq.org/FAQ-complist
+\begin{compactdesc}
+
+    \item[(E1):] \textbf{Verification} [ 3 human-minutes + 1 compute-hour ]: Use the Tamarin Prover to check the security lemmas of every formal model in \texttt{./models/}. The resulting \textit{verified}/\textit{falsified} outcomes should match Table~1 and Table~2 of the paper.
+
+    \begin{asparadesc}
+
+        \item[How to:] Run the verification in three steps.
+
+       \item[Preparation:]
+        With the installation in Section~A.3 completed, launch the Tamarin toolbox container from the \textbf{artifact root directory}:
+\begin{verbatim}
+$ docker run -d \
+  --name tamarin-toolbox \
+  -p 3001:3001 \
+  -v "$(pwd):/root" \
+  -w /root \
+  ghcr.io/luojiazhishu\
+/tamarin-docker/toolbox:latest
+\end{verbatim}
+
+        \item[Execution:]
+        Enter the container, clear any pre-existing results, and run the verification pipeline:
+\begin{verbatim}
+$ docker exec -it -w /root \
+  tamarin-toolbox bash
+$ make clean
+$ make all JOBS=1
+\end{verbatim}
+        On the reference hardware (8 cores, 32~GB RAM), \texttt{JOBS=1} completes the full verification in about one hour. On a more powerful machine (e.g., 32 cores and 64~GB RAM), increase parallelism with \texttt{make all JOBS=8} to reduce the total time to roughly 30 minutes.
+
+        \item[Results:]
+        The top-level file \texttt{./results/results.csv} aggregates the verification outcome of every lemma across all models; its rows reproduce Table~1 and Table~2 of the paper. Each subdirectory of \texttt{./results/} corresponds to one channel security assumption (or to the countermeasures) and contains one \texttt{.spthy} proof file per protocol plus a \texttt{result.json} summarising that subdirectory. To inspect a proof graph, launch Tamarin's web interface inside the container; for example, to view the proofs under \texttt{./results/base/}, run:
+\begin{verbatim}
+$ tamarin-prover interactive \
+  --interface=0.0.0.0 \
+  --derivcheck-timeout=0 \
+  ./results/base
+\end{verbatim}
+        Then open \texttt{http://127.0.0.1:3001} in a browser on the host machine.
+
+    \end{asparadesc}
+
+\end{compactdesc}
+
+\noindent The Tamarin lemma names that appear in \texttt{results.csv} and in each \texttt{result.json} correspond to the security properties defined in the paper as follows:
+\begin{itemize}[itemsep=0pt, topsep=1pt, parsep=0pt, leftmargin=*]
+    \item \texttt{PS\_MS\_Order\_Injective\_Agreement: IA-O1}.
+    \item \texttt{U\_MS\_Order\_Injective\_Agreement: IA-O2}.
+    \item \texttt{MS\_PS\_Response\_Injective\_Agreement: IA-R1}.
+    \item \texttt{U\_PS\_Response\_Injective\_Agreement: IA-R2}.
+    \item \texttt{No\_Payment\_Without\_Password\_Input: IA-UA}.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Version}
+%%%%%%%%%%%%%%%%%%%%
+% Obligatory.
+% Do not change/remove.
+%%%%%%%%%%%%%%%%%%%%
+Based on the LaTeX template for Artifact Evaluation V20231005. Submission,
+reviewing and badging methodology followed for the evaluation of this artifact
+can be found at \url{https://secartifacts.github.io/usenixsec2026/}.

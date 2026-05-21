@@ -56,8 +56,6 @@ The remaining steps follow the in-app payment workflow.
 \end{figure}
 
 
-
-\newpage
 \section{Alipay \& PSP-B Protocols}
 
 We examined the actual protocol workflows of Alipay and PSP-B across three payment scenarios and documented them in detailed diagrams. 
@@ -71,7 +69,8 @@ For Alipay, as shown in Figure~\ref{fig:alipay_payment_methods}, we explicitly d
 For PSP-B, as shown in Figure~\ref{fig:wechat_pay_payment_methods}, we denote the payment-side component as the PSP-B system (\emph{BPS}). In our diagrams, \emph{BPS} abstracts the payment-side functionality that is externally visible to the merchant and the user across scenarios.
 
 
-\begin{figure*}[t]
+\clearpage
+\begin{figure*}[!h]
     \centering
 
     \begin{subfigure}[b]{0.33\textwidth}
@@ -111,7 +110,7 @@ For PSP-B, as shown in Figure~\ref{fig:wechat_pay_payment_methods}, we denote th
     \label{fig:alipay_payment_methods}
 \end{figure*}
 
-\begin{figure*}[t]
+\begin{figure*}[!h]
     \centering
 
     \begin{subfigure}[b]{0.33\textwidth}
@@ -154,3 +153,4 @@ For PSP-B, as shown in Figure~\ref{fig:wechat_pay_payment_methods}, we denote th
     \label{fig:wechat_pay_payment_methods}
 \end{figure*}
 
+\clearpage
