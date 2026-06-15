@@ -2,15 +2,11 @@
 \section{Conclusion}
 %-------------------------------------------------------------------------------
 
-This work presents a systematic security analysis of third-party payment protocols, revealing a fundamental anti-pattern in their design: the absence of order authentication during user authorization.
-This design flaw directly enables order tampering attacks and persists across major payment ecosystems despite their widespread deployment.
+This work presents a systematic security analysis of third-party payment protocols and uncovers a fundamental design anti-pattern: user authorization is never bound to order semantics, leaving major payment ecosystems open to order tampering.
+By formally modeling six widely deployed protocols from major Chinese providers and verifying them with \Tamarin under weakened channel assumptions, we discover a novel variant of this attack and establish a security property framework spanning three dimensions.
 
-We formalize six widely deployed payment protocols from major Chinese payment providers using symbolic models that capture core entities and interaction flows.
-Through formal verification with \Tamarin under weakened channel assumptions, we identify a novel variant of order tampering attacks and establish a comprehensive security property framework spanning three dimensions.
+We further validate the threat in practice: a proof-of-concept attack on Android tampers with real payment orders for both Alipay and PSP-B, and a measurement study of hundreds of popular applications finds over 25\% vulnerable.
+Following our responsible disclosure, both providers have officially acknowledged the vulnerability.
 
-To validate our findings, we develop a proof-of-concept attack on Android that successfully tampers with payment orders in real-world environments, affecting both Alipay and PSP-B.
-A measurement study of hundreds of popular applications reveals that over 25\% are vulnerable to this attack.
-Following responsible disclosure, both payment providers have officially acknowledged the vulnerability.
-
-We further propose a deployable countermeasure that integrates user-side order authentication into the payment flow.
-Formal verification demonstrates that this enhanced design satisfies all security properties under weakened channel assumptions, providing a practical path toward more secure third-party payment systems.
+Finally, we propose a deployable countermeasure that binds user authorization to the order through user-side order authentication.
+Formal verification confirms that it satisfies all security properties even under weakened channel assumptions, offering a practical path toward more secure third-party payments.

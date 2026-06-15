@@ -7,9 +7,8 @@ While prior studies have identified isolated vulnerabilities, a systematic forma
 This paper presents formal security models for six third-party payment protocols, spanning three major payment scenarios and two dominant payment service providers. 
 Our analysis reveals a fundamental design flaw: 
 whenever channel integrity is compromised between the merchant client, merchant server, or payment system, order tampering attacks become feasible.
-We validate this threat on Android and find that over 20\% of tested merchant applications allow orders tampering through implicit Intent hijacking. 
-Following our responsible disclosure, major platforms have deployed patches.
+We validate this threat on Android, where over 20\% of tested merchant applications allow order tampering through implicit Intent hijacking.
 To mitigate this threat, we propose user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics. 
 Formal verification demonstrates its resilience against identified attacks under weak channel assumptions. 
-By bridging formal methods with empirical analysis, this work offers actionable guidance for the standardization of secure payment protocols.
+By bridging formal methods and empirical analysis, this work offers actionable guidance for standardizing secure payment protocols.
 \end{abstract}

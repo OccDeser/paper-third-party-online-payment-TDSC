@@ -1,13 +1,18 @@
+% 致谢
+\section*{Acknowledgments}
+We thank the anonymous reviewers and our shepherd for their constructive feedback.
+This research was supported in part by the National Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National Natural Science Foundation of China under grants No.~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018, and the Wuhan Scientific and Technical Achievements Project under grant No.~2024030803010172.
+The corresponding authors are Jing Chen and Min Shi.
+
 % 伦理附录
 \section*{Ethical Considerations}
-% This study investigates security vulnerabilities in third-party online payment integrations and was conducted with strict safeguards to prevent harm to users, merchants, and payment platforms. 
-We adhered to stringent ethical standards throughout this research, establishing comprehensive safeguards to prevent harm to users, merchants, and payment platforms.
-All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds, and all transactions were limited to test environments or self-owned accounts. 
-The Android measurement study focused solely on whether payment requests could be intercepted or hijacked at the communication level.
-No order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants. 
-To reduce the risk of misuse, affected applications are not individually identified, and vulnerabilities are reported only in aggregated form. 
-The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation efforts before public disclosure. 
-Overall, the study follows responsible research and disclosure practices, and the benefits of disclosure outweigh the residual risks.
+The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
+Across these parties, the principal risk is the potential misuse of the disclosed technique, which we mitigate through the safeguards below, whereas the offsetting benefit is that it enables the providers and developers to remediate a fundamental design flaw before it is exploited in the wild.
+All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds, and all transactions were limited to test environments or self-owned accounts.
+The Android measurement study focused solely on whether payment requests could be intercepted or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.
+To reduce the risk of misuse, affected applications are not individually identified and are reported only in aggregated form.
+The protocol models presented in this paper are reconstructed solely from public developer documentation, rather than from reverse engineering or leaked internal specifications.
+The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, we do not release the attack implementation or the list of affected applications.
 
 
 % 开放科学附录

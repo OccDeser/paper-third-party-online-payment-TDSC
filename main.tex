@@ -72,7 +72,7 @@
 \usepackage{fancyvrb}
 \usepackage{url}
 \usepackage{hyperref}
-\usepackage{titling}
+% \usepackage{titling}
 
 % --------- DEFINE COLORS ---------
 % Blue 系
@@ -176,11 +176,18 @@
 % \newcommand{\outline}[1]{\textcolor{red!30!xred}{\ul{#1}}}
 
 
+\usepackage[available]{usenixbadges}
 
+% Share one \thanks footnote mark between two corresponding authors
+% (David Carlisle's canonical \samethanks macro).
+\newcommand\samethanks[1][\value{footnote}]{\textcolor{green!80!black}{\footnotemark[#1]}}
 
 %-------------------------------------------------------------------------------
 \begin{document}
 %-------------------------------------------------------------------------------
+
+% USENIX wants no page numbers for camera-ready papers (they number them).
+\pagestyle{empty}
 
 %don't want date printed
 \date{}
@@ -191,18 +198,13 @@
 
 %for single author (just remove % characters)
 \author{
-{\rm Anonymous Author(s)}\\
-Anonymous Institution
-% \and
-% {\rm Second Name}\\
-% Second Institution
-% copy the following lines to add more authors
-% \and
-% {\rm Name}\\
-%Name Institution
+{\rm Yongkang Xiao, Jing Chen\thanks{Corresponding authors.}, Min Shi\samethanks, Kun He, Qiyi Deng, Ruiying Du}\\
+School of Cyber Science and Engineering, Wuhan University\\
+\{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn
 } % end author
 
 \maketitle
+\thispagestyle{empty}
 
 \input{sections/abstract.tex}
 \input{sections/introduction.tex}

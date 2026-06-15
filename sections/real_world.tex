@@ -96,5 +96,6 @@ Their cumulative download count reaches 265.85 billion, indicating that the vuln
 \subsection{Responsible Disclosure}
 Following responsible disclosure guidelines, we reported the vulnerability to the security teams of PSP-B and Alipay in December 2025. 
 At the time of writing, both providers had acknowledged the issue and confirmed that remediation efforts were underway. 
-We identified contact information for 41 affected Android applications and issued security notifications to their developers, detailing the underlying risks and corresponding mitigation strategies. 
-Among these, 17 developers responded promptly, and one developer explicitly committed to fixing the vulnerability.
+We identified contact information for 41 affected Android applications and issued security notifications to their developers, detailing the underlying risks and corresponding mitigation strategies.
+Among these, 17 developers responded; one explicitly committed to fixing the vulnerability, while the remaining vendors attributed the issue to the Alipay and PSP-B SDKs.
+We did not notify the Google Play Store, as Chinese apps are distributed mainly through vendor stores and the root cause lies in the Alipay and PSP-B SDKs, which a single update can fix for all integrating apps. Other major systems (Apple Pay, Stripe, etc.) use architectures not exposed to this attack.
