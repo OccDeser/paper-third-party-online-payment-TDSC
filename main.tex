@@ -1,60 +1,14 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Template for USENIX papers.
-%
-% History:
-%
-% - TEMPLATE for Usenix papers, specifically to meet requirements of
-%   USENIX '05. originally a template for producing IEEE-format
-%   articles using LaTeX. written by Matthew Ward, CS Department,
-%   Worcester Polytechnic Institute. adapted by David Beazley for his
-%   excellent SWIG paper in Proceedings, Tcl 96. turned into a
-%   smartass generic template by De Clarke, with thanks to both the
-%   above pioneers. Use at your own risk. Complaints to /dev/null.
-%   Make it two column with no page numbering, default is 10 point.
-%
-% - Munged by Fred Douglis <douglis@research.att.com> 10/97 to
-%   separate the .sty file from the LaTeX source template, so that
-%   people can more easily include the .sty file into an existing
-%   document. Also changed to more closely follow the style guidelines
-%   as represented by the Word sample file.
-%
-% - Note that since 2010, USENIX does not require endnotes. If you
-%   want foot of page notes, don't include the endnotes package in the
-%   usepackage command, below.
-% - This version uses the latex2e styles, not the very ancient 2.09
-%   stuff.
-%
-% - Updated July 2018: Text block size changed from 6.5" to 7"
-%
-% - Updated Dec 2018 for ATC'19:
-%
-%   * Revised text to pass HotCRP's auto-formatting check, with
-%     hotcrp.settings.submission_form.body_font_size=10pt, and
-%     hotcrp.settings.submission_form.line_height=12pt
-%
-%   * Switched from \endnote-s to \footnote-s to match Usenix's policy.
-%
-%   * \section* => \begin{abstract} ... \end{abstract}
-%
-%   * Make template self-contained in terms of bibtex entires, to allow
-%     this file to be compiled. (And changing refs style to 'plain'.)
-%
-%   * Make template self-contained in terms of figures, to
-%     allow this file to be compiled. 
-%
-%   * Added packages for hyperref, embedding fonts, and improving
-%     appearance.
-%   
-%   * Removed outdated text.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt,journal,compsoc]{IEEEtran}
 
-% \documentclass[draft,twocolumn,10pt]{article}
-\documentclass[letterpaper,twocolumn,10pt]{article}
-\usepackage{usenix-2020-09}
+\ifCLASSOPTIONcompsoc
+  \usepackage[nocompress]{cite}
+\else
+  \usepackage{cite}
+\fi
 
 % to be able to draw some self-contained figs
 \usepackage{tikz}
+\usepackage{graphicx}
 \usepackage{amsmath}
 
 % my coustom packages
@@ -65,7 +19,6 @@
 \usepackage{tabularx}
 \usepackage{pifont}
 \usepackage{environ}
-\usepackage{appendix}
 \usepackage{subcaption}
 
 \usepackage{fvextra}
@@ -175,38 +128,39 @@
 \newcommand{\outline}[1]{#1}
 % \newcommand{\outline}[1]{\textcolor{red!30!xred}{\ul{#1}}}
 
-
-\usepackage[available]{usenixbadges}
-
-% Share one \thanks footnote mark between two corresponding authors
-% (David Carlisle's canonical \samethanks macro).
-\newcommand\samethanks[1][\value{footnote}]{\textcolor{green!80!black}{\footnotemark[#1]}}
-
 %-------------------------------------------------------------------------------
 \begin{document}
 %-------------------------------------------------------------------------------
 
-% USENIX wants no page numbers for camera-ready papers (they number them).
-\pagestyle{empty}
-
-%don't want date printed
-\date{}
-
-% make title bold and 14 pt font (Latex default is non-bold, 16 pt)
-\title{\Large \bf When Authorization Loses Its Meaning:\\
+\title{When Authorization Loses Its Meaning:\\
     Breaking and Fixing Third-Party Online Payments}
 
-%for single author (just remove % characters)
-\author{
-{\rm Yongkang Xiao, Jing Chen\thanks{Corresponding authors.}, Min Shi\samethanks, Kun He, Qiyi Deng, Ruiying Du}\\
-School of Cyber Science and Engineering, Wuhan University\\
-\{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn
-} % end author
+\author{Yongkang~Xiao,
+        Jing~Chen,
+        Min~Shi,
+        Kun~He,
+        Qiyi~Deng,
+        and~Ruiying~Du%
+\IEEEcompsocitemizethanks{%
+\IEEEcompsocthanksitem Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China.\protect\\
+E-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn
+\IEEEcompsocthanksitem Jing Chen and Min Shi are the corresponding authors.
+\IEEEcompsocthanksitem A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26). This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}%
+}
+
+\markboth{IEEE Transactions on Dependable and Secure Computing}%
+{Xiao \MakeLowercase{\textit{et al.}}: Breaking and Fixing Third-Party Online Payments}
+
+\IEEEtitleabstractindextext{%
+\input{sections/abstract.tex}
+\begin{IEEEkeywords}
+Third-party payment, mobile payment, security protocol, formal verification, Tamarin.
+\end{IEEEkeywords}}
 
 \maketitle
-\thispagestyle{empty}
+\IEEEdisplaynontitleabstractindextext
+\IEEEpeerreviewmaketitle
 
-\input{sections/abstract.tex}
 \input{sections/introduction.tex}
 \input{sections/background.tex}
 \input{sections/threat_model.tex}
@@ -218,17 +172,14 @@ School of Cyber Science and Engineering, Wuhan University\\
 \input{sections/discussion.tex}
 \input{sections/related_work.tex}
 \input{sections/conclusion.tex}
+
+\input{sections/appendix.tex}
+
 \input{sections/last.tex}
 
 %-------------------------------------------------------------------------------
-\bibliographystyle{plain}
+\bibliographystyle{IEEEtran}
 \bibliography{library}
-\input{sections/appendix.tex}
-\input{sections/usenix26-ae.tex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-------------------------------------------------------------------------------
 \end{document}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%  LocalWords:  endnotes includegraphics fread ptr nobj noindent
-%%  LocalWords:  pdflatex acks
