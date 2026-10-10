@@ -1,13 +1,9 @@
-\documentclass[10pt,journal,compsoc]{IEEEtran}
+\documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Sat Oct 10 16:22:57 2026
-%DIF ADD new/main.tex   Sat Oct 10 16:21:26 2026
+%DIF DEL old/main.tex   Sat Oct 10 22:32:32 2026
+%DIF ADD new/main.tex   Sat Oct 10 22:32:31 2026
 
-\ifCLASSOPTIONcompsoc
-  \usepackage[nocompress]{cite}
-\else
-  \usepackage{cite}
-\fi
+\usepackage{cite}
 
 % to be able to draw some self-contained figs
 \usepackage{tikz}
@@ -233,35 +229,14 @@
         Kun~He,
         Qiyi~Deng,
         and~Ruiying~Du%
-\IEEEcompsocitemizethanks{%
-\IEEEcompsocthanksitem Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China.\protect\\
-E-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn
-\IEEEcompsocthanksitem A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26). This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}%
-}
+\thanks{Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China (e-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn).}%
+\thanks{A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26). This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}}
 
 \markboth{IEEE Transactions on Dependable and Secure Computing}%
 {Xiao \MakeLowercase{\textit{et al.}}: Breaking and Fixing Third-Party Online Payments}
 
-\DIFdelbegin %DIFDELCMD < \IEEEtitleabstractindextext{%
-%DIFDELCMD < %-------------------------------------------------------------------------------
-%DIFDELCMD < \begin{abstract}
-%DIFDELCMD < %-------------------------------------------------------------------------------
-%DIFDELCMD < Third-party online payment systems, such as Alipay and PSP-B, constitute critical infrastructure for modern e-commerce.
-%DIFDELCMD < However, their security rests on the unrealistic assumption of fully trusted communication channels. 
-%DIFDELCMD < While prior studies have identified isolated vulnerabilities, a systematic formal analysis of payment protocol security remains absent. 
-%DIFDELCMD < This paper presents formal security models for six third-party payment protocols, spanning three major payment scenarios and two dominant payment service providers. 
-%DIFDELCMD < Our analysis reveals a fundamental design flaw: 
-%DIFDELCMD < whenever channel integrity is compromised between the merchant client, merchant server, or payment system, order tampering attacks become feasible.
-%DIFDELCMD < We validate this threat on Android, where over 20\% of tested merchant applications allow order tampering through implicit Intent hijacking.
-%DIFDELCMD < To mitigate this threat, we propose user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics. 
-%DIFDELCMD < Formal verification demonstrates its resilience against identified attacks under weak channel assumptions. 
-%DIFDELCMD < By bridging formal methods and empirical analysis, this work offers actionable guidance for standardizing secure payment protocols.
-%DIFDELCMD < \end{abstract}
-%DIFDELCMD < \begin{IEEEkeywords}
-%DIFDELCMD < Third-party payment, mobile payment, security protocol, formal verification, Tamarin.
-%DIFDELCMD < \end{IEEEkeywords}}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \IEEEtitleabstractindextext{%
+\maketitle
+
 %-------------------------------------------------------------------------------
 \begin{abstract}
 %-------------------------------------------------------------------------------
@@ -272,18 +247,13 @@ This paper presents formal security models for six third-party payment protocols
 Our analysis reveals a fundamental design flaw: 
 whenever channel integrity is compromised between the merchant client, merchant server, or payment system, order tampering attacks become feasible.
 We validate this threat on Android, where over 20\% of tested merchant applications allow order tampering through implicit Intent hijacking.
-To mitigate this threat, we propose user-side order authentication, where a nonce sealed by the merchant frontend and a short code entered by the user bind consent to the order.
+To mitigate this threat, we propose user-side order authentication, where \DIFdelbegin \DIFdel{per-user-merchant key pairs cryptographically }\DIFdelend \DIFaddbegin \DIFadd{a nonce sealed by the merchant frontend and a short code entered by the user }\DIFaddend bind consent to \DIFdelbegin \DIFdel{order semantics}\DIFdelend \DIFaddbegin \DIFadd{the order}\DIFaddend .
 Formal verification demonstrates its resilience against identified attacks under weak channel assumptions. 
 By bridging formal methods and empirical analysis, this work offers actionable guidance for standardizing secure payment protocols.
 \end{abstract}
 \begin{IEEEkeywords}
 Third-party payment, mobile payment, security protocol, formal verification, Tamarin.
-\end{IEEEkeywords}}
-\DIFaddend 
-
-\maketitle
-\IEEEdisplaynontitleabstractindextext
-\IEEEpeerreviewmaketitle
+\end{IEEEkeywords}
 
 %-------------------------------------------------------------------------------
 \section{Introduction}
