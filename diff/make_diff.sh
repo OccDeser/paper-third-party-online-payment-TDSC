@@ -11,13 +11,18 @@ mkdir -p "$W/old" "$W/new" "$W/build"
 git -C "$ROOT" archive "$BASE" | tar -x -C "$W/old"
 git -C "$ROOT" archive HEAD    | tar -x -C "$W/new"
 cp "$W/new/main.tex" "$W/old/main.tex"
-latexdiff --flatten --type=UNDERLINE \
+# Relative paths keep latexdiff's \input resolution working on Windows.
+( cd "$W" && latexdiff --flatten --type=UNDERLINE \
   --config="PICTUREENV=(?:picture|DIFnomarkup|tabular|tabularx)[\w\d*@]*" \
-  "$W/old/main.tex" "$W/new/main.tex" > "$W/build/main-diff.tex"
+  old/main.tex new/main.tex > build/main-diff.tex )
 cp -r "$W/old/img" "$W/build/" && cp -rn "$W/new/img/"* "$W/build/img/"
 cp "$W/new/library.bib" "$W/build/"
-( cd "$W/build" && pdflatex -interaction=nonstopmode main-diff.tex >/dev/null \
-  && bibtex main-diff >/dev/null && pdflatex -interaction=nonstopmode main-diff.tex >/dev/null \
-  && pdflatex -interaction=nonstopmode main-diff.tex >/dev/null )
+# pdflatex and bibtex return non-zero on warnings; check the PDF instead.
+( cd "$W/build"
+  pdflatex -interaction=nonstopmode main-diff.tex >/dev/null || true
+  bibtex main-diff >/dev/null || true
+  pdflatex -interaction=nonstopmode main-diff.tex >/dev/null || true
+  pdflatex -interaction=nonstopmode main-diff.tex >/dev/null || true )
+test -s "$W/build/main-diff.pdf"
 cp "$W/build/main-diff.tex" "$W/build/main-diff.pdf" "$ROOT/diff/"
 echo "written: $ROOT/diff/main-diff.pdf"
