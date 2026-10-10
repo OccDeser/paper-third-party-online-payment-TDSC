@@ -1,9 +1,12 @@
 %-------------------------------------------------------------------------------
-\section{Countermeasure} \label{sec:countermeasure}
+\section{Countermeasure}
 %-------------------------------------------------------------------------------
+% In this section, we xxxx.
 
-In this section, we analyze the causes of order tampering attacks and present Sealed Checkout Code (SCC), a countermeasure that binds every payment to the checkout the user actually performed.
-We then analyze its security, verify it with \Tamarin under the strongest channel assumption, and discuss its deployment.
+In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
+% Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
+Then, we verify our countermeasure using symbolic methods and present the results.
+Finally, we discuss our countermeasure.
 
 \subsection{Cause Analysis}
 
@@ -21,9 +24,13 @@ Consequently, mitigation is often reactive: once an insecure communication chann
 
 \textbf{Root Causes.}
 The root cause of such attacks lies in the lack of a user-side authentication mechanism for order information in existing payment patterns.
-During the \emph{Authorization} phase, the user enters a payment password and possibly verifies the payment amount and description.
-These values describe the content of a payment, and they do not identify the order that the user placed.
-The user's authorization therefore applies to the act of paying, and an attacker who tampers with the order parameters in transit can induce the user to authorize an incorrect order.
+We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
+However, the user does not actually authenticate the order.
+Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
+In other words, during the \emph{Authentication} phase, the user performs no form of authentication of the order data.
+The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
+Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
+This observation reveals a design flaw in current payment patterns.
 
 An order created through the order oracle makes this flaw exploitable.
 It carries the same amount, the same description, and the same payee as the user's order, so it passes every check the user performs.
@@ -41,9 +48,9 @@ We design the countermeasure to meet four goals.
   \item \textbf{Weak channel assumptions.} Security holds when both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure.
 \end{enumerate}
 The countermeasure in the preliminary version of this work meets G3 and G4 for regular payments and relies on trust on first use: the first payment to a merchant establishes a per-user key binding, and that payment remains vulnerable to order tampering (Table~\ref{tab:countermeasure-results}).
-SCC meets all four goals.
+Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
 
-\subsection{Sealed Checkout Code}
+\subsection{Countermeasure Design}
 
 \begin{figure}[t]
   \centering
@@ -125,6 +132,6 @@ Through the order oracle, the attacker places orders with arbitrary amounts and 
 The user commits to the order when the payment completes, because \emph{PS} checks the code after the user submits it.
 To confirm that this commit point preserves the discriminating power of IA-O2, we applied the same change to all six protocols of Table~\ref{tab:lemma-results} under all three channel assumptions; IA-O2 remains falsified in all 18 models.
 
-Table~\ref{tab:countermeasure-results} summarizes the results.
-SCC satisfies all five security properties under the Base assumption, and the verification completes in 619 seconds with a peak memory of 7.0~GB.
-Under the same assumption, payment pattern~B violates IA-O2, and the two-phase countermeasure of the preliminary version violates IA-O2 in the initial payment.
+Table~\ref{tab:countermeasure-results} summarizes the results, together with the initial and regular payments of the two-phase countermeasure in the preliminary version.
+SCC satisfies all five security properties under the Base assumption, whereas the two-phase countermeasure violates IA-O2 in the initial payment.
+We verified SCC on a server with 32 CPU cores and 187~GB of memory, with a peak memory usage of 7.0~GB.

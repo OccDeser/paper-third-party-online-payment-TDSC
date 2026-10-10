@@ -2,22 +2,21 @@
 \begin{table}[t]
 \centering
 \small
-\setlength{\tabcolsep}{4.5pt}
+\setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.12}
 
-\caption{Verification Results under the Base Assumption. \textcolor{xgreen}{\ding{51}}~means satisfy, while \textcolor{xred}{\ding{55}}~indicates a violation.}
+\caption{Verification Results of Countermeasure. \textcolor{xgreen}{\ding{51}}~means satisfy, while \textcolor{xred}{\ding{55}}~indicates a violation.}
 \label{tab:countermeasure-results}
 
-\begin{tabularx}{\linewidth}{Xccccc}
+\begin{tabularx}{\linewidth}{Xccccc  >{\raggedright\arraybackslash}X }
 \toprule
 \textbf{Protocol} &
-\textbf{IA-O1} & \textbf{IA-O2} & \textbf{IA-UA} & \textbf{IA-R1} & \textbf{IA-R2} \\
+\textbf{IA-O1} & \textbf{IA-O2} & \textbf{IA-UA} & \textbf{IA-R1} & \textbf{IA-R2} & \textbf{Time(s)} \\
 \midrule
 
-Pattern B (PSP-B In-App) & \textcolor{xgreen}{\ding{51}} & \textcolor{xred}{\ding{55}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} \\
-Two-phase, initial & \textcolor{xgreen}{\ding{51}} & \textcolor{xred}{\ding{55}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} \\
-Two-phase, regular & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} \\
-\textbf{SCC (this paper)} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} \\
+Initial  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xred}{\ding{55}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 477.86\\
+Regular & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 916.97\\
+SCC & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 619.36\\
 
 \bottomrule
 \end{tabularx}

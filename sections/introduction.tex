@@ -59,11 +59,9 @@ We responsibly disclosed our findings to the security teams at Alipay and PSP-B.
 We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
 Additionally, we notified the developers of 41 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
 
-To address these design flaws,
-we propose Sealed Checkout Code (SCC), a countermeasure that binds the user's authorization to the order produced by the user's own checkout.
-The merchant frontend seals a fresh nonce to the payment system together with the order handle and the user's fulfilment target, and the user confirms the payment by entering a short code derived from the nonce.
-SCC protects every payment, including the first, in a single round and without per-user keys.
-We formally verify SCC with both external channels insecure and show that it satisfies all the defined security properties.
+To address these design flaws, 
+we propose a deployable payment pattern which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
+Under the weakened channel assumptions, we formally verify this pattern and show that it satisfies all the defined security properties.
 
 % As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
 
@@ -77,8 +75,8 @@ We make the following contributions:
     Based on our formal analysis results, we identified a new variant of order tampering attacks and successfully demonstrated it in a real-world payment environment.
     Our further measurement study shows that this vulnerability affects more than 25\% of real-world applications.
   \item \textbf{Proposal of a formal verified countermeasure.}
-    We propose SCC, a single-round countermeasure that binds each payment to the user's own checkout through a sealed nonce and a short code entered by the user.
-    Formal verification shows that SCC satisfies all security properties when both external channels are insecure.
+    We propose a new payment protocol as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws.
+    Formal verification results demonstrate that the proposed protocol can maintain security, even under weakened channel assumptions.
 \end{enumerate}
 
 % \noindent\textbf{Disclosure.}

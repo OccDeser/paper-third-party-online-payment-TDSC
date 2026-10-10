@@ -2,33 +2,29 @@
 \subsection{Discussion}
 %-------------------------------------------------------------------------------
 
+
 \textbf{Advantages.}
-SCC offers four advantages over existing payment patterns and over the two-phase design.
+From a protocol design perspective, our payment pattern exhibits three key advantages.
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Protection from the first payment.}
-  Every payment, including the first payment to a merchant, binds the user's authorization to the order that the user's own checkout produced.
-  \item \textbf{Single round and no per-user state.}
-  Merchants store no per-user keys and \emph{PS-App} stores no bindings, so changing devices or reinstalling the payment application has no effect on security.
-  \item \textbf{Small integration change.}
-  Merchants add the fulfilment target to the signed order; the payment SDK handles the seal and the code.
-  \item \textbf{Verification under the strongest channel assumption.}
-  All five security properties hold when both external channels are insecure.
+  \item \textbf{Minimal trust assumptions.}
+  At the protocol design level, we minimize reliance on trusted channels.
+  The protocol is formally proven to guarantee payment security under weakened external channel assumptions.
+  \item \textbf{Formally provable security.}
+Our formal analysis results demonstrate that our payment pattern effectively prevents order tampering attacks and satisfies all security properties defined in this paper.
+  \item \textbf{Protection of every payment without per-user state.}
+Every payment, including the first payment to a merchant, is bound to the order produced by the user's own checkout, without per-user keys, local bindings, or trust decisions.
 \end{enumerate}
 
-\textbf{Costs and Scope.}
-SCC adds one user action per payment and relies on three deployment conditions.
+\textbf{Limitations.}
+We honestly present the limitations and trade-offs of our payment pattern.
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{User interaction.}
-  The user enters a short code together with the payment password.
-  In QR code payment, the code on the merchant page and the cashier on the phone are visible side by side.
-  In in-app and mobile web payment, the user carries the code across the switch from \emph{MF} to \emph{PS-App}, and \emph{MF} keeps displaying it until the payment ends.
+  \item \textbf{Encryption overhead.}
+Our payment pattern introduces one public-key encryption in \emph{MF} and one decryption in \emph{PS} for each payment, and merchants add the fulfilment target to the signed order; the fulfilment target covers every order field that determines delivery.
+We consider the resulting overhead to be acceptable in practice.
+  \item \textbf{Additional user interaction.}
+In each payment, the user enters the short code shown by \emph{MF} together with the payment password.
+In in-app and mobile web payment, the user carries the code across the switch from \emph{MF} to \emph{PS-App}, and \emph{MF} keeps displaying it until the payment ends.
   \item \textbf{Code confidentiality on the device.}
-  The security argument requires that the attacker not learn the code before the user enters it, which the secure channel between the user and \emph{MF} provides in our model.
-  Malware that reads the screen or overlays a fake input page acts on the user's device and lies outside the channel attacker.
-  \emph{MF} and \emph{PS-App} therefore render the code and its input field with screen-capture protection, such as \texttt{FLAG\_SECURE} on Android.
-  \item \textbf{Coverage of the fulfilment target.}
-  $D$ includes every order field that determines delivery, such as the shipping address, the recipient of a gift, a top-up number, or a game account.
-  \emph{PS} enforces this by requiring merchants to declare these fields when they integrate SCC.
+The security of our payment pattern requires that the attacker not learn the code before the user enters it, which the secure channel between the user and \emph{MF} provides in our model.
+Malware that reads the screen or overlays a fake input page on the user's device lies outside the channel attacker, and \emph{MF} and \emph{PS-App} render the code and its input field with screen-capture protection, such as \texttt{FLAG\_SECURE} on Android.
 \end{enumerate}
-The symbolic model treats the code check as exact; the code length bounds the probability of online guessing, as discussed in the security analysis.
-Tampering with $D$ or with the seal makes a payment fail, and such denial of service lies outside our threat model.
