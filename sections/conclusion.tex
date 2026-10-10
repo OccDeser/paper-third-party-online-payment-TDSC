@@ -8,5 +8,5 @@ By formally modeling six widely deployed protocols from major Chinese providers 
 We further validate the threat in practice: a proof-of-concept attack on Android tampers with real payment orders for both Alipay and PSP-B, and a measurement study of hundreds of popular applications finds over 25\% vulnerable.
 Following our responsible disclosure, both providers have officially acknowledged the vulnerability.
 
-Finally, we propose a deployable countermeasure that binds user authorization to the order through user-side order authentication.
-Formal verification confirms that it satisfies all security properties even under weakened channel assumptions, offering a practical path toward more secure third-party payments.
+Finally, we propose Sealed Checkout Code, a single-round countermeasure that binds each payment to the user's own checkout through a sealed nonce and a short code entered by the user.
+Formal verification confirms that it satisfies all security properties when both external channels are insecure, and it protects the first payment without per-user keys or trust on first use.

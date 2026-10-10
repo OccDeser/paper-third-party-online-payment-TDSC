@@ -1,12 +1,9 @@
 %-------------------------------------------------------------------------------
-\section{Countermeasure} 
+\section{Countermeasure} \label{sec:countermeasure}
 %-------------------------------------------------------------------------------
-% In this section, we xxxx.
 
-In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
-% Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
-Then, we verify our countermeasure using symbolic methods and present the results.
-Finally, we discuss our countermeasure.
+In this section, we analyze the causes of order tampering attacks and present Sealed Checkout Code (SCC), a countermeasure that binds every payment to the checkout the user actually performed.
+We then analyze its security, verify it with \Tamarin under the strongest channel assumption, and discuss its deployment.
 
 \subsection{Cause Analysis}
 
@@ -24,55 +21,110 @@ Consequently, mitigation is often reactive: once an insecure communication chann
 
 \textbf{Root Causes.}
 The root cause of such attacks lies in the lack of a user-side authentication mechanism for order information in existing payment patterns.
-We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
-However, the user does not actually authenticate the order.
-Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
-In other words, during the \emph{Authentication} phase, the user performs no form of authentication of the order data.
-The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
-Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
-This observation reveals a design flaw in current payment patterns.
+During the \emph{Authorization} phase, the user enters a payment password and possibly verifies the payment amount and description.
+These values describe the content of a payment, and they do not identify the order that the user placed.
+The user's authorization therefore applies to the act of paying, and an attacker who tampers with the order parameters in transit can induce the user to authorize an incorrect order.
 
-\subsection{Countermeasure Design}
+An order created through the order oracle makes this flaw exploitable.
+It carries the same amount, the same description, and the same payee as the user's order, so it passes every check the user performs.
+The two orders differ only in the order instance and in the party that receives the goods, and neither difference reaches the user.
+\emph{PS} cannot resolve the ambiguity either, because it cannot authenticate the sender of the payment parameters.
+A countermeasure therefore has to give the user a check that the attacker cannot reproduce with its own order.
+
+\subsection{Design Goals}
+
+We design the countermeasure to meet four goals.
+\begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
+  \item \textbf{Protection of every payment.} The first payment between a user and a merchant is protected in the same way as every later payment.
+  \item \textbf{Single round and no per-user state.} A payment completes in one run of the protocol, without per-user keys, locally stored bindings, or trust decisions by the user.
+  \item \textbf{Compatible integration.} Merchants keep the existing prepayment and notification interfaces.
+  \item \textbf{Weak channel assumptions.} Security holds when both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure.
+\end{enumerate}
+The countermeasure in the preliminary version of this work meets G3 and G4 for regular payments and relies on trust on first use: the first payment to a merchant establishes a per-user key binding, and that payment remains vulnerable to order tampering (Table~\ref{tab:countermeasure-results}).
+SCC meets all four goals.
+
+\subsection{Sealed Checkout Code}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{img/cm_initial.pdf}
-  \caption{Initial Payment}
-  \label{fig:our_model_initial}
+  \includegraphics[width=\linewidth]{img/cm_scc.pdf}
+  \caption{Sealed Checkout Code on top of payment pattern~B.
+    Black elements are new or changed; gray elements are identical to pattern~B.
+    Notation: $D$ denotes the fulfilment target of the order; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that \emph{PS} recorded for $id_{prepay}$.}
+  \label{fig:cm_scc}
 \end{figure}
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{img/cm_regular.pdf}
-  \caption{Regular Payment}
-  \label{fig:our_model_regular}
-\end{figure}
+SCC uses the user as the link between \emph{MF} and \emph{PS} that the attacker does not control.
+For each payment, \emph{MF} draws a fresh nonce $r$, seals it to \emph{PS} together with a digest of the order handle and the fulfilment target, and shows a short code derived from $r$ to the user.
+\emph{PS} opens the seal only for the order it was created for, and completes the payment only if the user enters the same code.
+Fig.~\ref{fig:cm_scc} shows the workflow on top of payment pattern~B.
 
-To fundamentally address order tampering attacks, we design and propose a new third-party payment protocol that introduces a user-side order authentication mechanism to effectively prevent such attacks.
-Our payment protocol distinguishes between \emph{initial} and \emph{regular} payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.~\ref{fig:our_model_regular}, respectively.
-For a given merchant and user, the first payment initiated by the user is defined as an \emph{initial} payment, while all later payments are defined as \emph{regular} payments.
+\textbf{Fulfilment target.}
+The fulfilment target $D$ is the information that determines who receives the goods, such as a shipping address, a recipient, a mobile number to top up, or a game account.
+The user enters or selects $D$ in \emph{MF} at checkout, so the value held by \emph{MF} comes from the user over a secure channel.
 
-At the beginning of the \emph{Prepayment} phase of a user's initial payment, \emph{MS} generates a public–private key pair $(priv_{UA}, pub_{UA})$ for \emph{U}, and then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them to \emph{PS}.
-Then, \emph{PS} temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~($id_{prepay}$) to the merchant.
-Upon receiving $id_{prepay}$, \emph{MS} generates two signatures over the payment parameters using $pub_M$ and $pub_{UA}$, respectively, and sends signatures and $id_{prepay}$ to \emph{MF}
-During the \emph{Authentication} phase, \emph{PS-Server} send the order information together with $pub_{UA}$ to \emph{PS-App}.
-At this point, \emph{PS-App} notifies the user that this is the first payment to the merchant and asks whether this merchant should be trusted.
-If the user chooses to trust the merchant, \emph{PS-App} verifies both signatures and, upon successful verification, binds $pub_{UA}$ to the merchant identifier and stores it locally.
-Otherwise, the payment process is aborted.
+\textbf{Order Phase.}
+The user selects $goods$ and $D$ in \emph{MF}, and \emph{MF} sends $id_{U}$, $goods$, and $D$ to \emph{MS}.
 
-In regular payments, the \emph{Prepayment} phase largely follows payment pattern~B.
-The only difference is that \emph{MS} additionally signs $id_{prepay}$ and $id_{M}$ using $priv_{UA}$.
-Then, \emph{PS-App} first checks whether a public key $pub_{UA}$ has already been bound locally to the merchant identifier.
-If such a binding exists, \emph{PS-App} verifies both signatures before prompting the user to confirm the order information and complete the payment.
-Otherwise, the application informs the user that the merchant is not trusted and asks whether to proceed with the payment.
+\textbf{Prepayment Phase.}
+\emph{MS} includes $D$ in the order it signs and submits to \emph{PS}, and \emph{PS} records the order under a fresh $id_{prepay}$.
+\emph{MS} then generates the payment parameters exactly as in pattern~B.
+Upon receiving the parameters, \emph{MF} draws $r$, computes $code = f(r)$ and $T = H(id_{M} \parallel id_{prepay} \parallel D)$ with the $D$ entered by the user, and encrypts $T \parallel r$ under the public key $pub_{P}$ of \emph{PS} to obtain $seal$.
+\emph{MF} displays $code$ to the user and sends the payment parameters together with $seal$ to \emph{PS}.
+\emph{PS} verifies $S_{prepay}$, looks up the order recorded for $id_{prepay}$, recomputes $T'$ from the merchant identifier, the order handle, and the fulfilment target in that order, and decrypts $seal$.
+It continues only if $T = T'$.
+
+\textbf{Authorization Phase.}
+\emph{PS-App} displays the amount, the description, and the payee account, and asks the user to enter the code.
+The user enters the code shown by \emph{MF} together with the payment password, and \emph{PS} completes the payment only if the code equals $f(r)$ and the password is valid.
+
+\textbf{Notification Phase.}
+This phase is identical to pattern~B, and \emph{MS} fulfils the order to $D$.
+
+\textbf{Direction of the code.}
+\emph{PS} never displays the code.
+Payment parameters are bearer tokens: any party holding them can open the cashier.
+If \emph{PS-App} displayed the code for the user to compare, an attacker that intercepts the parameters and the seal could open the cashier under its own payment account, read the code, and choose a nonce $r_A$ with $f(r_A)$ equal to that code for its own order.
+In SCC the code travels only from \emph{MF} to the user and from the user to \emph{PS}, both over secure channels.
+
+\textbf{Pattern A and integration.}
+In payment pattern~A, \emph{MF} receives the signed order in the payment parameters and uses $id_{order}$ as the order handle in $T$; all other steps are identical.
+Merchants integrate SCC by adding $D$ to the signed order.
+The seal and the code are computed by the payment SDK embedded in \emph{MF}, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
+
+\subsection{Security Analysis}
+
+The attacker controls \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} and obtains legitimate payment parameters for its own orders through the order oracle.
+To make the user pay for an order of its own, the attacker has three options.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Substitute its own order.}
+  The attacker replaces the user's payment parameters with those of its own order, either on \emph{MF} $\Longleftrightarrow$ \emph{MS} (Variant~\Rom{1}) or on \emph{MF} $\Longleftrightarrow$ \emph{PS} while keeping the user's seal (Variant~\Rom{2}).
+  In Variant~\Rom{1}, \emph{MF} seals the attacker's order handle together with the user's $D$; in Variant~\Rom{2}, the seal carries the user's order handle.
+  \emph{PS} recomputes $T'$ from the attacker's order, which carries the attacker's own handle and fulfilment target, so $T \neq T'$ and \emph{PS} aborts.
+  \item \textbf{Forge a seal for its own order.}
+  The attacker builds a consistent seal for its own order with a nonce $r_A$ of its choice.
+  \emph{PS} opens the cashier, but the payment requires $f(r_A)$, while the user enters the code $f(r)$ shown by its own \emph{MF}.
+  The nonce $r$ appears only inside the seal and as the code on the channel between \emph{MF} and the user, so the attacker can only guess.
+  With a four-digit code, a guess succeeds with probability $10^{-4}$, and \emph{PS} bounds the number of failed attempts per payment.
+  \item \textbf{Tamper with the fulfilment target.}
+  The attacker changes $D$ on its way to \emph{MS}.
+  The order at \emph{PS} then carries the attacker's target while \emph{MF} seals the user's target, so $T \neq T'$ and the payment fails.
+\end{enumerate}
+
+In every case the attack ends with a failed payment and does not redirect the user's funds or goods.
 
 \subsection{Symbolic Verification}
 
-
-We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
-The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
-This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
-Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, 
-the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
-
 \input{tables/countermeasure.tex}
+
+We model SCC in \Tamarin following the countermeasure models of our artifact, with the same channel rules, order and query oracles, tactics, and lemmas.
+The model uses the Base assumption, in which both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure; it grants the attacker the capabilities of both SecureMS and SecurePS.
+Through the order oracle, the attacker places orders with arbitrary amounts and descriptions on its own account, and each such order carries the attacker's own fulfilment target, consistent with the merchant's record of the order.
+
+The user commits to the order when the payment completes, because \emph{PS} checks the code after the user submits it.
+To confirm that this commit point preserves the discriminating power of IA-O2, we applied the same change to all six protocols of Table~\ref{tab:lemma-results} under all three channel assumptions; IA-O2 remains falsified in all 18 models.
+
+Table~\ref{tab:countermeasure-results} summarizes the results.
+SCC satisfies all five security properties under the Base assumption, and the verification completes in 619 seconds with a peak memory of 7.0~GB.
+Under the same assumption, payment pattern~B violates IA-O2, and the two-phase countermeasure of the preliminary version violates IA-O2 in the initial payment.
