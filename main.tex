@@ -1,10 +1,6 @@
-\documentclass[10pt,journal,compsoc]{IEEEtran}
+\documentclass[journal]{IEEEtran}
 
-\ifCLASSOPTIONcompsoc
-  \usepackage[nocompress]{cite}
-\else
-  \usepackage{cite}
-\fi
+\usepackage{cite}
 
 % to be able to draw some self-contained figs
 \usepackage{tikz}
@@ -141,24 +137,18 @@
         Kun~He,
         Qiyi~Deng,
         and~Ruiying~Du%
-\IEEEcompsocitemizethanks{%
-\IEEEcompsocthanksitem Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China.\protect\\
-E-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn
-\IEEEcompsocthanksitem A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26). This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}%
-}
+\thanks{Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China (e-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn).}%
+\thanks{A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26). This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}}
 
 \markboth{IEEE Transactions on Dependable and Secure Computing}%
 {Xiao \MakeLowercase{\textit{et al.}}: Breaking and Fixing Third-Party Online Payments}
 
-\IEEEtitleabstractindextext{%
+\maketitle
+
 \input{sections/abstract.tex}
 \begin{IEEEkeywords}
 Third-party payment, mobile payment, security protocol, formal verification, Tamarin.
-\end{IEEEkeywords}}
-
-\maketitle
-\IEEEdisplaynontitleabstractindextext
-\IEEEpeerreviewmaketitle
+\end{IEEEkeywords}
 
 \input{sections/introduction.tex}
 \input{sections/background.tex}
