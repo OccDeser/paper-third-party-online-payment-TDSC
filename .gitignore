@@ -442,3 +442,14 @@ img/*
 
 .vscode/*
 .texvsctmp/*
+### Local tool and editor state ###
+.claude/
+.aris/
+.vscode/
+.texvsctmp/
+
+### Working directories kept outside the manuscript ###
+newfangan/
+
+### latexdiff output PDF is committed for review ###
+!/diff/*.pdf
