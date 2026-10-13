@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Tue Oct 13 12:01:59 2026
-%DIF ADD new/main.tex   Tue Oct 13 12:01:58 2026
+%DIF DEL old/main.tex   Tue Oct 13 12:11:25 2026
+%DIF ADD new/main.tex   Tue Oct 13 12:11:24 2026
 
 \usepackage{cite}
 
@@ -348,7 +348,7 @@ We make the following contributions:
 The conference version countered order tampering with a two-phase protocol: merchants generate a key pair for each user, and the payment application binds the merchant's key to the user at the first payment.
 This design follows trust on first use and leaves the first payment to each merchant open to order tampering.
 This paper replaces it with SCC, which protects every payment, including the first, without per-user keys (Section~\ref{sec:countermeasure}).
-The new material comprises the design of SCC, its security analysis against order substitution, forged seals, and tampering with the fulfilment target, its formal verification with both external channels insecure, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
+The new material comprises the design, security analysis, and formal verification of SCC, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
 }
 
 \DIFaddend % \noindent\textbf{Disclosure.}
@@ -410,32 +410,52 @@ As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment pr
 
 \subsection{Payment Scenarios} \label{sec:payment-scenarios}
 
-The \emph{PS} obtains payment parameters from the \emph{MF} via \emph{PS-App} installed on the \emph{U}'s mobile device.
-However, the communication methods between the \emph{PS-App} and the \emph{MF} differ depending on implementation of the \emph{MF}, 
+The \emph{PS} obtains payment parameters from the \emph{MF} via \emph{PS-App} \DIFdelbegin \DIFdel{installed on the }\emph{\DIFdel{U}}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{on the user}\DIFaddend 's mobile device\DIFdelbegin \DIFdel{.
+However, the communication methods between the }\emph{\DIFdel{PS-App}} %DIFAUXCMD
+\DIFdel{and the }\emph{\DIFdel{MF}} %DIFAUXCMD
+\DIFdel{differ depending on implementation }\DIFdelend \DIFaddbegin \DIFadd{, and the interaction method depends on the form }\DIFaddend of the \emph{MF}\DIFdelbegin \DIFdel{, 
 which may include native mobile applications, mobile web pages, and desktop web pages.
-These distinct forms result in different payment scenarios, prompting payment providers to define specific interaction methods between the \emph{MF} and the \emph{PS}.
+These distinct forms result in different payment scenarios, prompting payment providers to define specific interaction methods between the }\emph{\DIFdel{MF}} %DIFAUXCMD
+\DIFdel{and the }\emph{\DIFdel{PS}}%DIFAUXCMD
+\DIFdel{.
 We introduce three common payment scenarios below:
+}%DIFDELCMD < 
 
-\textbf{In-app Payment.}
-% This payment scenario takes place within native mobile applications.
-In this scenario, payment parameters are obtained within native mobile applications.
-After the user selects a good, the \emph{MF} invokes the \emph{PS-App} through the Software Development Kit (SDK) provided by the payment provider to
-transmit the required payment parameters to the \emph{PS}.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{In-app Payment.}}
+%DIFAUXCMD
+%DIF <  This payment scenario takes place within native mobile applications.
+\DIFdel{In this scenario, payment parameters are obtained within native mobile applications.
+After the user selects a good, the }\emph{\DIFdel{MF}} %DIFAUXCMD
+\DIFdel{invokes }\DIFdelend \DIFaddbegin \DIFadd{.
+In }\textbf{\DIFadd{in-app payment}}\DIFadd{, }\DIFaddend the \DIFaddbegin \DIFadd{merchant's native application invokes }\DIFaddend \emph{PS-App} through the \DIFaddbegin \DIFadd{payment provider's }\DIFaddend Software Development Kit (SDK)\DIFdelbegin \DIFdel{provided by the payment provider to
+transmit the required payment parameters to the }\emph{\DIFdel{PS}}%DIFAUXCMD
+\DIFdel{.
+}%DIFDELCMD < 
 
-\textbf{Mobile Web Payment.}
-In this scenario, the user interacts with the merchant through a mobile browser.
-Similar to in-app payment, the merchant's mobile web page initiates a payment request to the \emph{PS-App} using a URL scheme.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{Mobile Web Payment.}}
+%DIFAUXCMD
+\DIFdel{In this scenario, the user interacts with the merchantthrough a mobile browser.
+Similar to in-app payment, the merchant}\DIFdelend \DIFaddbegin \DIFadd{.
+In }\textbf{\DIFadd{mobile web payment}}\DIFadd{, the merchant}\DIFaddend 's mobile web page \DIFdelbegin \DIFdel{initiates a payment request to the }\DIFdelend \DIFaddbegin \DIFadd{invokes }\DIFaddend \emph{PS-App} \DIFdelbegin \DIFdel{using }\DIFdelend \DIFaddbegin \DIFadd{through }\DIFaddend a URL scheme.
+\DIFdelbegin %DIFDELCMD < 
 
-\textbf{QR Code Payment.}
-QR code payment fundamentally differs from the previous two scenarios with respect to device interaction.
-In this scenario, the user browses the merchant's website using a desktop browser, while the payment is completed on a mobile device.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{QR Code Payment.}}
+%DIFAUXCMD
+\DIFdel{QR code payment fundamentally differs from the previous two scenarios with respect to device interaction.
+In this scenario}\DIFdelend \DIFaddbegin \DIFadd{In }\textbf{\DIFadd{QR code payment}}\DIFaddend , the user browses the merchant's website \DIFdelbegin \DIFdel{using }\DIFdelend \DIFaddbegin \DIFadd{on }\DIFaddend a desktop browser, \DIFdelbegin \DIFdel{while the payment is completed on a mobile device.
 Since the merchant's web page cannot directly redirect to a mobile payment application, the payment provider employs a QR code as an intermediary between the PC and mobile platforms. 
-After placing an order, the merchant website generates a payment QR code, which the user scans with the \emph{PS-App} to obtain the payment parameters.
+After placing an order, the merchant website generates a payment QR code , which }\DIFdelend \DIFaddbegin \DIFadd{and }\DIFaddend the \DIFaddbegin \DIFadd{website displays a QR code that the }\DIFaddend user scans with \DIFdelbegin \DIFdel{the }\DIFdelend \emph{PS-App} to obtain the payment parameters.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{img/tpp_process.pdf}
-    \caption{
+    \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=\linewidth]{img/tpp_process.pdf}
+%DIFDELCMD <     %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.85\linewidth]{img/tpp_process.pdf}
+    \DIFaddendFL \caption{
         An Overview of a Typical Third-Party Online Payment. 
         Dashed arrows indicate optional messages, depending on the specific payment pattern.
         Notation: $validate(p)$ denotes checking whether $p$ is valid; $continue()$ denotes continuing the execution of the protocol; $abort()$ denotes terminating the protocol; $make\_payment()$ denotes the fund transfer operation; $random()$ denotes generating a random number; and $sign_k(m)$ denotes signing message $m$ with key $k$.
@@ -750,83 +770,199 @@ Two types of atomic facts are necessary to define injective agreement:
 This notion is particularly well-suited for online payment scenarios, where both consistency and uniqueness of transactions are fundamentally essential requirements.
 We structure the security properties according to the logical progression of a payment protocol, namely agreement on the \emph{order}, agreement on \emph{user authorization}, and agreement on the \emph{result}.
 
-\subsection{Injective Agreement on Order}
+\DIFdelbegin \subsection{\DIFdel{Injective Agreement on Order}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{Each property instantiates the following template, in which $\mathsf{Commit}$ and $\mathsf{Running}$ are replaced by the fact pair of that property:
+}\begin{tightflalign}
+  \TAll \DIFadd{\; \text{\Tterm{a}} }& \DIFadd{\text{\Tterm{ b x \#i.}} \; \text{\TFact{Commit(a, b, x)@\#i}} }&\\
+  \implies & \TEx \DIFadd{\; \text{\TLemma{\#j.}} \; \text{\TFact{Running(b, a, x)@\#j}} \; }\land\\
+  \lnot \DIFadd{\; }&\DIFadd{(\;}\TEx \DIFadd{\; \text{\TLemma{a2 b2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }\land\\
+  & \DIFadd{\hspace{2em} \text{\TFact{Commit(a2, b2, x)@\#i2}})
+}\end{tightflalign}
+\DIFadd{The first conjunct requires that the peer actually ran the protocol on the same data, and the second requires that no other commit uses that data, which rules out replay and duplication.
+The Commit and Running facts follow the standard interpretation introduced in~\mbox{%DIFAUXCMD
+\cite{Lowe1997AuthenticationHierarchy}}\hskip0pt%DIFAUXCMD
+.
+}\DIFaddend 
 
-Injective agreement on the order ensures that all involved parties process the same payment order and that each order is handled at most once.
-Violations of this property indicate that an adversary may have tampered with the order information or caused inconsistent views among the participants.
-Since this property involves three principals, we separately consider the agreements between \emph{PS} and \emph{MS}, and between \emph{U} and \emph{MS}.
+\DIFdelbegin \DIFdel{Injective agreement on the order }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Injective Agreement on Order.}}
+\DIFadd{This property }\DIFaddend ensures that all involved parties process the same payment order and that each order is handled at most once\DIFdelbegin \DIFdel{.
+Violations of this property indicate }\DIFdelend \DIFaddbegin \DIFadd{; a violation indicates }\DIFaddend that an adversary \DIFdelbegin \DIFdel{may have }\DIFdelend \DIFaddbegin \DIFadd{has }\DIFaddend tampered with the order information\DIFdelbegin \DIFdel{or caused inconsistent views among the participants.
+Since this property }\DIFdelend \DIFaddbegin \DIFadd{.
+Since it }\DIFaddend involves three principals, we \DIFdelbegin \DIFdel{separately consider the agreements between }\DIFdelend \DIFaddbegin \DIFadd{consider }\DIFaddend \emph{PS} and \emph{MS}, and \DIFdelbegin \DIFdel{between }\DIFdelend \emph{U} and \emph{MS}\DIFdelbegin \DIFdel{.
+}%DIFDELCMD < 
 
-\textbf{IA-O1~(\emph{PS} $\leftarrow$ \emph{MS}):} 
-This lemma captures injective agreement on the order from the perspective of \emph{PS}.
-If \emph{PS} accepts a payment request for an order allegedly issued by \emph{MS}, then \emph{MS} must have previously initiated a corresponding request for that order.
-Moreover, no other payment request for the same order can be accepted by \emph{PS}, ensuring uniqueness.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{IA-O1~(}\emph{\DIFdel{PS}} %DIFAUXCMD
+\DIFdel{$\leftarrow$ }\emph{\DIFdel{MS}}%DIFAUXCMD
+\DIFdel{):}} 
+%DIFAUXCMD
+\DIFdel{This lemma captures injective agreement on the order from the perspective of }\DIFdelend \DIFaddbegin \DIFadd{, separately.
+}\emph{\DIFadd{IA-O1~(}\emph{\DIFadd{PS}} \DIFadd{$\leftarrow$ }\emph{\DIFadd{MS}}\DIFadd{)}} \DIFadd{uses }\TFact{PSCommit(ps, ms, order)} \DIFadd{and }\TFact{MSRunning(ms, ps, order)}\DIFadd{: if }\DIFaddend \emph{PS} \DIFdelbegin \DIFdel{.
+If }\emph{\DIFdel{PS}} %DIFAUXCMD
+\DIFdelend accepts a payment request for an order allegedly issued by \emph{MS}, then \emph{MS} \DIFdelbegin \DIFdel{must have previously initiated a corresponding }\DIFdelend \DIFaddbegin \DIFadd{has initiated a }\DIFaddend request for that order\DIFdelbegin \DIFdel{.
+Moreover, no other payment }\DIFdelend \DIFaddbegin \DIFadd{, and no other }\DIFaddend request for the same order \DIFdelbegin \DIFdel{can be accepted by }\emph{\DIFdel{PS}}%DIFAUXCMD
+\DIFdel{, ensuring uniqueness.
 The property is formalized as follows:
-\begin{tightflalign}
-  \TAll \; \text{\Tterm{ps}} & \text{\Tterm{ ms order \#i.}} \; \text{\TFact{PSCommit(ps, ms, order)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, ps, order)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{ps2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{PSCommit(ps2, ms2, order)@\#i2}}) 
-\end{tightflalign}
-Here, the \emph{Commit} and \emph{Running} facts follow the standard interpretation introduced in~\cite{Lowe1997AuthenticationHierarchy}.
-The fact \TFact{PSCommit(ps, ms, order)} denotes that \emph{PS} has accepted a payment request for \Tterm{order}, 
-while \TFact{MSRunning(ms, ps, order)} records that \emph{MS} has actually issued such a request.
-The term \Tterm{order} denotes order information, including the merchant's order identifier, the payment amount, and the product description.
+}%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <   \TAll %%%
+\DIFdel{\; \text{\Tterm{ps}} }%DIFDELCMD < & %%%
+\DIFdel{\text{\Tterm{ ms order \#i.}} \; \text{\TFact{PSCommit(ps, ms, order)@\#i}} }%DIFDELCMD < &\\
+%DIFDELCMD <   \implies & \TEx %%%
+\DIFdel{\; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, ps, order)@\#j}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   \lnot %%%
+\DIFdel{\; }%DIFDELCMD < &%%%
+\DIFdel{(\;}%DIFDELCMD < \TEx %%%
+\DIFdel{\; \text{\TLemma{ps2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   & %%%
+\DIFdel{\hspace{2em} \text{\TFact{PSCommit(ps2, ms2, order)@\#i2}}) 
+}%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < %%%
+\DIFdel{Here, the }\emph{\DIFdel{Commit}} %DIFAUXCMD
+\DIFdel{and }\emph{\DIFdel{Running}} %DIFAUXCMD
+\DIFdel{facts follow the standard interpretation introduced in~\mbox{%DIFAUXCMD
+\cite{Lowe1997AuthenticationHierarchy}}\hskip0pt%DIFAUXCMD
+.
+The fact }%DIFDELCMD < \TFact{PSCommit(ps, ms, order)} %%%
+\DIFdel{denotes that }\emph{\DIFdel{PS}} %DIFAUXCMD
+\DIFdel{has accepteda payment request for }%DIFDELCMD < \Tterm{order}%%%
+\DIFdel{, 
+while }%DIFDELCMD < \TFact{MSRunning(ms, ps, order)} %%%
+\DIFdel{records that }\emph{\DIFdel{MS}} %DIFAUXCMD
+\DIFdel{has actually issued such a request}\DIFdelend \DIFaddbegin \DIFadd{is accepted}\DIFaddend .
+The term \Tterm{order} \DIFdelbegin \DIFdel{denotes order information, including }\DIFdelend \DIFaddbegin \DIFadd{includes }\DIFaddend the merchant's order identifier, the payment amount, and the product description.
+\DIFdelbegin %DIFDELCMD < 
 
-\textbf{IA-O2~(\emph{U} $\leftarrow$ \emph{MS}):} 
-From the user's perspective, injective agreement on the order ensures that the user and the merchant reach agreement on order information during the payment process, and that each order is processed exactly once.
-The formalization is as follows:
-\begin{tightflalign}
-  \TAll \; \text{\Tterm{u }} & \text{\Tterm{ms goods \#i.}} \; \text{\TFact{UMCommit(u, ms, goods)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, u, goods)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{u2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{UMCommit(u2, ms2, goods)@\#i2}}) 
-\end{tightflalign}
-Unlike the order information considered in IA-O1, IA-O2 only requires agreement between the user and the merchant on the purchased goods, since the user is primarily concerned with what is being bought.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{IA-O2~(}\emph{\DIFdel{U}} %DIFAUXCMD
+\DIFdel{$\leftarrow$ }\emph{\DIFdel{MS}}%DIFAUXCMD
+\DIFdel{):}} 
+%DIFAUXCMD
+\DIFdel{From the user 's perspective, injective agreement on the order ensures that the user }\DIFdelend \DIFaddbegin \emph{\DIFadd{IA-O2~(}\emph{\DIFadd{U}} \DIFadd{$\leftarrow$ }\emph{\DIFadd{MS}}\DIFadd{)}} \DIFadd{uses }\TFact{UMCommit(u, ms, goods)} \DIFaddend and \DIFaddbegin \TFact{MSRunning(ms, u, goods)}\DIFadd{: the user and }\DIFaddend the merchant \DIFdelbegin \DIFdel{reach agreement on order information during the payment process, and that }\DIFdelend \DIFaddbegin \DIFadd{agree on the purchased goods, and }\DIFaddend each order is processed exactly once.
+\DIFdelbegin \DIFdel{The formalization is as follows:
+}%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <   \TAll %%%
+\DIFdel{\; \text{\Tterm{u }} }%DIFDELCMD < & %%%
+\DIFdel{\text{\Tterm{ms goods \#i.}} \; \text{\TFact{UMCommit(u, ms, goods)@\#i}} }%DIFDELCMD < &\\
+%DIFDELCMD <   \implies & \TEx %%%
+\DIFdel{\; \text{\TLemma{\#j.}} \; \text{\TFact{MSRunning(ms, u, goods)@\#j}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   \lnot %%%
+\DIFdel{\; }%DIFDELCMD < &%%%
+\DIFdel{(\;}%DIFDELCMD < \TEx %%%
+\DIFdel{\; \text{\TLemma{u2 ms2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   & %%%
+\DIFdel{\hspace{2em} \text{\TFact{UMCommit(u2, ms2, goods)@\#i2}}) 
+}%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < %%%
+\DIFdel{Unlike the order information considered in IA-O1, }\DIFdelend IA-O2 \DIFdelbegin \DIFdel{only requires agreement between the user and the merchant on the purchased goods }\DIFdelend \DIFaddbegin \DIFadd{requires agreement on the goods only}\DIFaddend , since the user is primarily concerned with what is being bought.
 
+\DIFdelbegin \subsection{\DIFdel{Injective Agreement on User Authorization}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+%DIFDELCMD < 
 
-\subsection{Injective Agreement on User Authorization}
+%DIFDELCMD < %%%
+\DIFdel{Injective agreement on user authorization }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Injective Agreement on User Authorization.}}
+\DIFadd{This property }\DIFaddend ensures that each successful payment is backed by a unique and explicit authorization from the user\DIFdelbegin \DIFdel{.
+This property }\DIFdelend \DIFaddbegin \DIFadd{, which }\DIFaddend prevents both unauthorized payments and \DIFdelbegin \DIFdel{reuse of a single authorization to complete }\DIFdelend \DIFaddbegin \DIFadd{the reuse of one authorization for }\DIFaddend multiple transactions.
+\DIFdelbegin %DIFDELCMD < 
 
-Injective agreement on user authorization ensures that each successful payment is backed by a unique and explicit authorization from the user.
-This property prevents both unauthorized payments and reuse of a single authorization to complete multiple transactions.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{IA-UA~(}\emph{\DIFdel{PS}} %DIFAUXCMD
+\DIFdel{$\leftarrow$ }\emph{\DIFdel{U}}%DIFAUXCMD
+\DIFdel{):}}
+%DIFAUXCMD
+\DIFdel{Specifically, }\DIFdelend \DIFaddbegin \emph{\DIFadd{IA-UA~(}\emph{\DIFadd{PS}} \DIFadd{$\leftarrow$ }\emph{\DIFadd{U}}\DIFadd{)}} \DIFadd{uses }\TFact{PaymentComplete(u, h(p), s)} \DIFadd{and }\TFact{UserInputPwd(u, p, s)} \DIFadd{with the session }\Tterm{s} \DIFadd{as the agreed data: }\DIFaddend if \emph{PS} completes a payment based on \DIFdelbegin \DIFdel{a password hash, then the corresponding password must have been input by }\DIFdelend \DIFaddbegin \DIFadd{the hash }\Tterm{h(p)} \DIFadd{of a password, then }\DIFaddend \emph{U} \DIFaddbegin \DIFadd{has input }\Tterm{p} \DIFadd{in session }\Tterm{s}\DIFaddend , and each password input \DIFdelbegin \DIFdel{can authorize }\DIFdelend \DIFaddbegin \DIFadd{authorizes }\DIFaddend at most one payment\DIFdelbegin \DIFdel{:
+}%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <   \TAll %%%
+\DIFdel{\; \text{\Tterm{u }} }%DIFDELCMD < & %%%
+\DIFdel{\text{\Tterm{p s \#i.}} \; \text{\TFact{PaymentComplete(u, h(p), s)@\#i}} }%DIFDELCMD < &\\
+%DIFDELCMD <   \implies & \TEx %%%
+\DIFdel{\; \text{\TLemma{\#j.}} \; \text{\TFact{UserInputPwd(u, p, s)@\#j}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   \lnot %%%
+\DIFdel{\; }%DIFDELCMD < &%%%
+\DIFdel{(\;}%DIFDELCMD < \TEx %%%
+\DIFdel{\; \text{\TLemma{u2 p2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   & %%%
+\DIFdel{\hspace{2em} \text{\TFact{PaymentComplete(u2, h(p2), s)@\#i2}}) 
+}%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < %%%
+\DIFdel{In this lemma, the fact }%DIFDELCMD < \TFact{UserInputPwd(u, p, s)} %%%
+\DIFdel{represents that the user }%DIFDELCMD < \Tterm{u} %%%
+\DIFdel{inputs the password }%DIFDELCMD < \Tterm{p} %%%
+\DIFdel{in a session }%DIFDELCMD < \Tterm{s} %%%
+\DIFdel{to authorize a payment.
+The fact }%DIFDELCMD < \TFact{PaymentComplete(u, h(p), s)} %%%
+\DIFdel{denotes that }\emph{\DIFdel{PS}} %DIFAUXCMD
+\DIFdel{has received the hash value }%DIFDELCMD < \Tterm{h(p)} %%%
+\DIFdel{of the password }%DIFDELCMD < \Tterm{p} %%%
+\DIFdel{sent by }%DIFDELCMD < \Tterm{u}%%%
+\DIFdel{, and has completed the payment.
+}\DIFdelend \DIFaddbegin \DIFadd{.
+}\DIFaddend 
 
-\textbf{IA-UA~(\emph{PS} $\leftarrow$ \emph{U}):}
-Specifically, if \emph{PS} completes a payment based on a password hash, then the corresponding password must have been input by \emph{U}, and each password input can authorize at most one payment:
-\begin{tightflalign}
-  \TAll \; \text{\Tterm{u }} & \text{\Tterm{p s \#i.}} \; \text{\TFact{PaymentComplete(u, h(p), s)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{UserInputPwd(u, p, s)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{u2 p2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{PaymentComplete(u2, h(p2), s)@\#i2}}) 
-\end{tightflalign}
-In this lemma, the fact \TFact{UserInputPwd(u, p, s)} represents that the user \Tterm{u} inputs the password \Tterm{p} in a session \Tterm{s} to authorize a payment.
-The fact \TFact{PaymentComplete(u, h(p), s)} denotes that \emph{PS} has received the hash value \Tterm{h(p)} of the password \Tterm{p} sent by \Tterm{u}, and has completed the payment.
+\DIFdelbegin \subsection{\DIFdel{Injective Agreement on Result}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+%DIFDELCMD < 
 
+%DIFDELCMD < %%%
+\DIFdel{Finally, injective agreement on the payment result }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Injective Agreement on Result.}}
+\DIFadd{This property }\DIFaddend guarantees that successful payment notifications cannot be forged, replayed, or duplicated\DIFdelbegin \DIFdel{.
+A violation of this property would allow an adversary to falsely }\DIFdelend \DIFaddbegin \DIFadd{, so that an adversary cannot }\DIFaddend convince the user or the merchant that a payment has been completed \DIFdelbegin \DIFdel{, even though no actual }\DIFdelend \DIFaddbegin \DIFadd{when no }\DIFaddend fund transfer has occurred.
+\DIFdelbegin \DIFdel{We again consider the perspectives of }\DIFdelend \emph{\DIFdelbegin \DIFdel{MS}%DIFDELCMD < \MBLOCKRIGHTBRACE %%%
+\DIFdel{and }\emph{\DIFdel{U}} %DIFAUXCMD
+\DIFdel{separately.
+}%DIFDELCMD < 
 
-\subsection{Injective Agreement on Result}
+%DIFDELCMD < %%%
+\textbf{\DIFdel{IA-R1~(}\emph{\DIFdel{MS}} %DIFAUXCMD
+\DIFdel{$\leftarrow$ }\emph{\DIFdel{PS}}%DIFAUXCMD
+\DIFdel{):}}
+%DIFAUXCMD
+\DIFdel{From the merchant's view, if }\DIFdelend \DIFaddbegin \DIFadd{IA-R1~(}\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{receives a successful payment notification for an order, then this notification must have }\DIFdelend \DIFaddbegin \DIFadd{$\leftarrow$ }\emph{\DIFadd{PS}}\DIFadd{)}} \DIFadd{uses }\TFact{MSCommit(ms, ps, order)} \DIFadd{and }\TFact{PSRunning(ps, ms, order)}\DIFadd{: a successful notification received by }\emph{\DIFadd{MS}} \DIFadd{has }\DIFaddend been generated by \emph{PS}\DIFdelbegin \DIFdel{. 
+Also, }\DIFdelend \DIFaddbegin \DIFadd{, and }\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{must not receive multiple successful notifications for the same order.
+This is formalized in the lemma: }%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <   \TAll %%%
+\DIFdel{\; \text{\Tterm{ms}} }%DIFDELCMD < & %%%
+\DIFdel{\text{\Tterm{ ps order \#i.}} \; \text{\TFact{MSCommit(ms, ps, order)@\#i}} }%DIFDELCMD < &\\
+%DIFDELCMD <   \implies & \TEx %%%
+\DIFdel{\; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, ms, order)@\#j}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   \lnot %%%
+\DIFdel{\; }%DIFDELCMD < &%%%
+\DIFdel{(\;}%DIFDELCMD < \TEx %%%
+\DIFdel{\; \text{\TLemma{ms2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   & %%%
+\DIFdel{\hspace{2em} \text{\TFact{MSCommit(ms2, ps2, order)@\#i2}}) 
+}%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < 
 
-Finally, injective agreement on the payment result guarantees that successful payment notifications cannot be forged, replayed, or duplicated.
-A violation of this property would allow an adversary to falsely convince the user or the merchant that a payment has been completed, even though no actual fund transfer has occurred.
-We again consider the perspectives of \emph{MS} and \emph{U} separately.
-
-\textbf{IA-R1~(\emph{MS} $\leftarrow$ \emph{PS}):}
-From the merchant's view, if \emph{MS} receives a successful payment notification for an order, then this notification must have been generated by \emph{PS}. 
-Also, \emph{MS} must not receive multiple successful notifications for the same order. 
-This is formalized in the lemma:
-\begin{tightflalign}
-  \TAll \; \text{\Tterm{ms}} & \text{\Tterm{ ps order \#i.}} \; \text{\TFact{MSCommit(ms, ps, order)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, ms, order)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{ms2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{MSCommit(ms2, ps2, order)@\#i2}}) 
-\end{tightflalign}
-
-\textbf{IA-R2~(\emph{U} $\leftarrow$ \emph{PS}):}
-For the user, if \emph{U} observes a successful payment notification in the application, then \emph{PS} must have sent a corresponding notification.
-Each order produces at most one notification. Formally,
-\begin{tightflalign}
-  \TAll \; \text{\Tterm{u }} & \text{\Tterm{ps goods \#i.}} \; \text{\TFact{UPCommit(u, ps, goods)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, u, goods)@\#j}} \; \land\\
-  \lnot \; &(\;\TEx \; \text{\TLemma{u2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
-  & \hspace{2em} \text{\TFact{UPCommit(u2, ps2, goods)@\#i2}}) 
-\end{tightflalign}
+%DIFDELCMD < %%%
+\textbf{\DIFdel{IA-R2~(}\emph{\DIFdel{U}} %DIFAUXCMD
+\DIFdel{$\leftarrow$ }\emph{\DIFdel{PS}}%DIFAUXCMD
+\DIFdel{):}}
+%DIFAUXCMD
+\DIFdel{For the user, if }\emph{\DIFdel{U}} %DIFAUXCMD
+\DIFdel{observes a successful payment notification in the application, then }\DIFdelend \DIFaddbegin \DIFadd{receives at most one such notification per order.
+}\emph{\DIFadd{IA-R2~(}\emph{\DIFadd{U}} \DIFadd{$\leftarrow$ }\emph{\DIFadd{PS}}\DIFadd{)}} \DIFadd{uses }\TFact{UPCommit(u, ps, goods)} \DIFadd{and }\TFact{PSRunning(ps, u, goods)}\DIFadd{: a successful notification observed by }\DIFaddend \emph{\DIFdelbegin \DIFdel{PS}\DIFdelend \DIFaddbegin \DIFadd{U}\DIFaddend } \DIFdelbegin \DIFdel{must have sent a corresponding notification.
+Each }\DIFdelend \DIFaddbegin \DIFadd{has been sent by }\emph{\DIFadd{PS}}\DIFadd{, and each }\DIFaddend order produces at most one notification.
+\DIFdelbegin \DIFdel{Formally,
+}%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <   \TAll %%%
+\DIFdel{\; \text{\Tterm{u }} }%DIFDELCMD < & %%%
+\DIFdel{\text{\Tterm{ps goods \#i.}} \; \text{\TFact{UPCommit(u, ps, goods)@\#i}} }%DIFDELCMD < &\\
+%DIFDELCMD <   \implies & \TEx %%%
+\DIFdel{\; \text{\TLemma{\#j.}} \; \text{\TFact{PSRunning(ps, u, goods)@\#j}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   \lnot %%%
+\DIFdel{\; }%DIFDELCMD < &%%%
+\DIFdel{(\;}%DIFDELCMD < \TEx %%%
+\DIFdel{\; \text{\TLemma{u2 ps2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }%DIFDELCMD < \land\\
+%DIFDELCMD <   & %%%
+\DIFdel{\hspace{2em} \text{\TFact{UPCommit(u2, ps2, goods)@\#i2}}) 
+}%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < %%%
+\DIFdelend 
 
 
 \begin{table*}[t]
@@ -913,8 +1049,10 @@ All counterexamples violating IA-O1 and IA-O2 shows that each of them arises fro
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{img/attack.pdf}
-  \caption{
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=\linewidth]{img/attack.pdf}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.85\linewidth]{img/attack.pdf}
+  \DIFaddendFL \caption{
     Order Tampering Attack Variants. 
     Notation: 
       $params_M$ denotes the original payment parameters generated by the merchant;
@@ -1027,8 +1165,10 @@ As a result, the attacker successfully tampers with the order, causing the user 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{img/attack_flow.pdf}
-  \caption{Attack Flow.
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=\linewidth]{img/attack_flow.pdf}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.85\linewidth]{img/attack_flow.pdf}
+  \DIFaddendFL \caption{Attack Flow.
     MA denotes the merchant application; 
     Malicious Application denotes the malicious application we developed;
     PA denotes the payment application;
@@ -1089,11 +1229,8 @@ The user's authorization is applied only to the act of payment transaction, rath
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
 This observation reveals a design flaw in current payment patterns.
 
-\DIFaddbegin \DIFadd{An order created through the order oracle makes this flaw exploitable.
-It carries the same amount, the same description, and the same payee as the user's order, so it passes every check the user performs.
-The two orders differ only in the order instance and in the party that receives the goods, and neither difference reaches the user.
-}\emph{\DIFadd{PS}} \DIFadd{cannot resolve the ambiguity either, because it cannot authenticate the sender of the payment parameters.
-A countermeasure therefore has to give the user a check that the attacker cannot reproduce with its own order.
+\DIFaddbegin \DIFadd{An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the party that receives the goods.
+}\emph{\DIFadd{PS}} \DIFadd{cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give the user a check that the attacker cannot reproduce with its own order.
 }
 
 \subsection{\DIFadd{Design Goals}}
@@ -1120,7 +1257,7 @@ A countermeasure therefore has to give the user a check that the attacker cannot
   %DIFAUXCMD
 %DIFDELCMD < \label{fig:our_model_initial}
 %DIFDELCMD < %%%
-\DIFdelendFL \DIFaddbeginFL \includegraphics[width=\linewidth]{img/cm_scc.pdf}
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.92\linewidth]{img/cm_scc.pdf}
   \caption{\DIFaddFL{Sealed Checkout Code on top of payment pattern~B.
     Black elements are new or changed; gray elements are identical to pattern~B.
     Notation: $D$ denotes the fulfilment target of the order; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that }\emph{\DIFaddFL{PS}} \DIFaddFL{recorded for $id_{prepay}$.}}
@@ -1291,7 +1428,7 @@ To confirm that this commit point preserves the discriminating power of IA-O2, w
 
 \DIFadd{Table~\ref{tab:countermeasure-results} summarizes the results.
 SCC satisfies all five security properties under the Base assumption.
-We verified SCC on a server with 32 CPU cores and 187~GB of memory, with a peak memory usage of 7.0~GB.
+The verification ran on a server with 32 CPU cores and 187~GB of memory (peak usage 7.0~GB).
 }
 
 \DIFaddend %-------------------------------------------------------------------------------
@@ -1315,9 +1452,8 @@ Our formal analysis results demonstrate that our payment pattern effectively pre
 We honestly present the limitations and trade-offs of our payment pattern.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{\DIFdelbegin \DIFdel{Signature and storage }\DIFdelend \DIFaddbegin \DIFadd{Encryption }\DIFaddend overhead.}
-Our payment pattern introduces one \DIFdelbegin \DIFdel{additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
-However, no new cryptographic primitives are introduced, and we }\DIFdelend \DIFaddbegin \DIFadd{public-key encryption in }\emph{\DIFadd{MF}} \DIFadd{and one decryption in }\emph{\DIFadd{PS}} \DIFadd{for each payment, and merchants add the fulfilment target to the signed order; the fulfilment target covers every order field that determines delivery.
-We }\DIFaddend consider the resulting overhead to be acceptable in practice.
+Our payment pattern \DIFdelbegin \DIFdel{introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
+However, no new cryptographic primitives are introduced, and we consider the resulting overhead to be }\DIFdelend \DIFaddbegin \DIFadd{adds one public-key encryption in }\emph{\DIFadd{MF}} \DIFadd{and one decryption in }\emph{\DIFadd{PS}} \DIFadd{per payment, and merchants add the fulfilment target, which covers every field that determines delivery, to the signed order; we consider this overhead }\DIFaddend acceptable in practice.
   \item \textbf{Additional user interaction\DIFdelbegin \DIFdel{during the initial payment}\DIFdelend .}
 \DIFdelbegin \DIFdel{During the initial payment, users are required to explicitly confirm their trust in the merchant, introducing additional user interaction.
 For regular payments, no extra interaction is required, and }\DIFdelend \DIFaddbegin \DIFadd{In each payment, }\DIFaddend the \DIFdelbegin \DIFdel{overall user experience remains comparable to that of existing payment patterns}\DIFdelend \DIFaddbegin \DIFadd{user enters the short code shown by }\emph{\DIFadd{MF}} \DIFadd{together with the payment password.
@@ -1463,15 +1599,12 @@ EMV 3-D Secure lets the card issuer authenticate the cardholder for a card-not-p
 Attacks on mobile two-factor authentication and on PSD2 banking apps show that these guarantees weaken when the authentication factor and the transaction run on the same compromised device~\mbox{%DIFAUXCMD
 \cite{Konoth2016Anywhere, Haupert2019PSD2}}\hskip0pt%DIFAUXCMD
 .
-These mechanisms bind the authorization to the amount and the payee, which an order created through the order oracle reproduces exactly.
-SCC binds the authorization to the order instance and its fulfilment target, which such an order cannot reproduce.
+These mechanisms bind the authorization to the amount and the payee, which an order created through the order oracle reproduces exactly, whereas SCC binds it to the order instance and its fulfilment target.
 }
 
 \DIFadd{Short authenticated strings let users authenticate a key exchange between two devices by comparing a short value~\mbox{%DIFAUXCMD
 \cite{Vaudenay2005SAS}}\hskip0pt%DIFAUXCMD
-.
-SCC transfers a short code in one direction, from the merchant frontend through the user to the payment system.
-Because payment parameters are bearer tokens, a code displayed by the payment system would be readable by an attacker who opens the cashier with intercepted parameters, so SCC never displays it there.
+, whereas SCC transfers a short code in one direction, from the merchant frontend through the user to the payment system (Section~\ref{sec:countermeasure}).
 }
 
 \DIFaddend %-------------------------------------------------------------------------------
@@ -1494,15 +1627,17 @@ The corresponding authors are Jing Chen and Min Shi.
 
 %DIF <  伦理附录
 %DIF >  伦理与开放科学
-\section*{Ethical Considerations \DIFaddbegin \DIFadd{and Open Science}\DIFaddend }
-\DIFdelbegin \DIFdel{The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
+\section*{Ethical Considerations \DIFdelbegin %DIFDELCMD < \MBLOCKRIGHTBRACE
+%DIFDELCMD < %%%
+\DIFdel{The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
 Across these parties, the principal risk is the potential misuse of the disclosed technique, which we mitigate through the safeguards below, whereas the offsetting benefit is that it enables the providers and developers to remediate a fundamental design flaw before it is exploited in the wild.
-}\DIFdelend All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds\DIFdelbegin \DIFdel{, and all transactions were limited to test environments or self-owned accounts}\DIFdelend .
-The Android measurement study \DIFdelbegin \DIFdel{focused solely on }\DIFdelend \DIFaddbegin \DIFadd{only checked }\DIFaddend whether payment requests could be intercepted \DIFdelbegin \DIFdel{or hijacked }\DIFdelend at the communication level; \DIFaddbegin \DIFadd{it performed }\DIFaddend no order tampering \DIFdelbegin \DIFdel{or manipulation of payment amounts or outcomes was performed, and }\DIFdelend \DIFaddbegin \DIFadd{and imposed }\DIFaddend no financial or operational impact \DIFdelbegin \DIFdel{was imposed on application }\DIFdelend \DIFaddbegin \DIFadd{on }\DIFaddend developers or merchants.
-\DIFdelbegin \DIFdel{To reduce the risk of misuse, affected applications are not individually identified and are }\DIFdelend \DIFaddbegin \DIFadd{Affected applications are }\DIFaddend reported only in aggregated form\DIFdelbegin \DIFdel{.
-The protocol models presented in this paper }\DIFdelend \DIFaddbegin \DIFadd{, and the protocol models }\DIFaddend are reconstructed solely from public developer documentation\DIFdelbegin \DIFdel{, rather than from reverse engineering or leaked internal specifications.
-The identified issues were responsibly }\DIFdelend \DIFaddbegin \DIFadd{.
-The issues were }\DIFaddend disclosed to Alipay\DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend PSP-B, \DIFdelbegin \DIFdel{as well as to affected application developers , prior to publication , enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, }\DIFdelend \DIFaddbegin \DIFadd{and affected developers before publication (Section~\ref{sec:real_world}), and }\DIFaddend we do not release the attack implementation or the list of affected applications.
+All experiments were performed using }\DIFdelend \DIFaddbegin \DIFadd{and Open Science}}
+\DIFadd{All experiments used }\DIFaddend accounts fully controlled by the authors, without involving real users or \DIFdelbegin \DIFdel{accessing real user }\DIFdelend \DIFaddbegin \DIFadd{their }\DIFaddend funds, and \DIFdelbegin \DIFdel{all transactions were limited to test environments or self-owned accounts.
+The }\DIFdelend \DIFaddbegin \DIFadd{the }\DIFaddend Android measurement study \DIFdelbegin \DIFdel{focused solely on }\DIFdelend \DIFaddbegin \DIFadd{only checked }\DIFaddend whether payment requests could be intercepted\DIFdelbegin \DIFdel{or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.
+To reduce the risk of misuse, affected applications are not individually identified and are }\DIFdelend \DIFaddbegin \DIFadd{, without tampering with orders.
+Affected applications are }\DIFaddend reported only in aggregated form\DIFdelbegin \DIFdel{.
+The protocol models presented in this paper are reconstructed solely }\DIFdelend \DIFaddbegin \DIFadd{, the protocol models are reconstructed }\DIFaddend from public developer documentation, \DIFdelbegin \DIFdel{rather than from reverse engineering or leaked internal specifications.
+The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, }\DIFdelend \DIFaddbegin \DIFadd{and the issues were disclosed before publication (Section~\ref{sec:real_world}); }\DIFaddend we do not release the attack implementation or the list of affected applications.
 \DIFdelbegin %DIFDELCMD < 
 
 %DIFDELCMD < %%%
