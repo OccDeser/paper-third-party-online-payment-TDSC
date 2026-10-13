@@ -86,19 +86,22 @@ After placing an order, the merchant website generates a payment QR code, which 
 During the \emph{Prepayment} phase, the generation methods of payment parameters vary across different providers and scenarios.
 We introduce two high-level payment patterns adopted by the two leading payment providers, PSP-B and Alipay.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=0.9\linewidth]{img/model_a.pdf}
-  \caption{Payment Pattern A}
-  \label{fig:payment_model_a}
-\end{figure}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.9\linewidth]{img/model_b.pdf}
-  \caption{Payment Pattern B}
-  \label{fig:payment_model_b}
-\end{figure}
+  \begin{minipage}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/model_a.pdf}
+    \caption{Payment Pattern A}
+    \label{fig:payment_model_a}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/model_b.pdf}
+    \caption{Payment Pattern B}
+    \label{fig:payment_model_b}
+  \end{minipage}
+\end{figure*}
 
 \textbf{Payment Pattern A.}
 In this pattern, the payment parameters are generated directly by the \emph{MS}.
