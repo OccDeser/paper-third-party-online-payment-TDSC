@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Sat Oct 10 22:32:32 2026
-%DIF ADD new/main.tex   Sat Oct 10 22:32:31 2026
+%DIF DEL old/main.tex   Tue Oct 13 11:32:54 2026
+%DIF ADD new/main.tex   Tue Oct 13 11:32:53 2026
 
 \usepackage{cite}
 
@@ -336,7 +336,20 @@ We make the following contributions:
     Formal verification results demonstrate that the proposed protocol can maintain security, even under weakened channel assumptions.
 \end{enumerate}
 
-% \noindent\textbf{Disclosure.}
+\DIFaddbegin \noindent\textbf{\DIFadd{Extension of the Conference Version.}}
+\DIFadd{This paper extends our conference paper that appears at USENIX Security 2026~\mbox{%DIFAUXCMD
+\cite{xiao2026authorization}}\hskip0pt%DIFAUXCMD
+.
+The conference version countered order tampering with a two-phase protocol: merchants generate a key pair for each user, and the payment application binds the merchant's key to the user at the first payment.
+This design follows trust on first use and leaves the first payment to each merchant open to order tampering.
+This paper replaces it with Sealed Checkout Code (SCC) and makes three new contributions:
+}\begin{enumerate}[leftmargin=*]
+  \item \DIFadd{We design SCC, a single-round countermeasure that protects every payment, including the first, without per-user keys or trust decisions by the user (Section~\ref{sec:countermeasure}).
+  }\item \DIFadd{We analyze how SCC defeats order substitution, forged seals, and tampering with the fulfilment target, and show that the code must travel from the user to the payment system.
+  }\item \DIFadd{We formally verify SCC in \Tamarin with both external channels insecure and show that it satisfies all five security properties.
+}\end{enumerate}
+
+\DIFaddend % \noindent\textbf{Disclosure.}
 % We responsibly disclosed our findings to the security teams of Alipay and PSP-B.
 % The reported vulnerabilities were acknowledged by both parties, and, at the time of writing, remediation efforts are actively underway.
 % In addition, we notified the developers of xxx vulnerable merchant applications identified in our study and provided concrete security recommendations.
@@ -990,8 +1003,8 @@ We identified contact information for 41 affected Android applications and issue
 Among these, 17 developers responded; one explicitly committed to fixing the vulnerability, while the remaining vendors attributed the issue to the Alipay and PSP-B SDKs.
 We did not notify the Google Play Store, as Chinese apps are distributed mainly through vendor stores and the root cause lies in the Alipay and PSP-B SDKs, which a single update can fix for all integrating apps. Other major systems (Apple Pay, Stripe, etc.) use architectures not exposed to this attack.
 %-------------------------------------------------------------------------------
-\section{Countermeasure}
-%-------------------------------------------------------------------------------
+\section{Countermeasure} \DIFaddbegin \label{sec:countermeasure}
+\DIFaddend %-------------------------------------------------------------------------------
 % In this section, we xxxx.
 
 In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
@@ -1039,8 +1052,7 @@ A countermeasure therefore has to give the user a check that the attacker cannot
   }\item \textbf{\DIFadd{Compatible integration.}} \DIFadd{Merchants keep the existing prepayment and notification interfaces.
   }\item \textbf{\DIFadd{Weak channel assumptions.}} \DIFadd{Security holds when both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure.
 }\end{enumerate}
-\DIFadd{The countermeasure in the preliminary version of this work meets G3 and G4 for regular payments and relies on trust on first use: the first payment to a merchant establishes a per-user key binding, and that payment remains vulnerable to order tampering (Table~\ref{tab:countermeasure-results}).
-Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
+\DIFadd{Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
 }
 
 \DIFaddend \subsection{Countermeasure Design}
@@ -1072,36 +1084,36 @@ Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
   %DIFAUXCMD
 %DIFDELCMD < \label{fig:our_model_regular}
 %DIFDELCMD < \end{figure}
+%DIFDELCMD < 
+
 %DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \DIFadd{SCC uses the user as the link between }\emph{\DIFadd{MF}} \DIFadd{and }\emph{\DIFadd{PS}} \DIFadd{that the attacker does not control.
-For each payment, }\emph{\DIFadd{MF}} \DIFadd{draws a fresh nonce $r$, seals it to }\emph{\DIFadd{PS}} \DIFadd{together with a digest of the order handle and the fulfilment target, and shows a short code derived from $r$ to the user.
-}\emph{\DIFadd{PS}} \DIFadd{opens the seal only for the order it was created for, and completes the payment only if the user enters the same code.
+\DIFdel{To fundamentally address order tampering attacks, we design and propose a new third-party payment protocol that introduces a user-side orderauthentication mechanism to effectively prevent such attacks.
+Our payment protocol distinguishes between }\emph{\DIFdel{initial}} %DIFAUXCMD
+\DIFdel{and }\emph{\DIFdel{regular}} %DIFAUXCMD
+\DIFdel{payments, whose workflows are illustrated in Fig.
+  ~\ref{fig:our_model_initial} and Fig.
+  ~\ref{fig:our_model_regular}, respectively.
+For a given merchant and user, the first payment initiated by the user is defined as an }\emph{\DIFdel{initial}} %DIFAUXCMD
+\DIFdel{payment , while all later payments are defined as }\emph{\DIFdel{regular}} %DIFAUXCMD
+\DIFdel{payments}\DIFdelend \DIFaddbegin \DIFadd{SCC uses the user as the link between }\emph{\DIFadd{MF}} \DIFadd{and }\emph{\DIFadd{PS}} \DIFadd{that the attacker does not control.
+For each payment, }\emph{\DIFadd{MF}} \DIFadd{draws a fresh nonce $r$, seals it to }\emph{\DIFadd{PS}} \DIFadd{together with a digest of the order handle and the fulfilment target, and shows a short code derived from $r$ to the user}\DIFaddend .
+\DIFaddbegin \emph{\DIFadd{PS}} \DIFadd{opens the seal only for the order it was created for, and completes the payment only if the user enters the same code.
 Fig.~\ref{fig:cm_scc} shows the workflow on top of payment pattern~B.
 }\DIFaddend 
 
-\DIFdelbegin \DIFdel{To fundamentally address order tampering attacks, we design and propose a new third-party payment protocol that introduces a user-side orderauthentication mechanism to effectively prevent such attacks.
-Our payment protocol distinguishes between }\emph{\DIFdel{initial}} %DIFAUXCMD
-\DIFdel{and }\emph{\DIFdel{regular}} %DIFAUXCMD
-\DIFdel{payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.
-~\ref{fig:our_model_regular}, respectively.
-For a given merchant and user , the first payment initiated by the user is defined as an }\emph{\DIFdel{initial}} %DIFAUXCMD
-\DIFdel{payment, while all later payments are defined as }\emph{\DIFdel{regular}} %DIFAUXCMD
-\DIFdel{payments.
-}\DIFdelend \DIFaddbegin \textbf{\DIFadd{Fulfilment target.}}
-\DIFadd{The fulfilment target $D$ is the information that determines who receives the goods, such as a shipping address, a recipient, a mobile number to top up, or a game account.
-The user enters or selects $D$ in }\emph{\DIFadd{MF}} \DIFadd{at checkout, so the value held by }\emph{\DIFadd{MF}} \DIFadd{comes from the user over a secure channel.
-}\DIFaddend 
-
 \DIFdelbegin \DIFdel{At the beginning of the }\emph{\DIFdel{Prepayment}} %DIFAUXCMD
-\DIFdel{phase of a user's initial payment }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Order Phase.}}
-\DIFadd{The user selects $goods$ and $D$ in }\emph{\DIFadd{MF}}\DIFadd{, and }\emph{\DIFadd{MF}} \DIFadd{sends $id_{U}$}\DIFaddend , \DIFaddbegin \DIFadd{$goods$, and $D$ to }\DIFaddend \emph{MS}\DIFdelbegin \DIFdel{generates a public–private key pair $(priv_{UA}, pub_{UA})$ for }\emph{\DIFdel{U}}%DIFAUXCMD
-\DIFdel{, and then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them to }\emph{\DIFdel{PS}}%DIFAUXCMD
-\DIFdel{.
-Then, }\DIFdelend \DIFaddbegin \DIFadd{.
+\DIFdel{phase of a user's initial payment, }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Fulfilment target.}}
+\DIFadd{The fulfilment target $D$ is the information that determines who receives the goods, such as a shipping address, a recipient, a mobile number to top up, or a game account.
+The user enters or selects $D$ in }\emph{\DIFadd{MF}} \DIFadd{at checkout, so the value held by }\DIFaddend \emph{\DIFdelbegin \DIFdel{MS}\DIFdelend \DIFaddbegin \DIFadd{MF}\DIFaddend } \DIFdelbegin \DIFdel{generates a public–private key pair $(priv_{UA}, pub_{UA})$ for }\DIFdelend \DIFaddbegin \DIFadd{comes from the user over a secure channel.
+}
+
+\textbf{\DIFadd{Order Phase.}}
+\DIFadd{The user selects $goods$ and $D$ in }\DIFaddend \emph{\DIFdelbegin \DIFdel{U}\DIFdelend \DIFaddbegin \DIFadd{MF}\DIFaddend }, and \DIFdelbegin \DIFdel{then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them }\DIFdelend \DIFaddbegin \emph{\DIFadd{MF}} \DIFadd{sends $id_{U}$, $goods$, and $D$ to }\emph{\DIFadd{MS}}\DIFadd{.
 }
 
 \textbf{\DIFadd{Prepayment Phase.}}
-\emph{\DIFadd{MS}} \DIFadd{includes $D$ in the order it signs and submits to }\DIFaddend \emph{PS}\DIFdelbegin \DIFdel{temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~(}\DIFdelend \DIFaddbegin \DIFadd{, and }\emph{\DIFadd{PS}} \DIFadd{records the order under a fresh }\DIFaddend $id_{prepay}$\DIFdelbegin \DIFdel{) to the merchant.
+\emph{\DIFadd{MS}} \DIFadd{includes $D$ in the order it signs and submits }\DIFaddend to \emph{PS}\DIFdelbegin \DIFdel{.
+Then, }\DIFdelend \DIFaddbegin \DIFadd{, and }\DIFaddend \emph{PS} \DIFdelbegin \DIFdel{temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~(}\DIFdelend \DIFaddbegin \DIFadd{records the order under a fresh }\DIFaddend $id_{prepay}$\DIFdelbegin \DIFdel{) to the merchant.
 Upon receiving $id_{prepay}$, }\DIFdelend \DIFaddbegin \DIFadd{.
 }\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{generates two signatures over }\DIFdelend \DIFaddbegin \DIFadd{then generates }\DIFaddend the payment parameters \DIFdelbegin \DIFdel{using $pub_M$ and $pub_{UA}$, respectively, and sends signatures and $id_{prepay}$ to }\DIFdelend \DIFaddbegin \DIFadd{exactly as in pattern~B.
 Upon receiving the parameters, }\DIFaddend \emph{MF} \DIFdelbegin \DIFdel{During the }\emph{\DIFdel{Authentication}} %DIFAUXCMD
@@ -1113,45 +1125,54 @@ It continues only if $T = T'$.
 }
 
 \textbf{\DIFadd{Authorization Phase.}}
-\DIFaddend \emph{PS-App} \DIFdelbegin \DIFdel{notifies the user that this is the first payment to the merchant and asks whether this merchant should be trusted.
-If the user chooses to trust the merchant, }\DIFdelend \DIFaddbegin \DIFadd{displays the amount, the description, and the payee account, and asks the user to enter the code.
-The user enters the code shown by }\emph{\DIFadd{MF}} \DIFadd{together with the payment password, and }\emph{\DIFadd{PS}} \DIFadd{completes the payment only if the code equals $f(r)$ and the password is valid.
-}
+\DIFaddend \emph{PS-App} \DIFdelbegin \DIFdel{notifies the user that this is the first payment to the merchant }\DIFdelend \DIFaddbegin \DIFadd{displays the amount, the description, }\DIFaddend and \DIFdelbegin \DIFdel{asks whether this merchant should be trusted.
+If the user chooses to trust the merchant, }\emph{\DIFdel{PS-App}} %DIFAUXCMD
+\DIFdel{verifies both signatures and , upon successful verification, binds $pub_{UA}$ to the merchant identifier and stores it locally.
+Otherwise, the payment process is aborted}\DIFdelend \DIFaddbegin \DIFadd{the payee account, and asks the user to enter the code.
+The user enters the code shown by }\emph{\DIFadd{MF}} \DIFadd{together with the payment password, and }\emph{\DIFadd{PS}} \DIFadd{completes the payment only if the code equals $f(r)$ and the password is valid}\DIFaddend .
 
-\textbf{\DIFadd{Notification Phase.}}
-\DIFadd{This phase is identical to pattern~B, and }\emph{\DIFadd{MS}} \DIFadd{fulfils the order to $D$.
+\DIFdelbegin \DIFdel{In regular payments, the }\emph{\DIFdel{Prepayment}} %DIFAUXCMD
+\DIFdel{phase largely follows payment }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Notification Phase.}}
+\DIFadd{This phase is identical to }\DIFaddend pattern~B\DIFdelbegin \DIFdel{.
+The only difference is that }\emph{\DIFdel{MS}} %DIFAUXCMD
+\DIFdel{additionally signs $id_{prepay}$ }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend and \DIFdelbegin \DIFdel{$id_{M}$ using $priv_{UA}$.
+Then, }\DIFdelend \emph{\DIFdelbegin \DIFdel{PS-App}\DIFdelend \DIFaddbegin \DIFadd{MS}\DIFaddend } \DIFdelbegin \DIFdel{first checks whether a public key $pub_{UA}$ has already been bound locally to the merchant identifier.
+If such a binding exists, }\DIFdelend \DIFaddbegin \DIFadd{fulfils the order to $D$.
 }
 
 \textbf{\DIFadd{Direction of the code.}}
 \emph{\DIFadd{PS}} \DIFadd{never displays the code.
 Payment parameters are bearer tokens: any party holding them can open the cashier.
-If }\DIFaddend \emph{PS-App} \DIFdelbegin \DIFdel{verifies both signatures and , upon successful verification, binds $pub_{UA}$ to the merchant identifier and stores it locally.
-Otherwise, the payment process is aborted}\DIFdelend \DIFaddbegin \DIFadd{displayed the code for the user to compare, an attacker that intercepts the parameters and the seal could open the cashier under its own payment account, read the code, and choose a nonce $r_A$ with $f(r_A)$ equal to that code for its own order.
-In SCC the code travels only from }\emph{\DIFadd{MF}} \DIFadd{to the user and from the user to }\emph{\DIFadd{PS}}\DIFadd{, both over secure channels}\DIFaddend .
+If }\DIFaddend \emph{PS-App} \DIFdelbegin \DIFdel{verifies both signatures before prompting the user to confirm the order information and complete the payment.
+Otherwise, }\DIFdelend \DIFaddbegin \DIFadd{displayed the code for the user to compare, an attacker that intercepts the parameters and }\DIFaddend the \DIFdelbegin \DIFdel{application informs the user that }\DIFdelend \DIFaddbegin \DIFadd{seal could open the cashier under its own payment account, read the code, and choose a nonce $r_A$ with $f(r_A)$ equal to that code for its own order.
+In SCC the code travels only from }\emph{\DIFadd{MF}} \DIFadd{to }\DIFaddend the \DIFdelbegin \DIFdel{merchant is not trusted and asks whether to proceed with the payment}\DIFdelend \DIFaddbegin \DIFadd{user and from the user to }\emph{\DIFadd{PS}}\DIFadd{, both over secure channels}\DIFaddend .
 
-\DIFdelbegin \DIFdel{In regular payments, the }\emph{\DIFdel{Prepayment}} %DIFAUXCMD
-\DIFdel{phase largely follows }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Pattern A and integration.}}
-\DIFadd{In }\DIFaddend payment pattern~\DIFdelbegin \DIFdel{B.
-The only difference is that }\DIFdelend \DIFaddbegin \DIFadd{A, }\emph{\DIFadd{MF}} \DIFadd{receives the signed order in the payment parameters and uses $id_{order}$ as the order handle in $T$; all other steps are identical.
+\DIFdelbegin \subsection{\DIFdel{Symbolic Verification}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdel{We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
+The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
+This demonstrates that by introducing an order authentication mechanism on }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Pattern A and integration.}}
+\DIFadd{In payment pattern~A, }\emph{\DIFadd{MF}} \DIFadd{receives the signed order in the payment parameters and uses $id_{order}$ as the order handle in $T$; all other steps are identical.
 Merchants integrate SCC by adding $D$ to the signed order.
-The seal and the code are computed by the payment SDK embedded in }\emph{\DIFadd{MF}}\DIFadd{, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
-}
+The seal and }\DIFaddend the \DIFdelbegin \DIFdel{user side, we can fundamentally address the problem of order tampering attacks.
+  Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
+  }\DIFdelend \DIFaddbegin \DIFadd{code are computed by the payment SDK embedded in }\emph{\DIFadd{MF}}\DIFadd{, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
+}\DIFaddend 
 
-\subsection{\DIFadd{Security Analysis}}
+\DIFaddbegin \subsection{\DIFadd{Security Analysis}}
 
-\DIFadd{The attacker controls }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{additionally signs $id_{prepay}$ and $id_{M}$ using $priv_{UA}$.
-Then, }\emph{\DIFdel{PS-App}} %DIFAUXCMD
-\DIFdel{first checks whether a public key $pub_{UA}$ has already been bound locally to the merchant identifier.
-  If such a binding exists, }\DIFdelend \DIFaddbegin \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{and obtains legitimate payment parameters for its own orders through the order oracle.
+\DIFadd{The attacker controls }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{and obtains legitimate payment parameters for its own orders through the order oracle.
 To make the user pay for an order of its own, the attacker has three options.
 }
 
 \begin{enumerate}[leftmargin=*]
   \item \textbf{\DIFadd{Substitute its own order.}}
   \DIFadd{The attacker replaces the user's payment parameters with those of its own order, either on }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{(Variant~}\Rom{1}\DIFadd{) or on }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{while keeping the user's seal (Variant~}\Rom{2}\DIFadd{).
-  In Variant~}\Rom{1}\DIFadd{, }\DIFaddend \emph{\DIFdelbegin \DIFdel{PS-App}\DIFdelend \DIFaddbegin \DIFadd{MF}\DIFaddend } \DIFdelbegin \DIFdel{verifies both signatures before prompting the user to confirm the order information and complete the payment.
-Otherwise, the application informs the user that the merchant is not trusted and asks whether to proceed with the payment.
-}\DIFdelend \DIFaddbegin \DIFadd{seals the attacker's order handle together with the user's $D$; in Variant~}\Rom{2}\DIFadd{, the seal carries the user's order handle.
+  In Variant~}\Rom{1}\DIFadd{, }\emph{\DIFadd{MF}} \DIFadd{seals the attacker's order handle together with the user's $D$; in Variant~}\Rom{2}\DIFadd{, the seal carries the user's order handle.
   }\emph{\DIFadd{PS}} \DIFadd{recomputes $T'$ from the attacker's order, which carries the attacker's own handle and fulfilment target, so $T \neq T'$ and }\emph{\DIFadd{PS}} \DIFadd{aborts.
   }\item \textbf{\DIFadd{Forge a seal for its own order.}}
   \DIFadd{The attacker builds a consistent seal for its own order with a nonce $r_A$ of its choice.
@@ -1162,22 +1183,14 @@ Otherwise, the application informs the user that the merchant is not trusted and
   \DIFadd{The attacker changes $D$ on its way to }\emph{\DIFadd{MS}}\DIFadd{.
   The order at }\emph{\DIFadd{PS}} \DIFadd{then carries the attacker's target while }\emph{\DIFadd{MF}} \DIFadd{seals the user's target, so $T \neq T'$ and the payment fails.
 }\end{enumerate}
-\DIFaddend 
 
-\DIFaddbegin \DIFadd{In every case the attack ends with a failed payment and does not redirect the user's funds or goods.
+\DIFadd{In every case the attack ends with a failed payment and does not redirect the user's funds or goods.
 }
 
-\DIFaddend \subsection{Symbolic Verification}
+\subsection{\DIFadd{Symbolic Verification}}
 
 
-\DIFdelbegin \DIFdel{We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
-The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
-This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
-Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
-}%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \begin{table}[t]
+\DIFaddend \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -1206,8 +1219,6 @@ Although our initial payment does not satisfy all security properties under cert
 \textbf{IA-O1} & \textbf{IA-O2} & \textbf{IA-UA} & \textbf{IA-R1} & \textbf{IA-R2} & \textbf{Time(s)} \\
 \midrule
 
-Initial  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xred}{\ding{55}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 477.86\\
-Regular & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 916.97\\
 SCC & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 619.36\\
 
 \bottomrule
@@ -1226,8 +1237,8 @@ Through the order oracle, the attacker places orders with arbitrary amounts and 
 To confirm that this commit point preserves the discriminating power of IA-O2, we applied the same change to all six protocols of Table~\ref{tab:lemma-results} under all three channel assumptions; IA-O2 remains falsified in all 18 models.
 }
 
-\DIFadd{Table~\ref{tab:countermeasure-results} summarizes the results, together with the initial and regular payments of the two-phase countermeasure in the preliminary version.
-SCC satisfies all five security properties under the Base assumption, whereas the two-phase countermeasure violates IA-O2 in the initial payment.
+\DIFadd{Table~\ref{tab:countermeasure-results} summarizes the results.
+SCC satisfies all five security properties under the Base assumption.
 We verified SCC on a server with 32 CPU cores and 187~GB of memory, with a peak memory usage of 7.0~GB.
 }
 
@@ -1356,159 +1367,6 @@ For security and ethical reasons, we do not release exploit code for real mercha
 %-------------------------------------------------------------------------------
 \bibliographystyle{IEEEtran}
 \bibliography{library}
-\DIFdelbegin %DIFDELCMD < \appendix
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \appendices
-\DIFaddend 
-
-\section{Payment Scenarios Illustrations}
-
-Three third-party online payment scenarios were discussed in Section~\ref{sec:payment-scenarios}.
-We provide detailed workflow diagrams for each of these payment scenarios, as shown in Figures~\ref{fig:inapp_payment}--\ref{fig:qr_code_payment}.
-
-In in-app payment, as shown in Figure~\ref{fig:inapp_payment}, the workflow is as follows:
-
-\begin{enumerate}[leftmargin=3.5em]
-    \item[\textbf{Step 1}.] The user selects goods in the merchant application and initiates a purchase request.
-    \item[\textbf{Step 2}.] The merchant application communicates with the merchant server to create the order and obtain the payment-relevant information required for the subsequent payment process.
-    \item[\textbf{Step 3}.] The merchant application invokes the payment provider's SDK to launch \emph{PS-App} and delivers the payment information to \emph{PS-App}.
-    \item[\textbf{Step 4}.] The user authorizes the payment within \emph{PS-App} by entering the payment password.
-    \item[\textbf{Step 5}.] \emph{PS-App} submits the payment request to \emph{PS-Server}, which validates the request and proceeds with payment execution.
-    \item[\textbf{Step 6}.] The \emph{PS-Server} performs the funds transfer to complete the transaction.
-    \item[\textbf{Step 7}.] The \emph{PS-Server} sends a callback notification to the merchant server, enabling the merchant server to update the order status accordingly.
-\end{enumerate}
-
-    % add words
-In mobile web payment, as shown in Figure~\ref{fig:mobile_web_payment}, the workflow is mostly similar to that of in-app payment.
-The main difference lies in \textbf{Step 3}: the mobile web page launches \emph{PS-App} via a dedicated URL scheme registered by \emph{PS-App} at the operating system level.
-
-In QR code payment, as shown in Fig.~\ref{fig:qr_code_payment}, the workflow differs from the previous two scenarios mainly in \textbf{Steps 1--3}, which are described below.
-The remaining steps follow the in-app payment workflow.
-\begin{enumerate}[leftmargin=3.5em]
-    \item[\textbf{Step 1}.] The user selects goods in the merchant webpage and initiates a purchase request.
-    \item[\textbf{Step 2}.] The merchant webpage communicates with the merchant server to create the order and obtain the payment-relevant information required for the subsequent payment process.
-    \item[\textbf{Step 3}.] The merchant webpage displays a QR code encoding the payment information. The user scans the QR code on the mobile device, which launches \emph{PS-App} and transfers the payment information to \emph{PS-App}.
-\end{enumerate}
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/pays1.pdf}
-    \caption{Payment Scenario \Rom{1} -- In-app Payment
-    }
-    \label{fig:inapp_payment}
-\end{figure}
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{img/pays2.pdf}
-    \caption{Payment Scenario \Rom{2} -- Mobile Web Payment
-    }
-    \label{fig:mobile_web_payment}
-\end{figure}
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=\linewidth]{img/pays3.pdf}
-    \caption{Payment Scenario \Rom{3} -- QR Code Payment
-    }
-    \label{fig:qr_code_payment}
-\end{figure}
-
-
-\section{Alipay \& PSP-B Protocols}
-
-We summarize the Alipay and PSP-B protocols, reconstructed from their official developer documentation, across the three payment scenarios in Figures~\ref{fig:alipay_payment_methods} and~\ref{fig:wechat_pay_payment_methods}.
-
-
-\clearpage
-\begin{figure*}[!h]
-    \centering
-
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/alipay_app.pdf}
-        \caption{Alipay In-App Payment}
-        \label{fig:alipay_in_app_payment}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/alipay_mobile_web.pdf}
-        \caption{Alipay Mobile Web Payment}
-        \label{fig:alipay_mobile_web_payment}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/alipay_order_code.pdf}
-        \caption{Alipay QR Code Payment}
-        \label{fig:alipay_qr_code_payment}
-    \end{subfigure}
-
-    \caption{Alipay Payment Methods.
-    Notations:
-    \emph{APA}: the Alipay payment application.
-    \emph{APS}: the Alipay payment server.
-    $out\_trade\_no$: the order number of the \emph{MS}.
-    $total\_amount$: the payment amount.
-    $subject$: the order title describing the purchased goods, which is displayed to the user during payment.
-    $app\_id$: the merchant application identifier.
-    $notify\_url$: the merchant callback endpoint.
-    $orderStr$: the signed order string generated by the merchant server.
-    $trade\_no$: the Alipay transaction number.
-    $form$: the HTML form.
-    $qr\_code$: the QR code.
-    $priv_{A}$: the private key of \emph{APA}.
-    }
-    \label{fig:alipay_payment_methods}
-\end{figure*}
-
-\begin{figure*}[!h]
-    \centering
-
-    \begin{subfigure}[b]{0.31\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/wechat_pay_app.pdf}
-        \caption{PSP-B In-App Payment}
-        \label{fig:wechat_pay_in_app_payment}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/wechat_pay_h5.pdf}
-        \caption{PSP-B Mobile Web Payment}
-        \label{fig:wechat_pay_mobile_web_payment}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/wechat_pay_native.pdf}
-        \caption{PSP-B QR Code Payment}
-        \label{fig:wechat_pay_qr_code_payment}
-    \end{subfigure}
-
-    \caption{PSP-B Payment Methods.
-    Notations:
-    \emph{BPS}: the PSP-B system, abstracting its externally visible payment functionality.
-    $appid$: the merchant application identifier.
-    $mchid$: the merchant identifier.
-    $description$: the order description, which is displayed to the user during payment.
-    $prepay\_id$: the prepayment token.
-    $id$: the number of callback notification.
-    $transaction\_id$: the PSP-B transaction number.
-    $summary$: the summary notes for callback content.
-    $nonce/nonce_{1}/nonce_{2}$: a fresh nonce for replay protection.
-    $enc_{k}(m)$: encrypting message $m$ under key $k$ using \textsf{AES} symmetric encryption.
-    $APIV3$: the symmetric key shared between \emph{MS} and \emph{BPS}.
-    $priv_{W}$: the private key of \emph{BPS}.
-    $h5\_url$: an intermediate URL the merchant H5 page accesses to launch the PSP-B cashier and complete the payment.
-    $code\_url$: the URL to be encoded into the QR code.
-    }
-    \label{fig:wechat_pay_payment_methods}
-\end{figure*}
-
-\clearpage
-
 
 %-------------------------------------------------------------------------------
 \end{document}
