@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Tue Oct 13 12:11:25 2026
-%DIF ADD new/main.tex   Tue Oct 13 12:11:24 2026
+%DIF DEL old/main.tex   Tue Oct 13 17:42:24 2026
+%DIF ADD new/main.tex   Tue Oct 13 17:42:23 2026
 
 \usepackage{cite}
 
@@ -1623,22 +1623,21 @@ Formal verification confirms that it satisfies all security properties even unde
 \section*{Acknowledgments}
 We thank the anonymous reviewers and our shepherd for their constructive feedback.
 This research was supported in part by the National Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National Natural Science Foundation of China under grants No.~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018, and the Wuhan Scientific and Technical Achievements Project under grant No.~2024030803010172.
-The corresponding authors are Jing Chen and Min Shi.
+The corresponding authors are Jing Chen and Min Shi\DIFdelbegin \DIFdel{.
+}%DIFDELCMD < 
 
-%DIF <  伦理附录
-%DIF >  伦理与开放科学
-\section*{Ethical Considerations \DIFdelbegin %DIFDELCMD < \MBLOCKRIGHTBRACE
 %DIFDELCMD < %%%
+%DIF <  伦理附录
+\section*{\DIFdel{Ethical Considerations}}
+%DIFAUXCMD
 \DIFdel{The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
 Across these parties, the principal risk is the potential misuse of the disclosed technique, which we mitigate through the safeguards below, whereas the offsetting benefit is that it enables the providers and developers to remediate a fundamental design flaw before it is exploited in the wild.
-All experiments were performed using }\DIFdelend \DIFaddbegin \DIFadd{and Open Science}}
-\DIFadd{All experiments used }\DIFaddend accounts fully controlled by the authors, without involving real users or \DIFdelbegin \DIFdel{accessing real user }\DIFdelend \DIFaddbegin \DIFadd{their }\DIFaddend funds, and \DIFdelbegin \DIFdel{all transactions were limited to test environments or self-owned accounts.
-The }\DIFdelend \DIFaddbegin \DIFadd{the }\DIFaddend Android measurement study \DIFdelbegin \DIFdel{focused solely on }\DIFdelend \DIFaddbegin \DIFadd{only checked }\DIFaddend whether payment requests could be intercepted\DIFdelbegin \DIFdel{or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.
-To reduce the risk of misuse, affected applications are not individually identified and are }\DIFdelend \DIFaddbegin \DIFadd{, without tampering with orders.
-Affected applications are }\DIFaddend reported only in aggregated form\DIFdelbegin \DIFdel{.
-The protocol models presented in this paper are reconstructed solely }\DIFdelend \DIFaddbegin \DIFadd{, the protocol models are reconstructed }\DIFaddend from public developer documentation, \DIFdelbegin \DIFdel{rather than from reverse engineering or leaked internal specifications.
-The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, }\DIFdelend \DIFaddbegin \DIFadd{and the issues were disclosed before publication (Section~\ref{sec:real_world}); }\DIFaddend we do not release the attack implementation or the list of affected applications.
-\DIFdelbegin %DIFDELCMD < 
+All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds, and all transactions were limited to test environments or self-owned accounts.
+The Android measurement study focused solely on whether payment requests could be intercepted or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.
+To reduce the risk of misuse, affected applications are not individually identified and are reported only in aggregated form.
+The protocol models presented in this paper are reconstructed solely from public developer documentation, rather than from reverse engineering or leaked internal specifications.
+The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, we do not release the attack implementation or the list of affected applications.
+}%DIFDELCMD < 
 
 %DIFDELCMD < %%%
 %DIF <  开放科学附录
@@ -1647,12 +1646,10 @@ The identified issues were responsibly disclosed to Alipay and PSP-B, as well as
 %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdel{To support transparency and reproducibility, we release an artifact repository\mbox{%DIFAUXCMD
+\DIFdel{To support transparency and reproducibility, we release an artifact repository \mbox{%DIFAUXCMD
 \cite{third_payment_model_2026} }\hskip0pt%DIFAUXCMD
-containing }\DIFdelend \DIFaddbegin \DIFadd{Our artifact repository~\mbox{%DIFAUXCMD
-\cite{third_payment_model_2026} }\hskip0pt%DIFAUXCMD
-contains }\DIFaddend the formal models of \DIFdelbegin \DIFdel{six third-party payment protocols and }\DIFdelend \DIFaddbegin \DIFadd{the six protocols and of }\DIFaddend our countermeasure, the specifications of the \DIFdelbegin \DIFdel{proposed }\DIFdelend security properties, and scripts for reproducing the \DIFdelbegin \DIFdel{formal verification results. 
-For security and ethical reasons, we do not release exploit code for real merchant applications or data that could directly identify vulnerable apps or merchants}\DIFdelend \DIFaddbegin \DIFadd{verification results}\DIFaddend .
+containing the formal models of six third-party payment protocols and our countermeasure, the specifications of the proposed security properties, and scripts for reproducing the formal verification results. 
+For security and ethical reasons, we do not release exploit code for real merchant applications or data that could directly identify vulnerable apps or merchants}\DIFdelend .
 
 
 %-------------------------------------------------------------------------------
