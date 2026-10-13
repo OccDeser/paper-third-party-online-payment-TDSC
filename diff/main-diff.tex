@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Tue Oct 13 11:32:54 2026
-%DIF ADD new/main.tex   Tue Oct 13 11:32:53 2026
+%DIF DEL old/main.tex   Tue Oct 13 12:01:59 2026
+%DIF ADD new/main.tex   Tue Oct 13 12:01:58 2026
 
 \usepackage{cite}
 
@@ -247,8 +247,9 @@ This paper presents formal security models for six third-party payment protocols
 Our analysis reveals a fundamental design flaw: 
 whenever channel integrity is compromised between the merchant client, merchant server, or payment system, order tampering attacks become feasible.
 We validate this threat on Android, where over 20\% of tested merchant applications allow order tampering through implicit Intent hijacking.
-To mitigate this threat, we propose user-side order authentication, where \DIFdelbegin \DIFdel{per-user-merchant key pairs cryptographically }\DIFdelend \DIFaddbegin \DIFadd{a nonce sealed by the merchant frontend and a short code entered by the user }\DIFaddend bind consent to \DIFdelbegin \DIFdel{order semantics}\DIFdelend \DIFaddbegin \DIFadd{the order}\DIFaddend .
-Formal verification demonstrates its resilience against identified attacks under weak channel assumptions. 
+To mitigate this threat, we propose \DIFdelbegin \DIFdel{user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics.
+Formal verification demonstrates its resilience against identified attacks under weak channel assumptions}\DIFdelend \DIFaddbegin \DIFadd{Sealed Checkout Code (SCC): the merchant frontend seals a fresh nonce to the payment system together with the order handle and the fulfilment target, and the user confirms the payment by entering a short code derived from that nonce.
+SCC protects every payment without per-user keys or trust on first use, and formal verification shows that it satisfies all security properties when both external channels are insecure}\DIFaddend .
 By bridging formal methods and empirical analysis, this work offers actionable guidance for standardizing secure payment protocols.
 \end{abstract}
 \begin{IEEEkeywords}
@@ -312,15 +313,18 @@ We develop a proof-of-concept attack application that exploit this vulnerability
 To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
 Our results show that more than $25\%$ of the sampled applications are vulnerable.
 These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
-We responsibly disclosed our findings to the security teams at Alipay and PSP-B.
+\DIFdelbegin \DIFdel{We responsibly disclosed our findings to the security teams at Alipay and PSP-B.
 We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
 Additionally, we notified the developers of 41 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
+}\DIFdelend 
 
-To address these design flaws, 
+\DIFdelbegin \DIFdel{To address these design flaws, 
 we propose a deployable payment pattern which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
 Under the weakened channel assumptions, we formally verify this pattern and show that it satisfies all the defined security properties.
+}%DIFDELCMD < 
 
-% As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
+%DIFDELCMD < %%%
+\DIFdelend % As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
 
 \noindent\textbf{Contributions.}
 We make the following contributions:
@@ -331,10 +335,11 @@ We make the following contributions:
   \item \textbf{Disclosure of a new order tampering attack.}
     Based on our formal analysis results, we identified a new variant of order tampering attacks and successfully demonstrated it in a real-world payment environment.
     Our further measurement study shows that this vulnerability affects more than 25\% of real-world applications.
-  \item \textbf{Proposal of a formal verified countermeasure.}
-    We propose a new payment protocol as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws.
-    Formal verification results demonstrate that the proposed protocol can maintain security, even under weakened channel assumptions.
-\end{enumerate}
+  \item \textbf{\DIFdelbegin \DIFdel{Proposal }\DIFdelend \DIFaddbegin \DIFadd{Design and verification }\DIFaddend of \DIFdelbegin \DIFdel{a formal verified countermeasure}\DIFdelend \DIFaddbegin \DIFadd{Sealed Checkout Code}\DIFaddend .}
+    We propose \DIFdelbegin \DIFdel{a new payment protocol as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws}\DIFdelend \DIFaddbegin \DIFadd{SCC, a single-round countermeasure that binds each payment to the user's own checkout through a sealed nonce and a short code entered by the user, and protects every payment, including the first, without per-user keys}\DIFaddend .
+    Formal verification \DIFdelbegin \DIFdel{results demonstrate that the proposed protocolcan maintain security , even under weakened channel assumptions.
+}\DIFdelend \DIFaddbegin \DIFadd{shows that SCC satisfies all security properties when both external channels are insecure.
+}\DIFaddend \end{enumerate}
 
 \DIFaddbegin \noindent\textbf{\DIFadd{Extension of the Conference Version.}}
 \DIFadd{This paper extends our conference paper that appears at USENIX Security 2026~\mbox{%DIFAUXCMD
@@ -342,12 +347,9 @@ We make the following contributions:
 .
 The conference version countered order tampering with a two-phase protocol: merchants generate a key pair for each user, and the payment application binds the merchant's key to the user at the first payment.
 This design follows trust on first use and leaves the first payment to each merchant open to order tampering.
-This paper replaces it with Sealed Checkout Code (SCC) and makes three new contributions:
-}\begin{enumerate}[leftmargin=*]
-  \item \DIFadd{We design SCC, a single-round countermeasure that protects every payment, including the first, without per-user keys or trust decisions by the user (Section~\ref{sec:countermeasure}).
-  }\item \DIFadd{We analyze how SCC defeats order substitution, forged seals, and tampering with the fulfilment target, and show that the code must travel from the user to the payment system.
-  }\item \DIFadd{We formally verify SCC in \Tamarin with both external channels insecure and show that it satisfies all five security properties.
-}\end{enumerate}
+This paper replaces it with SCC, which protects every payment, including the first, without per-user keys (Section~\ref{sec:countermeasure}).
+The new material comprises the design of SCC, its security analysis against order substitution, forged seals, and tampering with the fulfilment target, its formal verification with both external channels insecure, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
+}
 
 \DIFaddend % \noindent\textbf{Disclosure.}
 % We responsibly disclosed our findings to the security teams of Alipay and PSP-B.
@@ -445,19 +447,32 @@ After placing an order, the merchant website generates a payment QR code, which 
 During the \emph{Prepayment} phase, the generation methods of payment parameters vary across different providers and scenarios.
 We introduce two high-level payment patterns adopted by the two leading payment providers, PSP-B and Alipay.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.9\linewidth]{img/model_a.pdf}
-  \caption{Payment Pattern A}
-  \label{fig:payment_model_a}
-\end{figure}
+\DIFdelbegin %DIFDELCMD < \begin{figure}[t]
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \begin{figure*}[t]
+  \DIFaddendFL \centering
+  \DIFaddbeginFL \begin{minipage}[b]{0.48\textwidth}
+    \centering
+    \DIFaddendFL \includegraphics[width=0.9\linewidth]{img/model_a.pdf}
+    \caption{Payment Pattern A}
+    \label{fig:payment_model_a}
+  \DIFdelbeginFL %DIFDELCMD < \end{figure}
+%DIFDELCMD < 
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.9\linewidth]{img/model_b.pdf}
-  \caption{Payment Pattern B}
-  \label{fig:payment_model_b}
-\end{figure}
+%DIFDELCMD < \begin{figure}[t]
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\textwidth}
+    \DIFaddendFL \centering
+    \includegraphics[width=0.9\linewidth]{img/model_b.pdf}
+    \caption{Payment Pattern B}
+    \label{fig:payment_model_b}
+  \DIFdelbeginFL %DIFDELCMD < \end{figure}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \end{minipage}
+\end{figure*}
+\DIFaddend 
 
 \textbf{Payment Pattern A.}
 In this pattern, the payment parameters are generated directly by the \emph{MS}.
@@ -492,37 +507,58 @@ and 5G-AKA~\cite{basin2018formal,cremers2019component}.
 It employs a multiset rewriting system to model both protocol execution and adversary capabilities, providing a rich language for specifying security properties as first-order logic formulas over execution traces. 
 \Tamarin supports unbounded protocol sessions, a Dolev-Yao style adversary, and is particularly well-suited for analyzing stateful protocols due to its native handling of mutable and persistent state.
 
-\textbf{Terms and Facts.}
-In \Tamarin, protocol messages are represented as \emph{terms}, which are constructed from variables, constants, and compound expressions formed by applying function symbols to subterms.
-An equational theory over terms specifies algebraic properties and reducibility relations, thereby affecting pattern matching and substitution.
+\DIFdelbegin \textbf{\DIFdel{Terms and Facts.}}
+%DIFAUXCMD
+\DIFdel{In \Tamarin , protocol messages are represented }\DIFdelend \DIFaddbegin \DIFadd{\Tamarin represents messages }\DIFaddend as \emph{terms} \DIFdelbegin \DIFdel{, which are constructed from variables, constants, and compound expressions formed by applying function symbols to subterms.
+An equational theoryover terms specifies algebraic properties and reducibility relations, thereby affecting pattern matching and substitution.
 For example, symmetric encryption is modeled by a encryption function $\text{\Tfunction{senc}}$ and a decryption function $\text{\Tfunction{sdec}}$ satisfying the equation $\text{\Tfunction{sdec}}(\text{\Tfunction{senc}}(m,k),k)=m$.
-The system state is captured using \emph{facts}, which are predicates of the form \TFactTerm{F}{$t_1,\ldots,t_n$}.
-Facts can be linear (consumed upon rule application), persistent (available throughout the execution, e.g., \TFactTerm{!PK}{$A,Pk_A$}).
-The system execution can be observed using action facts, which record execution steps such as \TFactTerm{Running}{$A,x$} and \TFactTerm{Commit}{$B,x$} and are retained to form execution traces but do not constitute system states.
+The system state is captured using }\DIFdelend \DIFaddbegin \DIFadd{built from function symbols under an equational theory, and the system state as a multiset of }\DIFaddend \emph{facts} \DIFdelbegin \DIFdel{, which are predicates of the form }\DIFdelend \TFactTerm{F}{$t_1,\ldots,t_n$}.
+\DIFdelbegin \DIFdel{Facts can be linear (consumed upon rule application), persistent (available throughout the execution, e.g., }%DIFDELCMD < \TFactTerm{!PK}{$A,Pk_A$}%%%
+\DIFdel{).
+The system execution can be observed using action facts, which record execution steps such as }%DIFDELCMD < \TFactTerm{Running}{$A,x$} %%%
+\DIFdel{and }%DIFDELCMD < \TFactTerm{Commit}{$B,x$} %%%
+\DIFdel{and are retained to form execution traces but do not constitute system states.
+}%DIFDELCMD < 
 
-
-\textbf{Multiset Rewriting Rules.}
-Multiset rewriting rules formally describe protocol behavior.
-Each rule specifies a state transition by means of \emph{left-hand side} premise facts (guards) and \emph{right-hand side} conclusion facts (productions), and may also include action facts as observable events.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{Multiset Rewriting Rules.}}
+%DIFAUXCMD
+\DIFdel{Multiset rewriting rules formally describe protocol behavior.
+Each rule specifies a state transition by means of }\emph{\DIFdel{left-hand side}} %DIFAUXCMD
+\DIFdel{premise facts (guards) and }\emph{\DIFdel{right-hand side}} %DIFAUXCMD
+\DIFdel{conclusion facts (productions), and may also include action facts as observable events.
 Formally, a rule can be written as following:
-\begin{tightflalign}
-  \TFacts{  LF_1,\ldots,LF_m } \TActFactsSL{AF(t_1, \ldots, t_k)} \TFacts{  RF_1, \ldots, RF_n } &
-\end{tightflalign}
-Given a current state multiset $S$, the rule is enabled when $LF_1,\ldots,LF_m \subseteq S$.
-We use the function \funcText{linear} to denotes the linear facts from a set of facts.
-The application of the rule produces a new state $S' = (S \setminus \text{\funcText{linear}}(\{LF_1,\ldots,LF_m\})) \cup \{RF_1, \ldots, RF_n\}$, and appends the action facts $AF(t_1, \ldots, t_k)$ to the execution trace.
+}%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <   \TFacts{  LF_1,\ldots,LF_m } \TActFactsSL{AF(t_1, \ldots, t_k)} \TFacts{  RF_1, \ldots, RF_n } &
+%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < %%%
+\DIFdel{Given a current state multiset $S$, the rule }\DIFdelend \DIFaddbegin \DIFadd{Linear facts are consumed when a rule uses them, while persistent facts, written with a leading ``!'', remain available.
+A multiset rewriting rule $\TFacts{L} \TActFactsSL{A} \TFacts{R}$ }\DIFaddend is enabled when \DIFdelbegin \DIFdel{$LF_1,\ldots,LF_m \subseteq S$.
+We use the function }%DIFDELCMD < \funcText{linear} %%%
+\DIFdel{to denotes }\DIFdelend \DIFaddbegin \DIFadd{its premises $L$ are in the state; it consumes }\DIFaddend the linear facts \DIFdelbegin \DIFdel{from a set of facts.
+The application of the rule produces a new state $S' = (S \setminus \text{\funcText{linear}}(\{LF_1,\ldots,LF_m\})) \cup \{RF_1, \ldots, RF_n\}$, and appends }\DIFdelend \DIFaddbegin \DIFadd{in $L$, adds the conclusions $R$, and records }\DIFaddend the action facts \DIFdelbegin \DIFdel{$AF(t_1, \ldots, t_k)$ to }\DIFdelend \DIFaddbegin \DIFadd{$A$ in }\DIFaddend the execution trace.
+\DIFdelbegin %DIFDELCMD < 
 
-\textbf{Trace and Formulas.}
-In \Tamarin, the global behavior of a protocol is captured by traces, which are sequences of action facts.
+%DIFDELCMD < %%%
+\textbf{\DIFdel{Trace and Formulas.}}
+%DIFAUXCMD
+\DIFdel{In \Tamarin, the global behavior of a protocol is captured by traces, which are sequences of action facts .
 Formally, a trace is represented as $\tau = \langle FA_1@t_1, FA_2@t_2, \dots, FA_n@t_n \rangle$, where $FA_i@t_i$ denotes an observable event occurring at time point $t_i$.
-Based on such traces, \Tamarin reasons about executions using first-order logic formulas, where \emph{restrictions} are used to specify global constraints over all possible executions.
+Based on such traces, \Tamarin reasons about executions using }\DIFdelend \DIFaddbegin \DIFadd{Security properties (lemmas) are }\DIFaddend first-order \DIFdelbegin \DIFdel{logic formulas, where }\emph{\DIFdel{restrictions}} %DIFAUXCMD
+\DIFdel{are used to specify global constraints over all possible executions.
 These constraints are also first-order logic formulas over events and time points.
 Within this restricted semantic space, security properties are likewise expressed as first-order temporal logic formulas (lemmas), such as secrecy, authentication, or consistency properties, and are required to hold for all valid traces.
 For example, key secrecy can be formalized as:
-\begin{tightflalign}
-    \TAll \;\text{\Tterm{k \#i.}} \;\text{\TFact{Install(k)@\#i}} \implies \TNot (\TEx \;\, \text{\TLemma{\#j.}} \;\text{\TFact{K(k)@\#j}} ) 
-\end{tightflalign}
-This formula expresses that for any key $k$ and time point $i$, if this key~$k$ is installed at time~$i$, then there doesn't exist a time point~$j$ at which the key~$k$ is known by an adversary.
+}%DIFDELCMD < \begin{tightflalign}
+%DIFDELCMD <     \TAll %%%
+\DIFdel{\;\text{\Tterm{k \#i.}} \;\text{\TFact{Install(k)@\#i}} }%DIFDELCMD < \implies \TNot %%%
+\DIFdel{(}%DIFDELCMD < \TEx %%%
+\DIFdel{\;\, \text{\TLemma{\#j.}} \;\text{\TFact{K(k)@\#j}} ) 
+}%DIFDELCMD < \end{tightflalign}
+%DIFDELCMD < %%%
+\DIFdel{This formula expresses that for any key $k$ and time point $i$, if this key~$k$ is installed at time~$i$, then there doesn't exist a time point~$j$ at which the key~$k$ is known by an adversary.
+}\DIFdelend \DIFaddbegin \DIFadd{formulas over the action facts of a trace and their time points, and restrictions use the same language to exclude executions.
+}\DIFaddend 
 
 %-------------------------------------------------------------------------------
 \section{Threat Model and Assumptions}
@@ -931,36 +967,53 @@ This channel assumption is unrealistic in real-world deployments.
 
 \subsection{Attack Implementation}
 
-\begin{figure}[t]
-  \centering
-  % --- 左侧子图：受害者设备 ---
-  \begin{subfigure}[b]{0.32\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/setup_1.png} % 请替换为受害者设备的图片路径
-    \caption{Victim Device}
-    \label{fig:victim_device}
-  \end{subfigure}
-  \hspace{3em}
-  % --- 右侧子图：攻击者设备 ---
-  \begin{subfigure}[b]{0.32\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/setup_2.png} % 请替换为攻击者设备的图片路径
-    \caption{Attacker Device}
-    \label{fig:attacker_device}
-  \end{subfigure}
+\DIFdelbegin %DIFDELCMD < \begin{figure}[t]
+%DIFDELCMD <   \centering
+%DIFDELCMD <   %%%
+%DIF <  --- 左侧子图：受害者设备 ---
+  %DIFDELCMD < \begin{subfigure}[b]{0.32\linewidth}
+%DIFDELCMD <     \centering
+%DIFDELCMD <     \includegraphics[width=\linewidth]{img/setup_1.png} %%%
+%DIF <  请替换为受害者设备的图片路径
+    %DIFDELCMD < \caption{%
+{%DIFAUXCMD
+\DIFdelFL{Victim Device}}
+    %DIFAUXCMD
+%DIFDELCMD < \label{fig:victim_device}
+%DIFDELCMD <   \end{subfigure}
+%DIFDELCMD <   %%%
+\DIFdelFL{\hspace{3em}
+  %DIF <  --- 右侧子图：攻击者设备 ---
+  }%DIFDELCMD < \begin{subfigure}[b]{0.32\linewidth}
+%DIFDELCMD <     \centering
+%DIFDELCMD <     \includegraphics[width=\linewidth]{img/setup_2.png} %%%
+%DIF <  请替换为攻击者设备的图片路径
+    %DIFDELCMD < \caption{%
+{%DIFAUXCMD
+\DIFdelFL{Attacker Device}}
+    %DIFAUXCMD
+%DIFDELCMD < \label{fig:attacker_device}
+%DIFDELCMD <   \end{subfigure}
+%DIFDELCMD < 
 
-  \caption{Attack Setup. 
+%DIFDELCMD <   %%%
+%DIFDELCMD < \caption{%
+{%DIFAUXCMD
+\DIFdelFL{Attack Setup. 
     Device~\ref{fig:victim_device} denotes the victim device, which installs the malicious application, a vulnerable merchant application, and a payment application. 
     Device~\ref{fig:attacker_device} denotes the attacker device, which installs the attacker application. 
     The screenshots correspond to the real interfaces of the malicious and attacker applications, respectively.
-  }
-  \label{fig:real_world_attack_devices}
-\end{figure}
+  }}
+  %DIFAUXCMD
+%DIFDELCMD < \label{fig:real_world_attack_devices}
+%DIFDELCMD < \end{figure}
+%DIFDELCMD < 
 
-We developed two Android applications, a malicious application and an attacker application, to exploit the aforementioned vulnerability.
-Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
-The malicious application on device~\ref{fig:victim_device} is responsible for capturing and replaying payment parameters.
-The attacker application on device~\ref{fig:attacker_device} places orders on the merchant platform and returns payment parameters to the malicious application.
+%DIFDELCMD < %%%
+\DIFdelend We developed two Android applications, a malicious application and an attacker application, to exploit the aforementioned vulnerability.
+\DIFdelbegin \DIFdel{Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
+The malicious application on device~\ref{fig:victim_device} }\DIFdelend \DIFaddbegin \DIFadd{The victim device runs the malicious application, a vulnerable merchant application, and a payment application; the malicious application }\DIFaddend is responsible for capturing and replaying payment parameters.
+The attacker \DIFdelbegin \DIFdel{application on device ~\ref{fig:attacker_device} }\DIFdelend \DIFaddbegin \DIFadd{device runs the attacker application, which }\DIFaddend places orders on the merchant platform and returns payment parameters to the malicious application.
 
 Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
 The attack proceeds in four phases:
@@ -1155,9 +1208,8 @@ In SCC the code travels only from }\emph{\DIFadd{MF}} \DIFadd{to }\DIFaddend the
 %DIFDELCMD < %%%
 \DIFdel{We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
 The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
-This demonstrates that by introducing an order authentication mechanism on }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Pattern A and integration.}}
-\DIFadd{In payment pattern~A, }\emph{\DIFadd{MF}} \DIFadd{receives the signed order in the payment parameters and uses $id_{order}$ as the order handle in $T$; all other steps are identical.
-Merchants integrate SCC by adding $D$ to the signed order.
+This demonstrates that by introducing an order authentication mechanism on }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Integration.}}
+\DIFadd{Merchants integrate SCC by adding $D$ to the signed order.
 The seal and }\DIFaddend the \DIFdelbegin \DIFdel{user side, we can fundamentally address the problem of order tampering attacks.
   Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
   }\DIFdelend \DIFaddbegin \DIFadd{code are computed by the payment SDK embedded in }\emph{\DIFadd{MF}}\DIFadd{, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
@@ -1285,50 +1337,144 @@ Malware that reads the screen or overlays a fake input page on the user's device
 
 \subsection{Third-Party Payment System}
 
-In recent years, the research community has devoted substantial effort to the security of third-party payment systems.
-Overall, prior work has largely focused on specific payment scenarios or concrete system implementations, with empirical analyses of third-party payment workflows used to uncover security flaws in real-world systems.
+\DIFdelbegin \DIFdel{In recent years, the research community has devoted substantial effort to the security of }\DIFdelend \DIFaddbegin \DIFadd{Prior work on }\DIFaddend third-party payment \DIFdelbegin \DIFdel{systems.
+Overall, prior work has largely focused on }\DIFdelend \DIFaddbegin \DIFadd{security has largely analyzed }\DIFaddend specific payment scenarios or concrete system implementations\DIFdelbegin \DIFdel{, with empirical analyses of third-party payment workflows used to uncover security flaws in real-world systems.
+}%DIFDELCMD < 
 
-In in-app payment scenarios, early studies uncovered multiple security vulnerabilities in different payment platforms.
-Early work by \cite{Reynaud2012FreeMarket, Mulliner2014VirtualSwindle} identified security flaws in Google's in-app billing service, which could be exploited to bypass payment verification and enable unauthorized free purchases.
-Focusing on the Indian market, \cite{Kumar2020SecurityUPI} conducted an in-depth analysis of the Unified Payments Interface (UPI) and uncovered design flaws in its multi-factor authentication mechanism.
-\cite{Yang2017FlawedImplementations, Yang2019SecurityPayment} performed an empirical study of in-app payment services in China.
-They proposed a set of security rules, and identified widespread rule violations in real-world systems, revealing pervasive risks of payment bypass and payment fraud.
-More recently, \cite{Mohsen2025PayScan} conducted a large-scale measurement on payment libraries in over 10,000 Android apps. They found $71.7\%$ of apps rely on outdated or insecure payment SDKs, exposing hundreds of leaked private keys and tens of thousands of high-risk vulnerabilities.
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \DIFadd{.
+}\DIFaddend In in-app payment\DIFdelbegin \DIFdel{scenarios, early studies uncovered multiple security vulnerabilities in different payment platforms.
+Early work by \mbox{%DIFAUXCMD
+\cite{Reynaud2012FreeMarket, Mulliner2014VirtualSwindle} }\hskip0pt%DIFAUXCMD
+identified security }\DIFdelend \DIFaddbegin \DIFadd{, \mbox{%DIFAUXCMD
+\cite{Reynaud2012FreeMarket, Mulliner2014VirtualSwindle} }\hskip0pt%DIFAUXCMD
+identified }\DIFaddend flaws in Google's in-app billing service \DIFdelbegin \DIFdel{, which could be exploited to bypass payment verification and }\DIFdelend \DIFaddbegin \DIFadd{that }\DIFaddend enable unauthorized free purchases\DIFdelbegin \DIFdel{.
+Focusing on the Indian market, \mbox{%DIFAUXCMD
+\cite{Kumar2020SecurityUPI} }\hskip0pt%DIFAUXCMD
+conducted an in-depth analysis }\DIFdelend \DIFaddbegin \DIFadd{, and \mbox{%DIFAUXCMD
+\cite{Kumar2020SecurityUPI} }\hskip0pt%DIFAUXCMD
+uncovered design flaws in the multi-factor authentication }\DIFaddend of the Unified Payments Interface (UPI) \DIFdelbegin \DIFdel{and uncovered design flaws in its multi-factor authentication mechanism.
+\mbox{%DIFAUXCMD
+\cite{Yang2017FlawedImplementations, Yang2019SecurityPayment} }\hskip0pt%DIFAUXCMD
+performed an empirical study of }\DIFdelend \DIFaddbegin \DIFadd{in India.
+\mbox{%DIFAUXCMD
+\cite{Yang2017FlawedImplementations, Yang2019SecurityPayment} }\hskip0pt%DIFAUXCMD
+proposed security rules for }\DIFaddend in-app payment services in China \DIFdelbegin \DIFdel{.
+They proposed a set of security rules, and identified widespread rule violations in real-world systems, revealing pervasive risks of }\DIFdelend \DIFaddbegin \DIFadd{and found widespread violations that lead to }\DIFaddend payment bypass and \DIFdelbegin \DIFdel{payment fraud.
+More recently, \mbox{%DIFAUXCMD
+\cite{Mohsen2025PayScan} }\hskip0pt%DIFAUXCMD
+conducted a large-scale measurement on }\DIFdelend \DIFaddbegin \DIFadd{fraud.
+\mbox{%DIFAUXCMD
+\cite{Mohsen2025PayScan} }\hskip0pt%DIFAUXCMD
+measured }\DIFaddend payment libraries in over 10,000 Android apps \DIFdelbegin \DIFdel{. They found }\DIFdelend \DIFaddbegin \DIFadd{and found that }\DIFaddend $71.7\%$ of \DIFdelbegin \DIFdel{apps }\DIFdelend \DIFaddbegin \DIFadd{them }\DIFaddend rely on outdated or insecure payment SDKs\DIFdelbegin \DIFdel{, exposing hundreds of leaked private keys and tens of thousands of high-risk vulnerabilities.
+}%DIFDELCMD < 
 
-In web-based payment scenarios, prior research has centered on the interaction workflows between merchant websites and third-party payment platforms. 
-\cite{Wang2011ShopFree} studied multiple online shopping platforms that integrate payment services such as PayPal and revealed severe logic vulnerabilities in these systems. 
-Later work, including \cite{Sun2014DetectingECommerce, Pellegrino2014TowardBlackBox, Sudhodanan2016AttackPatterns}, used symbolic execution and black-box analysis to identify payment logic flaws across many web applications.
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \DIFadd{.
+}\DIFaddend In web-based payment\DIFdelbegin \DIFdel{scenarios, prior research has centered on the interaction workflows between merchant websites and third-party payment platforms. 
+\mbox{%DIFAUXCMD
+\cite{Wang2011ShopFree} }\hskip0pt%DIFAUXCMD
+studied multiple }\DIFdelend \DIFaddbegin \DIFadd{, \mbox{%DIFAUXCMD
+\cite{Wang2011ShopFree} }\hskip0pt%DIFAUXCMD
+revealed logic vulnerabilities in }\DIFaddend online shopping platforms that integrate \DIFdelbegin \DIFdel{payment }\DIFdelend services such as PayPal\DIFdelbegin \DIFdel{and revealed severe logic vulnerabilities in these systems. 
+Later work, including \mbox{%DIFAUXCMD
+\cite{Sun2014DetectingECommerce, Pellegrino2014TowardBlackBox, Sudhodanan2016AttackPatterns}}\hskip0pt%DIFAUXCMD
+}\DIFdelend , \DIFaddbegin \DIFadd{and \mbox{%DIFAUXCMD
+\cite{Sun2014DetectingECommerce, Pellegrino2014TowardBlackBox, Sudhodanan2016AttackPatterns} }\hskip0pt%DIFAUXCMD
+}\DIFaddend used symbolic execution and black-box analysis to \DIFdelbegin \DIFdel{identify }\DIFdelend \DIFaddbegin \DIFadd{find }\DIFaddend payment logic flaws across many web applications.
+\DIFdelbegin %DIFDELCMD < 
 
-Beyond analyses of concrete implementations, several studies have investigated third-party payment systems from alternative perspectives.
-\cite{Chen2019LogicVulnerabilities} applied NLP techniques to developer documentation of payment services and found multiple exploitable logic vulnerabilities.
-From a design and defense perspective, \cite{Neera2025TrustworthyPayment} proposed a privacy-preserving mobile payment protocol and formally verified its security using ProVerif.
-\cite{Lou2021PaymentVulnerabilities} investigated personal payment systems built atop third-party payment infrastructures and identified multiple vulnerabilities at both the protocol and implementation levels.
+%DIFDELCMD < %%%
+\DIFdel{Beyond analyses of concrete implementations, several studies have investigated third-party payment systems from alternative perspectives.
+\mbox{%DIFAUXCMD
+\cite{Chen2019LogicVulnerabilities} }\hskip0pt%DIFAUXCMD
+applied NLP techniques to developer documentation of payment services and found multiple exploitable logic vulnerabilities.
+From a design and defense perspective, \mbox{%DIFAUXCMD
+\cite{Neera2025TrustworthyPayment} }\hskip0pt%DIFAUXCMD
+proposed a privacy-preserving mobile payment protocol and formally verified its security using ProVerif.
+\mbox{%DIFAUXCMD
+\cite{Lou2021PaymentVulnerabilities} }\hskip0pt%DIFAUXCMD
+investigated }\DIFdelend \DIFaddbegin \DIFadd{Other studies applied NLP to payment developer documentation to find logic vulnerabilities~\mbox{%DIFAUXCMD
+\cite{Chen2019LogicVulnerabilities}}\hskip0pt%DIFAUXCMD
+, analyzed }\DIFaddend personal payment systems built \DIFdelbegin \DIFdel{atop }\DIFdelend \DIFaddbegin \DIFadd{on }\DIFaddend third-party payment infrastructures\DIFdelbegin \DIFdel{and identified multiple vulnerabilities at both the protocol and implementation levels}\DIFdelend \DIFaddbegin \DIFadd{~\mbox{%DIFAUXCMD
+\cite{Lou2021PaymentVulnerabilities}}\hskip0pt%DIFAUXCMD
+, and designed a privacy-preserving mobile payment protocol verified with ProVerif~\mbox{%DIFAUXCMD
+\cite{Neera2025TrustworthyPayment}}\hskip0pt%DIFAUXCMD
+}\DIFaddend .
 
-% 启发我们从协议设计顶层系统地全面研究第三方支付支付协议
+%DIF <  启发我们从协议设计顶层系统地全面研究第三方支付支付协议
+\DIFdelbegin %DIFDELCMD < 
 
-\subsection{Banking Payment Systems}
+%DIFDELCMD < %%%
+\DIFdelend \subsection{Banking Payment Systems}
 
-Early research primarily focused on uncovering security vulnerabilities in mobile banking systems through empirical and systematic analyses.
-\cite{Paik2010StragglersHerd} revealed security flaws in mobile banking systems from an application design perspective, 
-while \cite{Almeida2012MPaymentsBrazil,Harris2012PrivacySecurityMobile} further highlighted pervasive privacy and security issues in real-world deployments.
-Building on this line of work, \cite{Reaves2015MobileMoneyProblems,Reaves2017MobileMoneyProblems} conducted a systematic analysis of transaction workflows in branchless banking applications, revealing widespread transaction integrity vulnerabilities.
+\DIFdelbegin \DIFdel{Early research primarily focused on uncovering security vulnerabilities in mobile banking systems through empirical and systematic analyses.
+\mbox{%DIFAUXCMD
+\cite{Paik2010StragglersHerd} }\hskip0pt%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{Empirical studies }\DIFaddend revealed security flaws in mobile banking \DIFdelbegin \DIFdel{systems from an application design perspective, while \mbox{%DIFAUXCMD
+\cite{Almeida2012MPaymentsBrazil,Harris2012PrivacySecurityMobile} }\hskip0pt%DIFAUXCMD
+further highlighted pervasive }\DIFdelend \DIFaddbegin \DIFadd{applications~\mbox{%DIFAUXCMD
+\cite{Paik2010StragglersHerd}}\hskip0pt%DIFAUXCMD
+, }\DIFaddend privacy and security issues in \DIFdelbegin \DIFdel{real-world deployments.
+Building on this line of work, \mbox{%DIFAUXCMD
+\cite{Reaves2015MobileMoneyProblems,Reaves2017MobileMoneyProblems} }\hskip0pt%DIFAUXCMD
+conducted a systematic analysis of transaction workflows }\DIFdelend \DIFaddbegin \DIFadd{deployed systems~\mbox{%DIFAUXCMD
+\cite{Almeida2012MPaymentsBrazil,Harris2012PrivacySecurityMobile}}\hskip0pt%DIFAUXCMD
+, and transaction integrity vulnerabilities }\DIFaddend in branchless banking\DIFdelbegin \DIFdel{applications, revealing widespread transaction integrity vulnerabilities.
+}%DIFDELCMD < 
 
-As payment protocols have grown in complexity, researchers have increasingly employed formal methods to model and verify bank-based payment systems, particularly for credit card and EMV protocols.
-De Ruiter et al.~\cite{Ruiter2011FormalEMV} conducted a formal analysis of a variant of the EMV protocol using ProVerif, marking the first systematic application of formal methods to EMV protocol analysis.
+%DIFDELCMD < %%%
+\DIFdel{As payment protocols have grown in complexity, researchers have increasingly employed formal methods to model and verify bank-based payment systems, particularly for credit card and EMVprotocols.
+}\DIFdelend \DIFaddbegin \DIFadd{~\mbox{%DIFAUXCMD
+\cite{Reaves2015MobileMoneyProblems,Reaves2017MobileMoneyProblems}}\hskip0pt%DIFAUXCMD
+.
+Formal methods have been applied extensively to EMV: }\DIFaddend De Ruiter et al.~\cite{Ruiter2011FormalEMV} \DIFdelbegin \DIFdel{conducted a formal analysis of a variant of the EMV protocol using ProVerif, marking the first systematic application of formal methods to EMV protocol analysis.
 Subsequently, more precise and comprehensive models were proposed. 
-Basin et al.~\cite{Basin2021EMVStandard} modeled the complete EMV protocol using the \Tamarin. 
-Formal analysis identified and explained multiple real-world attacks, including the PIN bypass vulnerability~\cite{Basin2023AuthenticationFailures} and the card brand mixup attack~\cite{Basin2021CardBrandMixup}.
+}\DIFdelend \DIFaddbegin \DIFadd{analyzed a variant of EMV with ProVerif, and }\DIFaddend Basin et al.~\cite{Basin2021EMVStandard} modeled the complete EMV protocol \DIFdelbegin \DIFdel{using the \Tamarin. 
+Formal analysis identified and explained multiple }\DIFdelend \DIFaddbegin \DIFadd{with \Tamarin, explaining }\DIFaddend real-world attacks \DIFdelbegin \DIFdel{, including the PIN bypassvulnerability}\DIFdelend \DIFaddbegin \DIFadd{such as PIN bypass}\DIFaddend ~\cite{Basin2023AuthenticationFailures} and \DIFdelbegin \DIFdel{the }\DIFdelend card brand mixup\DIFdelbegin \DIFdel{attack}\DIFdelend ~\cite{Basin2021CardBrandMixup}.
 
+%DIF <  形式化方法在EMV协议分析中的成功启发我们为第三方支付协议安全分析引入形式化方法。
+\DIFdelbegin %DIFDELCMD < 
 
-% 形式化方法在EMV协议分析中的成功启发我们为第三方支付协议安全分析引入形式化方法。
+%DIFDELCMD < %%%
+\DIFdelend \subsection{Vulnerabilities in Implementations}
 
-\subsection{Vulnerabilities in Implementations}
+\DIFdelbegin \DIFdel{In mobile ecosystems, payment applications suffer from a wide range of implementation-level vulnerabilities arising from }\DIFdelend \DIFaddbegin \DIFadd{Payment applications on mobile platforms suffer from }\DIFaddend insecure inter-application communication\DIFdelbegin \DIFdel{and input handling.
+Prior work shows that }\DIFdelend \DIFaddbegin \DIFadd{: }\DIFaddend improperly exported Android components enable launch hijacking and intent spoofing\DIFdelbegin \DIFdel{, allowing malicious applications to intercept or impersonate legitimate payment components~\mbox{%DIFAUXCMD
+\cite{Bhandari2017AndroidInterApp, Sun2023VenomAttackAndroid}}\hskip0pt%DIFAUXCMD
+.
+Similarly, implicit URI schemes and deep links are often insufficiently validated , enabling attackers to }\DIFdelend \DIFaddbegin \DIFadd{~\mbox{%DIFAUXCMD
+\cite{Bhandari2017AndroidInterApp, Sun2023VenomAttackAndroid}}\hskip0pt%DIFAUXCMD
+, insufficiently validated deep links let attackers }\DIFaddend hijack payment flows and steal \DIFdelbegin \DIFdel{sensitive }\DIFdelend parameters~\cite{Liu2017MeasuringMobileDeep}\DIFdelbegin \DIFdel{.
+Moreover, embedded QR code scanning functionalities further expand the attack surface, as }\DIFdelend \DIFaddbegin \DIFadd{, and }\DIFaddend malicious QR codes can trigger sensitive interfaces\DIFdelbegin \DIFdel{or tamper with}\DIFdelend ~\cite{Han2023MedusaAttackQR}.
+\DIFaddbegin 
 
-In mobile ecosystems, payment applications suffer from a wide range of implementation-level vulnerabilities arising from insecure inter-application communication and input handling.
-Prior work shows that improperly exported Android components enable launch hijacking and intent spoofing, allowing malicious applications to intercept or impersonate legitimate payment components~\cite{Bhandari2017AndroidInterApp, Sun2023VenomAttackAndroid}.
-Similarly, implicit URI schemes and deep links are often insufficiently validated, enabling attackers to hijack payment flows and steal sensitive parameters~\cite{Liu2017MeasuringMobileDeep}.
-Moreover, embedded QR code scanning functionalities further expand the attack surface, as malicious QR codes can trigger sensitive interfaces or tamper with~\cite{Han2023MedusaAttackQR}.
-%-------------------------------------------------------------------------------
+\subsection{\DIFadd{Transaction Authentication}}
+
+\DIFadd{Regulation and industry standards bind the user's authentication to the details of a transaction.
+The regulatory technical standards of PSD2 require dynamic linking: for a remote payment, the authentication code is specific to the amount and the payee, and the payer is made aware of both~\mbox{%DIFAUXCMD
+\cite{EU2018RTS}}\hskip0pt%DIFAUXCMD
+.
+EMV 3-D Secure lets the card issuer authenticate the cardholder for a card-not-present transaction using transaction data supplied by the merchant~\mbox{%DIFAUXCMD
+\cite{EMVCo2023ThreeDS}}\hskip0pt%DIFAUXCMD
+, and Secure Payment Confirmation lets the browser display the payee and the amount and obtain an authenticator assertion over them~\mbox{%DIFAUXCMD
+\cite{W3C2026SPC}}\hskip0pt%DIFAUXCMD
+.
+Attacks on mobile two-factor authentication and on PSD2 banking apps show that these guarantees weaken when the authentication factor and the transaction run on the same compromised device~\mbox{%DIFAUXCMD
+\cite{Konoth2016Anywhere, Haupert2019PSD2}}\hskip0pt%DIFAUXCMD
+.
+These mechanisms bind the authorization to the amount and the payee, which an order created through the order oracle reproduces exactly.
+SCC binds the authorization to the order instance and its fulfilment target, which such an order cannot reproduce.
+}
+
+\DIFadd{Short authenticated strings let users authenticate a key exchange between two devices by comparing a short value~\mbox{%DIFAUXCMD
+\cite{Vaudenay2005SAS}}\hskip0pt%DIFAUXCMD
+.
+SCC transfers a short code in one direction, from the merchant frontend through the user to the payment system.
+Because payment parameters are bearer tokens, a code displayed by the payment system would be readable by an attacker who opens the cashier with intercepted parameters, so SCC never displays it there.
+}
+
+\DIFaddend %-------------------------------------------------------------------------------
 \section{Conclusion}
 %-------------------------------------------------------------------------------
 
@@ -1346,22 +1492,32 @@ We thank the anonymous reviewers and our shepherd for their constructive feedbac
 This research was supported in part by the National Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National Natural Science Foundation of China under grants No.~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018, and the Wuhan Scientific and Technical Achievements Project under grant No.~2024030803010172.
 The corresponding authors are Jing Chen and Min Shi.
 
-% 伦理附录
-\section*{Ethical Considerations}
-The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
+%DIF <  伦理附录
+%DIF >  伦理与开放科学
+\section*{Ethical Considerations \DIFaddbegin \DIFadd{and Open Science}\DIFaddend }
+\DIFdelbegin \DIFdel{The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
 Across these parties, the principal risk is the potential misuse of the disclosed technique, which we mitigate through the safeguards below, whereas the offsetting benefit is that it enables the providers and developers to remediate a fundamental design flaw before it is exploited in the wild.
-All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds, and all transactions were limited to test environments or self-owned accounts.
-The Android measurement study focused solely on whether payment requests could be intercepted or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.
-To reduce the risk of misuse, affected applications are not individually identified and are reported only in aggregated form.
-The protocol models presented in this paper are reconstructed solely from public developer documentation, rather than from reverse engineering or leaked internal specifications.
-The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, we do not release the attack implementation or the list of affected applications.
+}\DIFdelend All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds\DIFdelbegin \DIFdel{, and all transactions were limited to test environments or self-owned accounts}\DIFdelend .
+The Android measurement study \DIFdelbegin \DIFdel{focused solely on }\DIFdelend \DIFaddbegin \DIFadd{only checked }\DIFaddend whether payment requests could be intercepted \DIFdelbegin \DIFdel{or hijacked }\DIFdelend at the communication level; \DIFaddbegin \DIFadd{it performed }\DIFaddend no order tampering \DIFdelbegin \DIFdel{or manipulation of payment amounts or outcomes was performed, and }\DIFdelend \DIFaddbegin \DIFadd{and imposed }\DIFaddend no financial or operational impact \DIFdelbegin \DIFdel{was imposed on application }\DIFdelend \DIFaddbegin \DIFadd{on }\DIFaddend developers or merchants.
+\DIFdelbegin \DIFdel{To reduce the risk of misuse, affected applications are not individually identified and are }\DIFdelend \DIFaddbegin \DIFadd{Affected applications are }\DIFaddend reported only in aggregated form\DIFdelbegin \DIFdel{.
+The protocol models presented in this paper }\DIFdelend \DIFaddbegin \DIFadd{, and the protocol models }\DIFaddend are reconstructed solely from public developer documentation\DIFdelbegin \DIFdel{, rather than from reverse engineering or leaked internal specifications.
+The identified issues were responsibly }\DIFdelend \DIFaddbegin \DIFadd{.
+The issues were }\DIFaddend disclosed to Alipay\DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend PSP-B, \DIFdelbegin \DIFdel{as well as to affected application developers , prior to publication , enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, }\DIFdelend \DIFaddbegin \DIFadd{and affected developers before publication (Section~\ref{sec:real_world}), and }\DIFaddend we do not release the attack implementation or the list of affected applications.
+\DIFdelbegin %DIFDELCMD < 
 
+%DIFDELCMD < %%%
+%DIF <  开放科学附录
+\section*{\DIFdel{Open Science}}
+%DIFAUXCMD
+%DIFDELCMD < 
 
-% 开放科学附录
-\section*{Open Science}
-
-To support transparency and reproducibility, we release an artifact repository \cite{third_payment_model_2026} containing the formal models of six third-party payment protocols and our countermeasure, the specifications of the proposed security properties, and scripts for reproducing the formal verification results. 
-For security and ethical reasons, we do not release exploit code for real merchant applications or data that could directly identify vulnerable apps or merchants.
+%DIFDELCMD < %%%
+\DIFdel{To support transparency and reproducibility, we release an artifact repository\mbox{%DIFAUXCMD
+\cite{third_payment_model_2026} }\hskip0pt%DIFAUXCMD
+containing }\DIFdelend \DIFaddbegin \DIFadd{Our artifact repository~\mbox{%DIFAUXCMD
+\cite{third_payment_model_2026} }\hskip0pt%DIFAUXCMD
+contains }\DIFaddend the formal models of \DIFdelbegin \DIFdel{six third-party payment protocols and }\DIFdelend \DIFaddbegin \DIFadd{the six protocols and of }\DIFaddend our countermeasure, the specifications of the \DIFdelbegin \DIFdel{proposed }\DIFdelend security properties, and scripts for reproducing the \DIFdelbegin \DIFdel{formal verification results. 
+For security and ethical reasons, we do not release exploit code for real merchant applications or data that could directly identify vulnerable apps or merchants}\DIFdelend \DIFaddbegin \DIFadd{verification results}\DIFaddend .
 
 
 %-------------------------------------------------------------------------------
