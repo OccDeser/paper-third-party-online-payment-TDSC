@@ -93,8 +93,7 @@ Payment parameters are bearer tokens: any party holding them can open the cashie
 If \emph{PS-App} displayed the code for the user to compare, an attacker that intercepts the parameters and the seal could open the cashier under its own payment account, read the code, and choose a nonce $r_A$ with $f(r_A)$ equal to that code for its own order.
 In SCC the code travels only from \emph{MF} to the user and from the user to \emph{PS}, both over secure channels.
 
-\textbf{Pattern A and integration.}
-In payment pattern~A, \emph{MF} receives the signed order in the payment parameters and uses $id_{order}$ as the order handle in $T$; all other steps are identical.
+\textbf{Integration.}
 Merchants integrate SCC by adding $D$ to the signed order.
 The seal and the code are computed by the payment SDK embedded in \emph{MF}, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
 

@@ -28,36 +28,9 @@ This channel assumption is unrealistic in real-world deployments.
 
 \subsection{Attack Implementation}
 
-\begin{figure}[t]
-  \centering
-  % --- 左侧子图：受害者设备 ---
-  \begin{subfigure}[b]{0.32\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/setup_1.png} % 请替换为受害者设备的图片路径
-    \caption{Victim Device}
-    \label{fig:victim_device}
-  \end{subfigure}
-  \hspace{3em}
-  % --- 右侧子图：攻击者设备 ---
-  \begin{subfigure}[b]{0.32\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/setup_2.png} % 请替换为攻击者设备的图片路径
-    \caption{Attacker Device}
-    \label{fig:attacker_device}
-  \end{subfigure}
-
-  \caption{Attack Setup. 
-    Device~\ref{fig:victim_device} denotes the victim device, which installs the malicious application, a vulnerable merchant application, and a payment application. 
-    Device~\ref{fig:attacker_device} denotes the attacker device, which installs the attacker application. 
-    The screenshots correspond to the real interfaces of the malicious and attacker applications, respectively.
-  }
-  \label{fig:real_world_attack_devices}
-\end{figure}
-
 We developed two Android applications, a malicious application and an attacker application, to exploit the aforementioned vulnerability.
-Fig.~\ref{fig:real_world_attack_devices} illustrates the devices used in the attack, serving as the victim device and the attacker device, respectively, with the corresponding applications installed.
-The malicious application on device~\ref{fig:victim_device} is responsible for capturing and replaying payment parameters.
-The attacker application on device~\ref{fig:attacker_device} places orders on the merchant platform and returns payment parameters to the malicious application.
+The victim device runs the malicious application, a vulnerable merchant application, and a payment application; the malicious application is responsible for capturing and replaying payment parameters.
+The attacker device runs the attacker application, which places orders on the merchant platform and returns payment parameters to the malicious application.
 
 Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
 The attack proceeds in four phases:

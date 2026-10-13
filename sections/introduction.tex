@@ -55,13 +55,6 @@ We develop a proof-of-concept attack application that exploit this vulnerability
 To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
 Our results show that more than $25\%$ of the sampled applications are vulnerable.
 These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
-We responsibly disclosed our findings to the security teams at Alipay and PSP-B.
-We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
-Additionally, we notified the developers of 41 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
-
-To address these design flaws, 
-we propose a deployable payment pattern which incorporates a user-side order authentication mechanism to establish a binding between user's authorization and the intended order.
-Under the weakened channel assumptions, we formally verify this pattern and show that it satisfies all the defined security properties.
 
 % As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
 
@@ -74,21 +67,17 @@ We make the following contributions:
   \item \textbf{Disclosure of a new order tampering attack.}
     Based on our formal analysis results, we identified a new variant of order tampering attacks and successfully demonstrated it in a real-world payment environment.
     Our further measurement study shows that this vulnerability affects more than 25\% of real-world applications.
-  \item \textbf{Proposal of a formal verified countermeasure.}
-    We propose a new payment protocol as a countermeasure, which introduces a user-side order authentication mechanism to address the identified design flaws.
-    Formal verification results demonstrate that the proposed protocol can maintain security, even under weakened channel assumptions.
+  \item \textbf{Design and verification of Sealed Checkout Code.}
+    We propose SCC, a single-round countermeasure that binds each payment to the user's own checkout through a sealed nonce and a short code entered by the user, and protects every payment, including the first, without per-user keys.
+    Formal verification shows that SCC satisfies all security properties when both external channels are insecure.
 \end{enumerate}
 
 \noindent\textbf{Extension of the Conference Version.}
 This paper extends our conference paper that appears at USENIX Security 2026~\cite{xiao2026authorization}.
 The conference version countered order tampering with a two-phase protocol: merchants generate a key pair for each user, and the payment application binds the merchant's key to the user at the first payment.
 This design follows trust on first use and leaves the first payment to each merchant open to order tampering.
-This paper replaces it with Sealed Checkout Code (SCC) and makes three new contributions:
-\begin{enumerate}[leftmargin=*]
-  \item We design SCC, a single-round countermeasure that protects every payment, including the first, without per-user keys or trust decisions by the user (Section~\ref{sec:countermeasure}).
-  \item We analyze how SCC defeats order substitution, forged seals, and tampering with the fulfilment target, and show that the code must travel from the user to the payment system.
-  \item We formally verify SCC in \Tamarin with both external channels insecure and show that it satisfies all five security properties.
-\end{enumerate}
+This paper replaces it with SCC, which protects every payment, including the first, without per-user keys (Section~\ref{sec:countermeasure}).
+The new material comprises the design of SCC, its security analysis against order substitution, forged seals, and tampering with the fulfilment target, its formal verification with both external channels insecure, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
 
 % \noindent\textbf{Disclosure.}
 % We responsibly disclosed our findings to the security teams of Alipay and PSP-B.

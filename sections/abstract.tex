@@ -8,7 +8,7 @@ This paper presents formal security models for six third-party payment protocols
 Our analysis reveals a fundamental design flaw: 
 whenever channel integrity is compromised between the merchant client, merchant server, or payment system, order tampering attacks become feasible.
 We validate this threat on Android, where over 20\% of tested merchant applications allow order tampering through implicit Intent hijacking.
-To mitigate this threat, we propose user-side order authentication, where a nonce sealed by the merchant frontend and a short code entered by the user bind consent to the order.
-Formal verification demonstrates its resilience against identified attacks under weak channel assumptions. 
+To mitigate this threat, we propose Sealed Checkout Code (SCC): the merchant frontend seals a fresh nonce to the payment system together with the order handle and the fulfilment target, and the user confirms the payment by entering a short code derived from that nonce.
+SCC protects every payment without per-user keys or trust on first use, and formal verification shows that it satisfies all security properties when both external channels are insecure.
 By bridging formal methods and empirical analysis, this work offers actionable guidance for standardizing secure payment protocols.
 \end{abstract}

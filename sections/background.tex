@@ -133,34 +133,7 @@ and 5G-AKA~\cite{basin2018formal,cremers2019component}.
 It employs a multiset rewriting system to model both protocol execution and adversary capabilities, providing a rich language for specifying security properties as first-order logic formulas over execution traces. 
 \Tamarin supports unbounded protocol sessions, a Dolev-Yao style adversary, and is particularly well-suited for analyzing stateful protocols due to its native handling of mutable and persistent state.
 
-\textbf{Terms and Facts.}
-In \Tamarin, protocol messages are represented as \emph{terms}, which are constructed from variables, constants, and compound expressions formed by applying function symbols to subterms.
-An equational theory over terms specifies algebraic properties and reducibility relations, thereby affecting pattern matching and substitution.
-For example, symmetric encryption is modeled by a encryption function $\text{\Tfunction{senc}}$ and a decryption function $\text{\Tfunction{sdec}}$ satisfying the equation $\text{\Tfunction{sdec}}(\text{\Tfunction{senc}}(m,k),k)=m$.
-The system state is captured using \emph{facts}, which are predicates of the form \TFactTerm{F}{$t_1,\ldots,t_n$}.
-Facts can be linear (consumed upon rule application), persistent (available throughout the execution, e.g., \TFactTerm{!PK}{$A,Pk_A$}).
-The system execution can be observed using action facts, which record execution steps such as \TFactTerm{Running}{$A,x$} and \TFactTerm{Commit}{$B,x$} and are retained to form execution traces but do not constitute system states.
-
-
-\textbf{Multiset Rewriting Rules.}
-Multiset rewriting rules formally describe protocol behavior.
-Each rule specifies a state transition by means of \emph{left-hand side} premise facts (guards) and \emph{right-hand side} conclusion facts (productions), and may also include action facts as observable events.
-Formally, a rule can be written as following:
-\begin{tightflalign}
-  \TFacts{  LF_1,\ldots,LF_m } \TActFactsSL{AF(t_1, \ldots, t_k)} \TFacts{  RF_1, \ldots, RF_n } &
-\end{tightflalign}
-Given a current state multiset $S$, the rule is enabled when $LF_1,\ldots,LF_m \subseteq S$.
-We use the function \funcText{linear} to denotes the linear facts from a set of facts.
-The application of the rule produces a new state $S' = (S \setminus \text{\funcText{linear}}(\{LF_1,\ldots,LF_m\})) \cup \{RF_1, \ldots, RF_n\}$, and appends the action facts $AF(t_1, \ldots, t_k)$ to the execution trace.
-
-\textbf{Trace and Formulas.}
-In \Tamarin, the global behavior of a protocol is captured by traces, which are sequences of action facts.
-Formally, a trace is represented as $\tau = \langle FA_1@t_1, FA_2@t_2, \dots, FA_n@t_n \rangle$, where $FA_i@t_i$ denotes an observable event occurring at time point $t_i$.
-Based on such traces, \Tamarin reasons about executions using first-order logic formulas, where \emph{restrictions} are used to specify global constraints over all possible executions.
-These constraints are also first-order logic formulas over events and time points.
-Within this restricted semantic space, security properties are likewise expressed as first-order temporal logic formulas (lemmas), such as secrecy, authentication, or consistency properties, and are required to hold for all valid traces.
-For example, key secrecy can be formalized as:
-\begin{tightflalign}
-    \TAll \;\text{\Tterm{k \#i.}} \;\text{\TFact{Install(k)@\#i}} \implies \TNot (\TEx \;\, \text{\TLemma{\#j.}} \;\text{\TFact{K(k)@\#j}} ) 
-\end{tightflalign}
-This formula expresses that for any key $k$ and time point $i$, if this key~$k$ is installed at time~$i$, then there doesn't exist a time point~$j$ at which the key~$k$ is known by an adversary.
+\Tamarin represents messages as \emph{terms} built from function symbols under an equational theory, and the system state as a multiset of \emph{facts} \TFactTerm{F}{$t_1,\ldots,t_n$}.
+Linear facts are consumed when a rule uses them, while persistent facts, written with a leading ``!'', remain available.
+A multiset rewriting rule $\TFacts{L} \TActFactsSL{A} \TFacts{R}$ is enabled when its premises $L$ are in the state; it consumes the linear facts in $L$, adds the conclusions $R$, and records the action facts $A$ in the execution trace.
+Security properties (lemmas) are first-order formulas over the action facts of a trace and their time points, and restrictions use the same language to exclude executions.
