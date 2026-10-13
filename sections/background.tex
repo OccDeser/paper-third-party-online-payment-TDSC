@@ -49,31 +49,14 @@ As illustrated in Figure~\ref{fig:third_party_payment}, a third-party payment pr
     
 \subsection{Payment Scenarios} \label{sec:payment-scenarios}
 
-The \emph{PS} obtains payment parameters from the \emph{MF} via \emph{PS-App} installed on the \emph{U}'s mobile device.
-However, the communication methods between the \emph{PS-App} and the \emph{MF} differ depending on implementation of the \emph{MF}, 
-which may include native mobile applications, mobile web pages, and desktop web pages.
-These distinct forms result in different payment scenarios, prompting payment providers to define specific interaction methods between the \emph{MF} and the \emph{PS}.
-We introduce three common payment scenarios below:
-
-\textbf{In-app Payment.}
-% This payment scenario takes place within native mobile applications.
-In this scenario, payment parameters are obtained within native mobile applications.
-After the user selects a good, the \emph{MF} invokes the \emph{PS-App} through the Software Development Kit (SDK) provided by the payment provider to
-transmit the required payment parameters to the \emph{PS}.
-
-\textbf{Mobile Web Payment.}
-In this scenario, the user interacts with the merchant through a mobile browser.
-Similar to in-app payment, the merchant's mobile web page initiates a payment request to the \emph{PS-App} using a URL scheme.
-
-\textbf{QR Code Payment.}
-QR code payment fundamentally differs from the previous two scenarios with respect to device interaction.
-In this scenario, the user browses the merchant's website using a desktop browser, while the payment is completed on a mobile device.
-Since the merchant's web page cannot directly redirect to a mobile payment application, the payment provider employs a QR code as an intermediary between the PC and mobile platforms. 
-After placing an order, the merchant website generates a payment QR code, which the user scans with the \emph{PS-App} to obtain the payment parameters.
+The \emph{PS} obtains payment parameters from the \emph{MF} via \emph{PS-App} on the user's mobile device, and the interaction method depends on the form of the \emph{MF}.
+In \textbf{in-app payment}, the merchant's native application invokes \emph{PS-App} through the payment provider's Software Development Kit (SDK).
+In \textbf{mobile web payment}, the merchant's mobile web page invokes \emph{PS-App} through a URL scheme.
+In \textbf{QR code payment}, the user browses the merchant's website on a desktop browser, and the website displays a QR code that the user scans with \emph{PS-App} to obtain the payment parameters.
  
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{img/tpp_process.pdf}
+    \includegraphics[width=0.85\linewidth]{img/tpp_process.pdf}
     \caption{
         An Overview of a Typical Third-Party Online Payment. 
         Dashed arrows indicate optional messages, depending on the specific payment pattern.

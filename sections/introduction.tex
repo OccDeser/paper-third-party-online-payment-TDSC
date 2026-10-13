@@ -77,7 +77,7 @@ This paper extends our conference paper that appears at USENIX Security 2026~\ci
 The conference version countered order tampering with a two-phase protocol: merchants generate a key pair for each user, and the payment application binds the merchant's key to the user at the first payment.
 This design follows trust on first use and leaves the first payment to each merchant open to order tampering.
 This paper replaces it with SCC, which protects every payment, including the first, without per-user keys (Section~\ref{sec:countermeasure}).
-The new material comprises the design of SCC, its security analysis against order substitution, forged seals, and tampering with the fulfilment target, its formal verification with both external channels insecure, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
+The new material comprises the design, security analysis, and formal verification of SCC, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
 
 % \noindent\textbf{Disclosure.}
 % We responsibly disclosed our findings to the security teams of Alipay and PSP-B.
