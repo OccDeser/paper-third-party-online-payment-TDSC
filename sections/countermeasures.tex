@@ -1,5 +1,5 @@
 %-------------------------------------------------------------------------------
-\section{Countermeasure}
+\section{Countermeasure} \label{sec:countermeasure}
 %-------------------------------------------------------------------------------
 % In this section, we xxxx.
 
@@ -47,7 +47,6 @@ We design the countermeasure to meet four goals.
   \item \textbf{Compatible integration.} Merchants keep the existing prepayment and notification interfaces.
   \item \textbf{Weak channel assumptions.} Security holds when both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure.
 \end{enumerate}
-The countermeasure in the preliminary version of this work meets G3 and G4 for regular payments and relies on trust on first use: the first payment to a merchant establishes a per-user key binding, and that payment remains vulnerable to order tampering (Table~\ref{tab:countermeasure-results}).
 Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
 
 \subsection{Countermeasure Design}
@@ -132,6 +131,6 @@ Through the order oracle, the attacker places orders with arbitrary amounts and 
 The user commits to the order when the payment completes, because \emph{PS} checks the code after the user submits it.
 To confirm that this commit point preserves the discriminating power of IA-O2, we applied the same change to all six protocols of Table~\ref{tab:lemma-results} under all three channel assumptions; IA-O2 remains falsified in all 18 models.
 
-Table~\ref{tab:countermeasure-results} summarizes the results, together with the initial and regular payments of the two-phase countermeasure in the preliminary version.
-SCC satisfies all five security properties under the Base assumption, whereas the two-phase countermeasure violates IA-O2 in the initial payment.
+Table~\ref{tab:countermeasure-results} summarizes the results.
+SCC satisfies all five security properties under the Base assumption.
 We verified SCC on a server with 32 CPU cores and 187~GB of memory, with a peak memory usage of 7.0~GB.

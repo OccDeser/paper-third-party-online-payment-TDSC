@@ -79,6 +79,17 @@ We make the following contributions:
     Formal verification results demonstrate that the proposed protocol can maintain security, even under weakened channel assumptions.
 \end{enumerate}
 
+\noindent\textbf{Extension of the Conference Version.}
+This paper extends our conference paper that appears at USENIX Security 2026~\cite{xiao2026authorization}.
+The conference version countered order tampering with a two-phase protocol: merchants generate a key pair for each user, and the payment application binds the merchant's key to the user at the first payment.
+This design follows trust on first use and leaves the first payment to each merchant open to order tampering.
+This paper replaces it with Sealed Checkout Code (SCC) and makes three new contributions:
+\begin{enumerate}[leftmargin=*]
+  \item We design SCC, a single-round countermeasure that protects every payment, including the first, without per-user keys or trust decisions by the user (Section~\ref{sec:countermeasure}).
+  \item We analyze how SCC defeats order substitution, forged seals, and tampering with the fulfilment target, and show that the code must travel from the user to the payment system.
+  \item We formally verify SCC in \Tamarin with both external channels insecure and show that it satisfies all five security properties.
+\end{enumerate}
+
 % \noindent\textbf{Disclosure.}
 % We responsibly disclosed our findings to the security teams of Alipay and PSP-B.
 % The reported vulnerabilities were acknowledged by both parties, and, at the time of writing, remediation efforts are actively underway.
