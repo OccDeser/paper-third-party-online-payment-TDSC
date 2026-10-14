@@ -1,36 +1,39 @@
-% Author biographies. Photos go in img/ as author_<Name>.{pdf,png,jpg};
+% Author biographies. Photos go in author/ as <name>.pdf, .png, or .jpg;
 % a missing photo is replaced by an empty frame of the same size.
+\newcommand{\authorphotofile}[1]{\includegraphics[width=1in,height=1.2in,clip,keepaspectratio]{#1}}
 \newcommand{\authorphoto}[1]{%
-  \IfFileExists{img/#1}{\includegraphics[width=1in,height=1.2in,clip,keepaspectratio]{img/#1}}%
-  {\fbox{\parbox[c][1.1in][c]{0.9in}{\centering\scriptsize photo}}}}
+  \IfFileExists{author/#1.pdf}{\authorphotofile{author/#1.pdf}}{%
+  \IfFileExists{author/#1.png}{\authorphotofile{author/#1.png}}{%
+  \IfFileExists{author/#1.jpg}{\authorphotofile{author/#1.jpg}}{%
+  \fbox{\parbox[c][1.1in][c]{0.9in}{\centering\scriptsize photo}}}}}}
 
 \vspace{-40pt}
-\begin{IEEEbiography}[{\authorphoto{author_Xiao.png}}]
+\begin{IEEEbiography}[{\authorphoto{author_XIAO}}]
 {\bf Yongkang Xiao}\
 received the B.E. degree in \textcolor{red}{[MAJOR]} from Wuhan University, Wuhan, China, in \textcolor{red}{[YEAR]}, and is currently pursuing the Ph.D. degree with the School of Cyber Science and Engineering, Wuhan University. \textcolor{red}{[His/Her]} research interests include formal verification and the security analysis of network security protocols.
 \end{IEEEbiography}
 \vspace{-40pt}
-\begin{IEEEbiography}[{\authorphoto{author_Chen.pdf}}]
+\begin{IEEEbiography}[{\authorphoto{author_Chen}}]
 {\bf Jing Chen}\
 (Senior Member, IEEE) received the Ph.D. degree in computer science from the Huazhong University of Science and Technology, China. He has been a Full Professor with Wuhan University since 2015. He has published more than 100 research papers in many international journals and conferences, such as IEEE TDSC, IEEE TIFS, IEEE TPDS, USENIX Security, ACM CCS, and IEEE INFOCOM. His current research interests include computer science, network security, and cloud security.
 \end{IEEEbiography}
 \vspace{-40pt}
-\begin{IEEEbiography}[{\authorphoto{author_Shi.png}}]
+\begin{IEEEbiography}[{\authorphoto{author_Shi}}]
 {\bf Min Shi}\
 \textcolor{red}{[TODO: biography]}
 \end{IEEEbiography}
 \vspace{-40pt}
-\begin{IEEEbiography}[{\authorphoto{author_He.pdf}}]
+\begin{IEEEbiography}[{\authorphoto{author_He}}]
 {\bf Kun He}\
 (Member, IEEE) received the Ph.D. degree in computer science from the Computer School, Wuhan University. He is currently an Associate Professor with Wuhan University. His research interests include cryptography, network security, mobile computing, and cloud computing. He has published more than 30 research papers in many international journals and conferences, such as IEEE TDSC, IEEE TIFS, USENIX Security, ACM CCS, and IEEE S\&P.
 \end{IEEEbiography}
 \vspace{-40pt}
-\begin{IEEEbiography}[{\authorphoto{author_Deng.png}}]
+\begin{IEEEbiography}[{\authorphoto{author_Deng}}]
 {\bf Qiyi Deng}\
 \textcolor{red}{[TODO: biography]}
 \end{IEEEbiography}
 \vspace{-40pt}
-\begin{IEEEbiography}[{\authorphoto{author_Du.png}}]
+\begin{IEEEbiography}[{\authorphoto{author_Du}}]
 {\bf Ruiying Du}\
 \textcolor{red}{[TODO: biography]}
 \end{IEEEbiography}

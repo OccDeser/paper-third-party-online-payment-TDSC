@@ -453,3 +453,6 @@ newfangan/
 
 ### latexdiff output PDF is committed for review ###
 !/diff/*.pdf
+
+### Author photos are part of the manuscript ###
+!/author/*.pdf
