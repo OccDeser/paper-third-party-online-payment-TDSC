@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Tue Oct 13 17:42:24 2026
-%DIF ADD new/main.tex   Tue Oct 13 17:42:23 2026
+%DIF DEL old/main.tex   Fri Oct 16 17:58:44 2026
+%DIF ADD new/main.tex   Fri Oct 16 17:58:43 2026
 
 \usepackage{cite}
 
@@ -1080,28 +1080,36 @@ In Section~\ref{sec:real_world}, we present a widely prevalent vulnerability tha
 \section{Real-World Attacks} \label{sec:real_world}
 %-------------------------------------------------------------------------------
 
-In this section, we present a real-world attack case that was identified inspired by our analysis results and successfully carried out in practice.
-We also introduce our measurement study to assess the scope and practical extent of the vulnerability's impact across affected systems.
-We further discuss the responsible vulnerability disclosure process.
+In this section, we present a real-world attack \DIFdelbegin \DIFdel{case that was identified }\DIFdelend inspired by our analysis results\DIFdelbegin \DIFdel{and successfully carried out in practice.
+We also introduce our measurement study to assess the scope and practical extent of the vulnerability's impactacross affected systems.
+We further discuss the responsible vulnerability }\DIFdelend \DIFaddbegin \DIFadd{, a measurement study of its impact, and the responsible }\DIFaddend disclosure process.
 
 \subsection{A Real-World Vulnerability}
 
 Inspired by the Variant~\Rom{2} attack, we identified an exploitable vulnerability on the Android platform.
-When initiating a payment request, merchant's Android applications use the Android Intent mechanism to transmit payment parameters to the payment service application.
-As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the PSP-B and Alipay receive payment parameters from merchant applications.
+\DIFdelbegin \DIFdel{When initiating a payment request, merchant's Android applications use the Android Intent mechanism to }\DIFdelend \DIFaddbegin \DIFadd{Merchant applications }\DIFaddend transmit payment parameters to the \DIFdelbegin \DIFdel{payment service application.
+As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the }\DIFdelend PSP-B and Alipay \DIFdelbegin \DIFdel{receive payment parameters from merchant applications .
 A merchant application typically constructs an Intent containing payment parameters and uses it to launch the corresponding payment application.
+}%DIFDELCMD < 
 
-It should be noted that Intents can be classified into two categories, explicit Intents and implicit Intents. 
-An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, allowing the system to match and select a responding component based on Intent Filters.
-The security risk primarily arises from the misuse of implicit Intents.
+%DIFDELCMD < %%%
+\DIFdel{It should be noted that Intents can be classified into two categories, explicit Intents and implicit Intents. 
+}\DIFdelend \DIFaddbegin \DIFadd{applications through the Android Intent mechanism.
+}\DIFaddend An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, \DIFdelbegin \DIFdel{allowing the system to match and select }\DIFdelend \DIFaddbegin \DIFadd{and the system selects }\DIFaddend a responding component based on Intent Filters.
+\DIFdelbegin \DIFdel{The security risk primarily arises from the misuse of implicit Intents.
+}%DIFDELCMD < 
 
-When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the PSP-B or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
-However, we find that some merchant applications use implicit Intents in practice.
-This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious application that declares the same Intent handling capability.
+%DIFDELCMD < %%%
+\DIFdel{When requesting a payment, a }\DIFdelend \DIFaddbegin \DIFadd{A }\DIFaddend merchant application should \DIFaddbegin \DIFadd{therefore }\DIFaddend use an explicit Intent to \DIFdelbegin \DIFdel{explicitly designate the PSP-B or Alipay applications as the target, thereby ensuring }\DIFdelend \DIFaddbegin \DIFadd{ensure }\DIFaddend that the payment request is \DIFdelbegin \DIFdel{correctly routed to a }\DIFdelend \DIFaddbegin \DIFadd{routed to the }\DIFaddend trusted payment application.
+However, we find that some merchant applications use implicit Intents in practice\DIFdelbegin \DIFdel{.
+This means that }\DIFdelend \DIFaddbegin \DIFadd{, so }\DIFaddend an attacker can hijack payment requests \DIFdelbegin \DIFdel{originally sent to a payment application }\DIFdelend by deploying a malicious application that declares the same Intent handling capability.
+\DIFdelbegin %DIFDELCMD < 
 
-Intent hijacking is not specific to payment scenarios, but rather a systemic security risk inherent in the Android component communication mechanism.
-However, existing third-party online payment protocols are designed under the assumption that the communication channel between the merchant client and the payment application is trusted. 
-This channel assumption is unrealistic in real-world deployments.
+%DIFDELCMD < %%%
+\DIFdelend Intent hijacking is \DIFdelbegin \DIFdel{not specific to payment scenarios, but rather a systemic security risk inherent in the }\DIFdelend \DIFaddbegin \DIFadd{a systemic risk of }\DIFaddend Android component communication\DIFdelbegin \DIFdel{mechanism.
+However, }\DIFdelend \DIFaddbegin \DIFadd{, yet }\DIFaddend existing third-party online payment protocols are designed under the assumption that the \DIFdelbegin \DIFdel{communication }\DIFdelend channel between the merchant client and the payment application is trusted.
+\DIFdelbegin \DIFdel{This channel assumption is unrealistic in real-world deployments.
+}\DIFdelend 
 
 \subsection{Attack Implementation}
 
@@ -1153,15 +1161,24 @@ This channel assumption is unrealistic in real-world deployments.
 The malicious application on device~\ref{fig:victim_device} }\DIFdelend \DIFaddbegin \DIFadd{The victim device runs the malicious application, a vulnerable merchant application, and a payment application; the malicious application }\DIFaddend is responsible for capturing and replaying payment parameters.
 The attacker \DIFdelbegin \DIFdel{application on device ~\ref{fig:attacker_device} }\DIFdelend \DIFaddbegin \DIFadd{device runs the attacker application, which }\DIFaddend places orders on the merchant platform and returns payment parameters to the malicious application.
 
-Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
-The attack proceeds in four phases:
-\begin{enumerate}[leftmargin=*]
-  \item A benign merchant application initiates a payment request by dispatching an implicit Intent containing payment parameters to the payment application;
-  \item By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information;
-  \item Using the extracted information, the attacker application places a new order under an attacker-controlled account on the merchant platform and obtains a fresh set of payment parameters that preserve the original order information while being bound to the attacker's account;
-  \item The tampered payment parameters are then relayed to the payment application, which processes the request without detecting the modification.
-\end{enumerate}
-As a result, the attacker successfully tampers with the order, causing the user to complete a payment specified by the attacker rather than the original merchant.
+Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack\DIFdelbegin \DIFdel{.
+The attack }\DIFdelend \DIFaddbegin \DIFadd{, which }\DIFaddend proceeds in four phases\DIFdelbegin \DIFdel{:
+}%DIFDELCMD < \begin{enumerate}[leftmargin=*]
+%DIFDELCMD <   \item %%%
+\DIFdelend \DIFaddbegin \DIFadd{.
+(1)~}\DIFaddend A benign merchant application \DIFdelbegin \DIFdel{initiates a payment request by dispatching }\DIFdelend \DIFaddbegin \DIFadd{dispatches }\DIFaddend an implicit Intent containing payment parameters to the payment application\DIFdelbegin \DIFdel{;
+  }%DIFDELCMD < \item %%%
+\DIFdelend \DIFaddbegin \DIFadd{.
+(2)~}\DIFaddend By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information\DIFdelbegin \DIFdel{;
+  }%DIFDELCMD < \item %%%
+\DIFdelend \DIFaddbegin \DIFadd{.
+(3)~}\DIFaddend Using the extracted information, the attacker application places a new order under an attacker-controlled account on the merchant platform and obtains \DIFdelbegin \DIFdel{a fresh set of }\DIFdelend \DIFaddbegin \DIFadd{fresh }\DIFaddend payment parameters that preserve the original order information while being bound to the attacker's account\DIFdelbegin \DIFdel{;
+  }%DIFDELCMD < \item %%%
+\DIFdelend \DIFaddbegin \DIFadd{.
+(4)~}\DIFaddend The tampered payment parameters are \DIFdelbegin \DIFdel{then }\DIFdelend relayed to the payment application, which processes the request without detecting the modification.
+\DIFdelbegin %DIFDELCMD < \end{enumerate}
+%DIFDELCMD < %%%
+\DIFdelend As a result, the attacker successfully tampers with the order, causing the user to complete a payment specified by the attacker rather than the original merchant.
 
 \begin{figure}[t]
   \centering
@@ -1180,8 +1197,8 @@ As a result, the attacker successfully tampers with the order, causing the user 
 \subsection{Impact Assessment}
 To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the PSP-B or Alipay SDK.
 Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game.
-For some applications, only one or two versions were available.
-In total, we collected 461 application versions.
+For some applications, only one or two versions were available\DIFdelbegin \DIFdel{.
+In total, we collected }\DIFdelend \DIFaddbegin \DIFadd{, giving }\DIFaddend 461 application versions \DIFaddbegin \DIFadd{in total}\DIFaddend .
 
 Among these versions, 419 support PSP-B and 401 support Alipay.
 Our analysis reveals that 64 PSP-B–enabled versions and 72 Alipay-enabled versions are vulnerable.
@@ -1195,39 +1212,46 @@ At the time of writing, both providers had acknowledged the issue and confirmed 
 We identified contact information for 41 affected Android applications and issued security notifications to their developers, detailing the underlying risks and corresponding mitigation strategies.
 Among these, 17 developers responded; one explicitly committed to fixing the vulnerability, while the remaining vendors attributed the issue to the Alipay and PSP-B SDKs.
 We did not notify the Google Play Store, as Chinese apps are distributed mainly through vendor stores and the root cause lies in the Alipay and PSP-B SDKs, which a single update can fix for all integrating apps. Other major systems (Apple Pay, Stripe, etc.) use architectures not exposed to this attack.
-%-------------------------------------------------------------------------------
+\DIFaddbegin 
+
+\DIFaddend %-------------------------------------------------------------------------------
 \section{Countermeasure} \DIFaddbegin \label{sec:countermeasure}
 \DIFaddend %-------------------------------------------------------------------------------
 % In this section, we xxxx.
 
-In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
-% Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
-Then, we verify our countermeasure using symbolic methods and present the results.
-Finally, we discuss our countermeasure.
+In this section, we analyze the causes of order tampering attacks\DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend introduce our countermeasure\DIFdelbegin \DIFdel{.
+%DIF <  Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
+Then, we verify our countermeasure }\DIFdelend \DIFaddbegin \DIFadd{, verify it }\DIFaddend using symbolic methods\DIFdelbegin \DIFdel{and present the results.
+Finally, we discuss our countermeasure}\DIFdelend \DIFaddbegin \DIFadd{, and discuss it}\DIFaddend .
 
 \subsection{Cause Analysis}
 
 \textbf{Superficial Causes.}
-From a superficial perspective, order tampering attacks arise from the existence of insecure communication channels between \emph{MS} and \emph{PS-App}.
-An attacker can intercept and tamper with order information along this channel, thereby misleading the user into authorizing an incorrect payment.
-At first glance, addressing this issue appears straightforward.
-It suffices to ensure that the communication channels between \emph{MS} and \emph{PS-App} are secure.
-However, for payment service providers, this seemingly simple solution is difficult to realize in practice.
-The security of the communication path from merchant backends to \emph{PS-App} is influenced by both merchants and end users, and is largely beyond the control of payment service providers.
-Payment service providers serve a large number of merchants, each with diverse backend implementations, making it infeasible to ensure that all merchants correctly secure their communication channels.
-Similarly, merchants serve a vast user base with heterogeneous device environments, and payment service providers cannot guarantee that all users operate within secure network conditions.
+From a superficial perspective, order tampering attacks arise from \DIFdelbegin \DIFdel{the existence of }\DIFdelend insecure communication channels between \emph{MS} and \emph{PS-App}\DIFdelbegin \DIFdel{.
+An attacker can intercept and }\DIFdelend \DIFaddbegin \DIFadd{, over which an attacker can }\DIFaddend tamper with order information \DIFdelbegin \DIFdel{along this channel, thereby misleading }\DIFdelend \DIFaddbegin \DIFadd{and mislead }\DIFaddend the user into authorizing an incorrect payment.
+\DIFdelbegin \DIFdel{At first glance, addressing this issue appears straightforward.
+It suffices to ensure that the communication channels between }\emph{\DIFdel{MS}} %DIFAUXCMD
+\DIFdel{and }\emph{\DIFdel{PS-App}} %DIFAUXCMD
+\DIFdel{are secure.
+However, }\DIFdelend \DIFaddbegin \DIFadd{Securing these channels is difficult }\DIFaddend for payment service providers \DIFdelbegin \DIFdel{, this seemingly simple solution is difficult to realize in practice.
+The security of the communication }\DIFdelend \DIFaddbegin \DIFadd{in practice: the }\DIFaddend path from merchant backends to \emph{PS-App} \DIFdelbegin \DIFdel{is influenced by both merchants and end users, and is largely beyond the control of payment service providers.
+Payment service providers serve }\DIFdelend \DIFaddbegin \DIFadd{depends on the backend implementations of }\DIFaddend a large number of merchants \DIFdelbegin \DIFdel{, each with diverse backend implementations, making it infeasible to ensure that all merchants correctly secure their communication channels.
+Similarly, merchants serve }\DIFdelend \DIFaddbegin \DIFadd{and on the network environments of }\DIFaddend a vast user base\DIFdelbegin \DIFdel{with heterogeneous device environments, and payment service providerscannot guarantee that all users operate within secure network conditions.
 Therefore, defending against order tampering attacks solely by securing communication channels is, in practice, highly challenging.
-Consequently, mitigation is often reactive: once an insecure communication channel is identified, merchants and users are notified to apply patches.
+}\DIFdelend \DIFaddbegin \DIFadd{, both of which lie beyond the providers' control.
+}\DIFaddend Consequently, mitigation is often reactive: once an insecure communication channel is identified, merchants and users are notified to apply patches.
 
 \textbf{Root Causes.}
 The root cause of such attacks lies in the lack of a user-side authentication mechanism for order information in existing payment patterns.
-We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
-However, the user does not actually authenticate the order.
-Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
-In other words, during the \emph{Authentication} phase, the user performs no form of authentication of the order data.
-The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
+\DIFdelbegin \DIFdel{We examine the typical actions performed by users during the paymentprocess: entering }\DIFdelend \DIFaddbegin \DIFadd{During payment, the user enters }\DIFaddend a payment password to authorize the transaction \DIFdelbegin \DIFdel{, and possibly verifying }\DIFdelend \DIFaddbegin \DIFadd{and possibly checks }\DIFaddend the payment amount and description.
+\DIFdelbegin \DIFdel{However, the user does not actually authenticate the order.
+Information such as the payment amount and item description merely represents the }\DIFdelend \DIFaddbegin \DIFadd{These values describe the }\DIFaddend content of the current payment, \DIFdelbegin \DIFdel{and does not correspond to }\DIFdelend \DIFaddbegin \DIFadd{not }\DIFaddend the original order that the user intends to confirm\DIFdelbegin \DIFdel{.
+In other words, during the }\emph{\DIFdel{Authentication}} %DIFAUXCMD
+\DIFdel{phase, the userperforms no form of authentication of the order data.
+The user}\DIFdelend \DIFaddbegin \DIFadd{, so the user}\DIFaddend 's authorization \DIFdelbegin \DIFdel{is applied }\DIFdelend \DIFaddbegin \DIFadd{applies }\DIFaddend only to the act of payment \DIFdelbegin \DIFdel{transaction, }\DIFdelend rather than to a specific order.
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
-This observation reveals a design flaw in current payment patterns.
+\DIFdelbegin \DIFdel{This observation reveals a design flaw in current payment patterns.
+}\DIFdelend 
 
 \DIFaddbegin \DIFadd{An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the party that receives the goods.
 }\emph{\DIFadd{PS}} \DIFadd{cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give the user a check that the attacker cannot reproduce with its own order.
@@ -1257,7 +1281,7 @@ This observation reveals a design flaw in current payment patterns.
   %DIFAUXCMD
 %DIFDELCMD < \label{fig:our_model_initial}
 %DIFDELCMD < %%%
-\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.92\linewidth]{img/cm_scc.pdf}
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.85\linewidth]{img/cm_scc.pdf}
   \caption{\DIFaddFL{Sealed Checkout Code on top of payment pattern~B.
     Black elements are new or changed; gray elements are identical to pattern~B.
     Notation: $D$ denotes the fulfilment target of the order; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that }\emph{\DIFaddFL{PS}} \DIFaddFL{recorded for $id_{prepay}$.}}
@@ -1437,23 +1461,27 @@ The verification ran on a server with 32 CPU cores and 187~GB of memory (peak us
 
 
 \textbf{Advantages.}
-From a protocol design perspective, our payment pattern exhibits three key advantages.
+From a protocol design perspective, \DIFdelbegin \DIFdel{our payment pattern exhibits three }\DIFdelend \DIFaddbegin \DIFadd{SCC exhibits two }\DIFaddend key advantages.
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Minimal trust assumptions.}
-  At the protocol design level, we minimize reliance on trusted channels.
+  \item \textbf{\DIFdelbegin \DIFdel{Minimal }\DIFdelend \DIFaddbegin \DIFadd{Formally verified security under minimal }\DIFaddend trust assumptions.}
+  \DIFdelbegin \DIFdel{At the protocol design level, we minimize reliance on trusted channels.
   The protocol is formally proven to guarantee payment security under weakened external channel assumptions.
-  \item \textbf{Formally provable security.}
-Our formal analysis results demonstrate that our payment pattern effectively prevents order tampering attacks \DIFdelbegin \DIFdel{during regular payments }\DIFdelend and satisfies all security properties defined in this paper.
-  \DIFaddbegin \item \textbf{\DIFadd{Protection of every payment without per-user state.}}
+  }%DIFDELCMD < \item %%%
+\item%DIFAUXCMD
+\textbf{\DIFdel{Formally provable security.}} 
+%DIFAUXCMD
+\DIFdel{Our formal analysis results demonstrate that our payment pattern effectively }\DIFdelend \DIFaddbegin \DIFadd{SCC does not rely on trusted external channels, and our formal analysis shows that it }\DIFaddend prevents order tampering attacks \DIFdelbegin \DIFdel{during regular payments }\DIFdelend and satisfies all security properties defined in this paper \DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{when both external channels are insecure.
+  }\item \textbf{\DIFadd{Protection of every payment without per-user state.}}
 \DIFadd{Every payment, including the first payment to a merchant, is bound to the order produced by the user's own checkout, without per-user keys, local bindings, or trust decisions.
 }\DIFaddend \end{enumerate}
 
 \textbf{Limitations.}
-We honestly present the limitations and trade-offs of our payment pattern.
+\DIFdelbegin \DIFdel{We honestly present the limitations and }\DIFdelend \DIFaddbegin \DIFadd{SCC involves the following }\DIFaddend trade-offs\DIFdelbegin \DIFdel{of our payment pattern}\DIFdelend .
 \begin{enumerate}[leftmargin=*]
   \item \textbf{\DIFdelbegin \DIFdel{Signature and storage }\DIFdelend \DIFaddbegin \DIFadd{Encryption }\DIFaddend overhead.}
-Our payment pattern \DIFdelbegin \DIFdel{introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
-However, no new cryptographic primitives are introduced, and we consider the resulting overhead to be }\DIFdelend \DIFaddbegin \DIFadd{adds one public-key encryption in }\emph{\DIFadd{MF}} \DIFadd{and one decryption in }\emph{\DIFadd{PS}} \DIFadd{per payment, and merchants add the fulfilment target, which covers every field that determines delivery, to the signed order; we consider this overhead }\DIFaddend acceptable in practice.
+\DIFdelbegin \DIFdel{Our payment pattern introduces one additional signature operation, and requires both merchants and users to locally store extra keys, which incurs additional computational and implementation overhead.
+However, no new cryptographic primitives are introduced, and we consider the resulting overhead to be }\DIFdelend \DIFaddbegin \DIFadd{SCC adds one public-key encryption in }\emph{\DIFadd{MF}} \DIFadd{and one decryption in }\emph{\DIFadd{PS}} \DIFadd{per payment, and merchants add the fulfilment target, which covers every field that determines delivery, to the signed order; we consider this overhead }\DIFaddend acceptable in practice.
   \item \textbf{Additional user interaction\DIFdelbegin \DIFdel{during the initial payment}\DIFdelend .}
 \DIFdelbegin \DIFdel{During the initial payment, users are required to explicitly confirm their trust in the merchant, introducing additional user interaction.
 For regular payments, no extra interaction is required, and }\DIFdelend \DIFaddbegin \DIFadd{In each payment, }\DIFaddend the \DIFdelbegin \DIFdel{overall user experience remains comparable to that of existing payment patterns}\DIFdelend \DIFaddbegin \DIFadd{user enters the short code shown by }\emph{\DIFadd{MF}} \DIFadd{together with the payment password.
@@ -1462,7 +1490,7 @@ In in-app and mobile web payment, the user carries the code across the switch fr
 \DIFdelbegin \DIFdel{Our proposed model does not provide additional security guarantees for the initial payment.
 Instead, our design follows the widely adopted Trust-On-First-Use (TOFU) model, under which the initial interaction may be vulnerable to active network attacks.
 Once a legitimate payment context is established, however, any subsequent deviation can be reliably detected.
-Consequently, while an adversary may interfere with the initial payment, our scheme guarantees the integrity of subsequent payments and enables attack detection even if the first payment was compromised}\DIFdelend \DIFaddbegin \DIFadd{The security of our payment pattern requires that the attacker not learn the code before the user enters it, which the secure channel between the user and }\emph{\DIFadd{MF}} \DIFadd{provides in our model.
+Consequently, while an adversary may interfere with the initial payment, our scheme guarantees the integrity of subsequent payments and enables attack detection even if the first payment was compromised}\DIFdelend \DIFaddbegin \DIFadd{The security of SCC requires that the attacker not learn the code before the user enters it, which the secure channel between the user and }\emph{\DIFadd{MF}} \DIFadd{provides in our model.
 Malware that reads the screen or overlays a fake input page on the user's device lies outside the channel attacker, and }\emph{\DIFadd{MF}} \DIFadd{and }\emph{\DIFadd{PS-App}} \DIFadd{render the code and its input field with screen-capture protection, such as }\texttt{\DIFadd{FLAG\_SECURE}} \DIFadd{on Android}\DIFaddend .
 \end{enumerate}
 \DIFaddbegin 
@@ -1621,20 +1649,18 @@ Finally, we propose a deployable countermeasure that binds user authorization to
 Formal verification confirms that it satisfies all security properties even under weakened channel assumptions, offering a practical path toward more secure third-party payments.
 % 致谢
 \section*{Acknowledgments}
-We thank the anonymous reviewers and our shepherd for their constructive feedback.
+We thank the anonymous reviewers \DIFdelbegin \DIFdel{and our shepherd }\DIFdelend for their constructive feedback.
 This research was supported in part by the National Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National Natural Science Foundation of China under grants No.~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018, and the Wuhan Scientific and Technical Achievements Project under grant No.~2024030803010172.
-The corresponding authors are Jing Chen and Min Shi\DIFdelbegin \DIFdel{.
-}%DIFDELCMD < 
+The corresponding authors are Jing Chen and Min Shi.
 
-%DIFDELCMD < %%%
+
 %DIF <  伦理附录
-\section*{\DIFdel{Ethical Considerations}}
+\DIFdelbegin \section*{\DIFdel{Ethical Considerations}}
 %DIFAUXCMD
 \DIFdel{The parties affected by this research are the users of Alipay and PSP-B, the two providers themselves, and the merchants whose applications integrate their SDKs.
 Across these parties, the principal risk is the potential misuse of the disclosed technique, which we mitigate through the safeguards below, whereas the offsetting benefit is that it enables the providers and developers to remediate a fundamental design flaw before it is exploited in the wild.
 All experiments were performed using accounts fully controlled by the authors, without involving real users or accessing real user funds, and all transactions were limited to test environments or self-owned accounts.
-The Android measurement study focused solely on whether payment requests could be intercepted or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.
-To reduce the risk of misuse, affected applications are not individually identified and are reported only in aggregated form.
+The Android measurement study focused solely on whether payment requests could be intercepted or hijacked at the communication level; no order tampering or manipulation of payment amounts or outcomes was performed, and no financial or operational impact was imposed on application developers or merchants.To reduce the risk of misuse, affected applications are not individually identified and are reported only in aggregated form.
 The protocol models presented in this paper are reconstructed solely from public developer documentation, rather than from reverse engineering or leaked internal specifications.
 The identified issues were responsibly disclosed to Alipay and PSP-B, as well as to affected application developers, prior to publication, enabling mitigation before public disclosure; to prevent opportunistic exploitation during the remediation window, we do not release the attack implementation or the list of affected applications.
 }%DIFDELCMD < 
@@ -1648,13 +1674,72 @@ The identified issues were responsibly disclosed to Alipay and PSP-B, as well as
 %DIFDELCMD < %%%
 \DIFdel{To support transparency and reproducibility, we release an artifact repository \mbox{%DIFAUXCMD
 \cite{third_payment_model_2026} }\hskip0pt%DIFAUXCMD
-containing the formal models of six third-party payment protocols and our countermeasure, the specifications of the proposed security properties, and scripts for reproducing the formal verification results. 
-For security and ethical reasons, we do not release exploit code for real merchant applications or data that could directly identify vulnerable apps or merchants}\DIFdelend .
+containing the formal models of six third-party payment protocolsand our countermeasure, the specifications of the proposed security properties, and scripts for reproducing the formal verification results.
+For securityand ethical reasons, we do not release exploit code for real merchant applications or data that could directly identify vulnerable apps or merchants.
+}%DIFDELCMD < 
 
-
-%-------------------------------------------------------------------------------
+%DIFDELCMD < %%%
+\DIFdelend %-------------------------------------------------------------------------------
 \bibliographystyle{IEEEtran}
 \bibliography{library}
+
+\DIFdelbegin %DIFDELCMD < \input{sections/biography.tex}
+%DIFDELCMD < %%%
+\DIFdelend %DIF >  Author biographies. Photos go in author/ as <name>.pdf, .png, or .jpg;
+%DIF >  a missing photo is replaced by an empty frame of the same size.
+\DIFaddbegin \newcommand{\authorphotofile}[1]{\includegraphics[width=1in,height=1.2in,clip,keepaspectratio]{#1}}
+\newcommand{\authorphoto}[1]{%
+  \IfFileExists{author/#1.pdf}{\authorphotofile{author/#1.pdf}}{%
+  \IfFileExists{author/#1.png}{\authorphotofile{author/#1.png}}{%
+  \IfFileExists{author/#1.jpg}{\authorphotofile{author/#1.jpg}}{%
+  \fbox{\parbox[c][1.1in][c]{0.9in}{\centering\scriptsize photo}}}}}}
+
+\vspace{-20pt}
+\begin{IEEEbiography}[{\authorphoto{author_Xiao}}]{Yongkang Xiao}
+\DIFadd{received the B.E. degree in information security from Wuhan University, Wuhan, China, in 2023, where he is currently pursuing the Ph.D. degree with the School of Cyber Science and Engineering.
+His research interests include formal verification and security protocol analysis.
+}\end{IEEEbiography}
+
+\vspace{-20pt}
+\begin{IEEEbiography}[{\authorphoto{author_Chen}}]{Jing Chen}
+\DIFadd{(Senior Member, IEEE) received the Ph.D. degree in computer science from the Huazhong University of Science and Technology, Wuhan, China, in 2008.
+He has been a Full Professor with Wuhan University since 2015.
+He has published more than 100 research papers in many international journals and conferences, such as IEEE TDSC, IEEE TIFS, IEEE TPDS, USENIX Security, ACM CCS, and IEEE INFOCOM.
+His research interests include network security and cloud security.
+}\end{IEEEbiography}
+
+\vspace{-20pt}
+\begin{IEEEbiography}[{\authorphoto{author_Shi}}]{Min Shi}
+\DIFadd{received the B.S. degree in information security from Jiangsu University, Zhenjiang, China, in 2017.
+He received the Ph.D. degree from the School of Cyber Science and Engineering, Wuhan University, Wuhan, China, in 2025.
+His research interests include cryptography and formal analysis.
+}\end{IEEEbiography}
+
+\vspace{-20pt}
+\begin{IEEEbiography}[{\authorphoto{author_He}}]{Kun He}
+\DIFadd{(Member, IEEE) received the Ph.D. degree in computer science from the Computer School, Wuhan University, Wuhan, China, in 2016.
+He is currently an Associate Professor with Wuhan University.
+He has published more than 30 research papers in many international journals and conferences, such as IEEE TDSC, IEEE TIFS, USENIX Security, ACM CCS, and IEEE S\&P.
+His research interests include cryptography, network security, mobile computing, and cloud computing.
+}\end{IEEEbiography}
+
+\vspace{-20pt}
+\begin{IEEEbiography}[{\authorphoto{author_Deng}}]{Qiyi Deng}
+\DIFadd{received the B.E. degree from Wuhan University, Wuhan, China, in 2025, where he is currently pursuing the M.S. degree with the School of Cyber Science and Engineering.
+His research interests include formal analysis of security protocols.
+}\end{IEEEbiography}
+
+\vspace{-20pt}
+\begin{IEEEbiography}[{\authorphoto{author_Du}}]{Ruiying Du}
+\DIFadd{received the B.S., M.S., and Ph.D. degrees in computer science from Wuhan University, Wuhan, China, in 1987, 1994, and 2008, respectively.
+She is a Professor with the School of Cyber Science and Engineering, Wuhan University.
+She has published more than 80 research papers in many international journals and conferences, such as IEEE TPDS, USENIX Security, ACM CCS, IEEE INFOCOM, IEEE SECON, IEEE TrustCom, and NSS.
+Her research interests include network security, wireless networks, cloud computing, and mobile computing.
+}\end{IEEEbiography}
+\vfill
+\DIFaddend 
+
+
 
 %-------------------------------------------------------------------------------
 \end{document}
