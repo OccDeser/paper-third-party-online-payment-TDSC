@@ -1,9 +1,10 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Fri Oct 16 17:58:44 2026
-%DIF ADD new/main.tex   Fri Oct 16 17:58:43 2026
+%DIF DEL old/main.tex   Fri Oct 16 18:15:43 2026
+%DIF ADD new/main.tex   Fri Oct 16 18:15:42 2026
 
 \usepackage{cite}
+\usepackage{xspace}
 
 % to be able to draw some self-contained figs
 \usepackage{tikz}
@@ -91,7 +92,7 @@
 \newcommand{\Tterm}[1]{{\ttfamily #1}}
 \newcommand{\Tequation}[1]{{\ttfamily #1}}
 \newcommand{\Tfunction}[1]{{\ttfamily #1}}
-\newcommand{\Tamarin}{{Tamarin-Prover }}
+\newcommand{\Tamarin}{Tamarin-Prover\xspace}
 
 \newcommand{\TFrTerm}[1]{{\Tterm{$\sim$#1}}}
 \newcommand{\TFactTerm}[2]{{\ttfamily #1}$(\,$\Tterm{#2}$\,)$}
@@ -229,8 +230,8 @@
         Kun~He,
         Qiyi~Deng,
         and~Ruiying~Du%
-\thanks{Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China (e-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn).}%
-\thanks{A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26). This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}}
+\thanks{Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China (e-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn). (Corresponding authors: Jing Chen and Min Shi.)}%
+\thanks{A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26)~\cite{xiao2026authorization}. This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}}
 
 \markboth{IEEE Transactions on Dependable and Secure Computing}%
 {Xiao \MakeLowercase{\textit{et al.}}: Breaking and Fixing Third-Party Online Payments}
@@ -243,12 +244,12 @@
 Third-party online payment systems, such as Alipay and PSP-B, constitute critical infrastructure for modern e-commerce.
 However, their security rests on the unrealistic assumption of fully trusted communication channels. 
 While prior studies have identified isolated vulnerabilities, a systematic formal analysis of payment protocol security remains absent. 
-This paper presents formal security models for six third-party payment protocols, spanning three major payment scenarios and two dominant payment service providers. 
+\DIFdelbegin \DIFdel{This paper presents formal security models for }\DIFdelend \DIFaddbegin \DIFadd{We formally model }\DIFaddend six third-party payment protocols, spanning three major payment scenarios and two dominant payment service providers. 
 Our analysis reveals a fundamental design flaw: 
 whenever channel integrity is compromised between the merchant client, merchant server, or payment system, order tampering attacks become feasible.
-We validate this threat on Android, where over 20\% of tested merchant applications allow order tampering through implicit Intent hijacking.
-To mitigate this threat, we propose \DIFdelbegin \DIFdel{user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics.
-Formal verification demonstrates its resilience against identified attacks under weak channel assumptions}\DIFdelend \DIFaddbegin \DIFadd{Sealed Checkout Code (SCC): the merchant frontend seals a fresh nonce to the payment system together with the order handle and the fulfilment target, and the user confirms the payment by entering a short code derived from that nonce.
+We validate this threat on Android, where over \DIFdelbegin \DIFdel{20}\DIFdelend \DIFaddbegin \DIFadd{25}\DIFaddend \% of tested merchant applications allow order tampering through implicit Intent hijacking.
+\DIFdelbegin \DIFdel{To mitigate this threat, we propose user-side order authentication, where per-user-merchant key pairs cryptographically bind consent to order semantics.
+Formal verification demonstrates its resilience against identified attacks under weak channel assumptions}\DIFdelend \DIFaddbegin \DIFadd{We propose Sealed Checkout Code (SCC): the merchant frontend seals a fresh nonce to the payment system together with the order handle and the fulfilment target, and the user confirms the payment by entering a short code derived from that nonce.
 SCC protects every payment without per-user keys or trust on first use, and formal verification shows that it satisfies all security properties when both external channels are insecure}\DIFaddend .
 By bridging formal methods and empirical analysis, this work offers actionable guidance for standardizing secure payment protocols.
 \end{abstract}
@@ -279,15 +280,15 @@ However, payment service providers cannot guarantee the security of communicatio
 
 Unfortunately, numerous empirical studies have shown that insecure or misconfigured channels have led to various categories of security vulnerabilities in third-party payment workflows.
 % Prior work has demonstrated that untrusted channels may give rise to at least the following three types of attacks, which are often intertwined:
-Prior research has identifyed at least three types of attacks associated with untrusted channels:
+Prior research has \DIFdelbegin \DIFdel{identifyed }\DIFdelend \DIFaddbegin \DIFadd{identified }\DIFaddend at least three types of attacks associated with untrusted channels:
 (1) \emph{Order Injection and Tampering Over Insecure Channels}: 
-Attackers can replace or replay order, causing users to unknowingly pay for incorrect orders~\cite{Sun2014DetectingECommerce, Yang2017FlawedImplementations};
+Attackers can replace or replay order\DIFaddbegin \DIFadd{s}\DIFaddend  , causing users to unknowingly pay for incorrect orders~\cite{Sun2014DetectingECommerce, Yang2017FlawedImplementations};
 (2) \emph{Misuse of Signatures and Parameter Structures}: 
 Attackers can alter payment parameters without invalidating the signature by exploiting flawed signature designs~\cite{Lou2021PaymentVulnerabilities};
 (3) \emph{Payment Result Forgery and UI Confusion}: 
 Attackers can inject forged ``payment success'' messages or leverage UI overlay attacks, H5 redirection, and script injection to mislead merchants or users about the transaction status, enabling free purchases or misdirected payments~\cite{Ulqinaku2019ScanAndPayAndroid, Yang2017FlawedImplementations}.
 These studies reveal a critical issue: the cryptographic mechanisms employed by current third-party online payment protocols are insufficient to withstand threats arising from insecure external channels.
-From the perspective of payment service providers, \emph{adopting weaker security assumptions for external channels reflects the relities of modern payment environments better}.
+From the perspective of payment service providers, \emph{adopting weaker security assumptions for external channels reflects the re\DIFaddbegin \DIFadd{a}\DIFaddend lities of modern payment environments better}.
 This observation \emph{motivates us to analyze the security of third-party online payment protocols under weakened external channel security assumptions}.
 
 In this paper, we establish comprehensive symbolic models for third-party online payment protocols.
@@ -309,10 +310,10 @@ Consequently, once the communication channel between the user and the merchant i
 Motivated by the findings from our formal analysis, we identify a new variant of the order tampering attack.
 We observe that many merchant applications on Android improperly use implicit intents to interact with payment applications.
 This misuse exposes the transmission of payment parameters to interception by malicious applications.
-We develop a proof-of-concept attack application that exploit this vulnerability and successfully perform order tampering attacks in real-world payment environments.
-To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
-Our results show that more than $25\%$ of the sampled applications are vulnerable.
-These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
+We develop a proof-of-concept attack application that exploit\DIFaddbegin \DIFadd{s}\DIFaddend  this vulnerability and successfully perform\DIFaddbegin \DIFadd{s}\DIFaddend  order tampering attacks in real-world payment environments.
+To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 \DIFaddbegin \DIFadd{versions of 200 }\DIFaddend popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
+Our results show that more than $25\%$ of the sampled \DIFdelbegin \DIFdel{applications }\DIFdelend \DIFaddbegin \DIFadd{application versions }\DIFaddend are vulnerable.
+\DIFdelbegin \DIFdel{These }\DIFdelend \DIFaddbegin \DIFadd{The vulnerable }\DIFaddend applications collectively account for over 200 billion downloads, potentially affecting billions of users.
 \DIFdelbegin \DIFdel{We responsibly disclosed our findings to the security teams at Alipay and PSP-B.
 We received acknowledgment from them, and at the time of writing, remediation efforts were actively underway.
 Additionally, we notified the developers of 41 vulnerable merchant applications identified in our study and provided concrete security recommendations to help mitigate this risk.
@@ -364,11 +365,11 @@ The new material comprises the design, security analysis, and formal verificatio
 %-------------------------------------------------------------------------------
 
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main high-level payment models, and finally introduce \Tamarin~\cite{Meier2013TAMARINProver}.
+Then, we abstract two main high-level payment \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{patterns}\DIFaddend , and finally introduce \Tamarin~\cite{Meier2013TAMARINProver}.
 
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
-Currentlly, there is no universally adopted regulatory standard governing third-party online payments, 
+Currentl\DIFdelbegin \DIFdel{l}\DIFdelend y , there is no universally adopted regulatory standard governing third-party online payments, 
 and payment providers typically rely on proprietary protocols and implementations.
 By reviewing official documentation and developer guides~\cite{Alipay2025OpenPlatform}, alongside an analysis of payment workflows,
 we summarize the typical ecosystem architecture of third-party online payment systems.
@@ -496,7 +497,7 @@ We introduce two high-level payment patterns adopted by the two leading payment 
 
 \textbf{Payment Pattern A.}
 In this pattern, the payment parameters are generated directly by the \emph{MS}.
-Figure.~\ref{fig:payment_model_a} details the process by which the \emph{MS} generates the \emph{order information}.
+Fig\DIFdelbegin \DIFdel{ure}\DIFdelend  .~\ref{fig:payment_model_a} details the process by which the \emph{MS} generates the \emph{order information}.
 Based on the $goods$ selected by the user, the \emph{MS} calculates the $amount$ to be paid and the order $description$, and generates a unique order identifier~($id_{order}$). 
 These values, together with the merchant identifier~($id_{M}$), constitute the order information.
 The \emph{MS} then signs the order information using its private key $priv_{M}$, producing a signature value $S_{order}$.
@@ -529,7 +530,7 @@ It employs a multiset rewriting system to model both protocol execution and adve
 
 \DIFdelbegin \textbf{\DIFdel{Terms and Facts.}}
 %DIFAUXCMD
-\DIFdel{In \Tamarin , protocol messages are represented }\DIFdelend \DIFaddbegin \DIFadd{\Tamarin represents messages }\DIFaddend as \emph{terms} \DIFdelbegin \DIFdel{, which are constructed from variables, constants, and compound expressions formed by applying function symbols to subterms.
+\DIFdel{In }\DIFdelend \Tamarin \DIFdelbegin \DIFdel{, protocol messages are represented }\DIFdelend \DIFaddbegin \DIFadd{represents messages }\DIFaddend as \emph{terms} \DIFdelbegin \DIFdel{, which are constructed from variables, constants, and compound expressions formed by applying function symbols to subterms.
 An equational theoryover terms specifies algebraic properties and reducibility relations, thereby affecting pattern matching and substitution.
 For example, symmetric encryption is modeled by a encryption function $\text{\Tfunction{senc}}$ and a decryption function $\text{\Tfunction{sdec}}$ satisfying the equation $\text{\Tfunction{sdec}}(\text{\Tfunction{senc}}(m,k),k)=m$.
 The system state is captured using }\DIFdelend \DIFaddbegin \DIFadd{built from function symbols under an equational theory, and the system state as a multiset of }\DIFaddend \emph{facts} \DIFdelbegin \DIFdel{, which are predicates of the form }\DIFdelend \TFactTerm{F}{$t_1,\ldots,t_n$}.
@@ -562,9 +563,11 @@ The application of the rule produces a new state $S' = (S \setminus \text{\funcT
 %DIFDELCMD < %%%
 \textbf{\DIFdel{Trace and Formulas.}}
 %DIFAUXCMD
-\DIFdel{In \Tamarin, the global behavior of a protocol is captured by traces, which are sequences of action facts .
+\DIFdel{In }%DIFDELCMD < \Tamarin%%%
+\DIFdel{, the global behavior of a protocol is captured by traces, which are sequences of action facts .
 Formally, a trace is represented as $\tau = \langle FA_1@t_1, FA_2@t_2, \dots, FA_n@t_n \rangle$, where $FA_i@t_i$ denotes an observable event occurring at time point $t_i$.
-Based on such traces, \Tamarin reasons about executions using }\DIFdelend \DIFaddbegin \DIFadd{Security properties (lemmas) are }\DIFaddend first-order \DIFdelbegin \DIFdel{logic formulas, where }\emph{\DIFdel{restrictions}} %DIFAUXCMD
+Based on such traces, }%DIFDELCMD < \Tamarin %%%
+\DIFdel{reasons about executions using }\DIFdelend \DIFaddbegin \DIFadd{Security properties (lemmas) are }\DIFaddend first-order \DIFdelbegin \DIFdel{logic formulas, where }\emph{\DIFdel{restrictions}} %DIFAUXCMD
 \DIFdel{are used to specify global constraints over all possible executions.
 These constraints are also first-order logic formulas over events and time points.
 Within this restricted semantic space, security properties are likewise expressed as first-order temporal logic formulas (lemmas), such as secrecy, authentication, or consistency properties, and are required to hold for all valid traces.
@@ -587,11 +590,12 @@ For example, key secrecy can be formalized as:
 In this section, we introduce the threat model and security assumptions used in our formal analysis and attacks.
 
 \subsection{Threat Model}
-In this paper, we consider the following adversary model.
+\DIFdelbegin \DIFdel{In this paper, we consider the following adversary model.
+}\DIFdelend 
 
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Payment Parameter Acquisition.}
-  We assume that adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
+  We assume that \DIFaddbegin \DIFadd{the }\DIFaddend adversary can obtain legitimate payment parameters for arbitrary goods from any merchant platform.
   This assumption is realistic, as most merchant platforms support public registration, allowing adversaries to create accounts and complete purchases to acquire payment parameters.
   \item \textbf{Compromised Insecure Channels.}
   The adversary follows the standard Dolev-Yao model, where the adversary is able to fully control insecure communication channels, including eavesdropping, modifying, replaying, and injecting arbitrary messages.
@@ -614,7 +618,8 @@ Another key element displayed on the payment interface is the payee's account na
 However, since this name does not necessarily correspond to the merchant's brand name, \emph{U} cannot reliably verify whether the displayed account belongs to the intended merchant.
 For instance, when purchasing a video game on Steam (a leading global digital game distribution and social platform), the payee's name shown is ``Valve Corporation'' (the parent company of Steam) rather than ``Steam''.
 Users without relevant background knowledge may find it difficult to determine whether ``Valve Corporation'' is indeed the payee account associated with ``Steam''.
-Therefore, we assume that users do not rely on the payee's account name when
+Therefore, we assume that users do not rely on the payee's account name when \DIFaddbegin \DIFadd{authorizing a payment.
+}\DIFaddend 
 
 \textbf{Payment System Assumptions.}
 The \emph{PS} comprises two components: the \emph{PS-App} and the \emph{PS-Server}.  
@@ -688,7 +693,7 @@ Then, we introduce the oracle model for the adversary to obtain legitimate payme
 Under our security assumptions, users are capable of accurately identifying the payment $amount$ and $description$, thereby avoiding being misled into authorizing a payment.
 To model this capability in the symbolic model, we introduce two unary functions, 
 \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, which are used to compute the payment $amount$ and $description$ from $goods$, respectively.
-During the \emph{Ordering} phase, users select goods.
+During the \emph{Order\DIFdelbegin \DIFdel{ing}\DIFdelend  } phase, users select goods.
 For the same goods (note that this does not refer to the same product model), a user can only purchase them at most once. 
 Therefore, in our model, we use a fresh value as an abstract representation of the goods.
 The following rule models the user's goods ordering behavior:
@@ -702,13 +707,13 @@ The following rule models the user's goods ordering behavior:
 This rule represents that the user \emph{U} selects a product $\TSymbolFr goods$ and sends it to \emph{MF}.
 Here, $\text{\TFact{Fr}}(\TSymbolFr goods)$ indicates that the value $\TSymbolFr goods$ is freshly generated.
 $\text{\TFact{Order}}(\TSymbolFr goods)$ indicates that the user has placed an order for the goods $\TSymbolFr goods$.
-In \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
+In \DIFaddbegin \DIFadd{the }\DIFaddend \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
 \begin{tightflalign}
       amount & = \text{\Tfunction{calc\_amt}}(\TSymbolFr goods) &\\
       description & = \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)
 \end{tightflalign}
-In \emph{Authorization} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
-Due to pattern matching, the user authorizes a payment if only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
+In \DIFaddbegin \DIFadd{the }\DIFaddend \emph{Authorization} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
+Due to pattern matching, the user authorizes a payment if \DIFaddbegin \DIFadd{and }\DIFaddend only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
 The following rule models the user's payment authorization behavior:
 \begin{tightflalign}
       \TFacts{ &\text{\TFact{Order}}(\TSymbolFr goods),                     &\\
@@ -732,18 +737,20 @@ To intuitively model this behavior, we introduce an \emph{Order Oracle} within t
   \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)}}}}}
 \end{tightflalign}
 By querying this oracle with an order amount $amt$ and an order description $desc$, the adversary can obtain the corresponding legitimate payment parameters.
-The oracle is granted access to the merchant's identifier $id_M$ and rivate key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
+The oracle is granted access to the merchant's identifier $id_M$ and \DIFaddbegin \DIFadd{p}\DIFaddend rivate key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
 The function \Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)} represents the process by which the oracle generates payment parameters from $amt$ and $desc$.
 This process is consistent with the procedure used by merchants to generate payment parameters in both payment pattern~A and payment pattern~B.
 We use equations to flexibly define this process in symbolic models.
-In protocols conforming to Model~A, the equation is defined as follows:
+In protocols conforming to \DIFdelbegin \DIFdel{Model}\DIFdelend \DIFaddbegin \DIFadd{pattern}\DIFaddend ~A, the equation is defined as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_par}} & \text{\Tfunction{mas}}(amt, desc, id_M, priv_M) = \\
+  \text{\Tfunction{gen\_par}} & \text{\DIFdelbegin %DIFDELCMD < \Tfunction{mas}%%%
+\DIFdelend \DIFaddbegin \Tfunction{ams}\DIFaddend }(amt, desc, id_M, priv_M) = \\
   & amt \parallel desc \parallel id_M \parallel \text{\Tfunction{sign}}(amt \parallel desc \parallel id_M, priv_M)
 \end{tightflalign}
-For protocols under Model~B, the equation is as follows:
+For protocols under \DIFdelbegin \DIFdel{Model}\DIFdelend \DIFaddbegin \DIFadd{pattern}\DIFaddend ~B, the equation is as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_parmas}}(am&t, desc, id_M, priv_M, id_{prepay})   = \\
+  \text{\DIFdelbegin %DIFDELCMD < \Tfunction{gen\_parmas}%%%
+\DIFdelend \DIFaddbegin \Tfunction{gen\_params}\DIFaddend }(am&t, desc, id_M, priv_M, id_{prepay})   = \\
   & id_{prepay} \parallel id_M \parallel \text{\Tfunction{sign}}(id_{prepay} \parallel id_M, priv_M)
 \end{tightflalign}
 Here, our equation simplifies the actual generation process of payment parameters, such as the generation of $id_{prepay}$.
@@ -767,8 +774,8 @@ Two types of atomic facts are necessary to define injective agreement:
   \item $\mathsf{Commit}(A,B,x)$:
     denotes that party $A$ subjectively believes that it has reached agreement with $B$ on data $x$ (e.g., after receiving and accepting a message).
 \end{enumerate}
-This notion is particularly well-suited for online payment scenarios, where both consistency and uniqueness of transactions are fundamentally essential requirements.
-We structure the security properties according to the logical progression of a payment protocol, namely agreement on the \emph{order}, agreement on \emph{user authorization}, and agreement on the \emph{result}.
+\DIFdelbegin \DIFdel{This notion is particularly well-suited for online payment scenarios, where both consistency and uniqueness of transactions are fundamentally essential requirements.
+}\DIFdelend We structure the security properties according to the logical progression of a payment protocol, namely agreement on the \emph{order}, agreement on \emph{user authorization}, and agreement on the \emph{result}.
 
 \DIFdelbegin \subsection{\DIFdel{Injective Agreement on Order}}
 %DIFAUXCMD
@@ -776,7 +783,7 @@ We structure the security properties according to the logical progression of a p
 \DIFdelend \DIFaddbegin \DIFadd{Each property instantiates the following template, in which $\mathsf{Commit}$ and $\mathsf{Running}$ are replaced by the fact pair of that property:
 }\begin{tightflalign}
   \TAll \DIFadd{\; \text{\Tterm{a}} }& \DIFadd{\text{\Tterm{ b x \#i.}} \; \text{\TFact{Commit(a, b, x)@\#i}} }&\\
-  \implies & \TEx \DIFadd{\; \text{\TLemma{\#j.}} \; \text{\TFact{Running(b, a, x)@\#j}} \; }\land\\
+  \implies & \TEx \DIFadd{\; \text{\TLemma{\#j.}} \; \text{\TFact{Running(b, a, x)@\#j}} }\land \DIFadd{\text{\Tterm{\#j < \#i}} }\land\\
   \lnot \DIFadd{\; }&\DIFadd{(\;}\TEx \DIFadd{\; \text{\TLemma{a2 b2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; }\land\\
   & \DIFadd{\hspace{2em} \text{\TFact{Commit(a2, b2, x)@\#i2}})
 }\end{tightflalign}
@@ -1028,14 +1035,15 @@ Based on different combinations of these two weak-channel assumptions, we constr
 \end{enumerate}
 
 Under these three channel security assumptions, we conduct a comprehensive automated security analysis of six third-party online payment protocols, covering three payment scenarios for each of Alipay and PSP-B.
-All analyses are performed using \Tamarin version~1.10.0 and are executed on a server equipped with a 24-core, 32-thread Intel Core i9-14900K processor and 192,GB of memory, running Ubuntu~24.04~LTS.
-This section presents and discusses the verification results of the above analyses in detail.
+All analyses are performed using \Tamarin version~1.10.0 and are executed on a server equipped with a 24-core, 32-thread Intel Core i9-14900K processor and 192\DIFdelbegin \DIFdel{,}\DIFdelend \DIFaddbegin \DIFadd{~}\DIFaddend GB of memory, running Ubuntu~24.04~LTS.
+\DIFdelbegin \DIFdel{This section presents and discusses the verification results of the above analyses in detail.
+}\DIFdelend 
 
 \subsubsection{Results}
 
 Table~\ref{tab:lemma-results} summarizes our analysis results.
 We find that two protocols following payment pattern~A fail to satisfy the IA-O1 property under all three channel assumptions. 
-With respect to IA-O2, none of the six analyzed protocols we analysed satisfies this property under our channel assumptions.
+With respect to IA-O2, none of the six analyzed protocols \DIFdelbegin \DIFdel{we analysed }\DIFdelend satisfies this property under our channel assumptions.
 
 We further observe that the analysis results remain consistent across all three channel assumptions.
 This indicates that as long as any insecure channel exists, an adversary can successfully carry out an attack, 
@@ -1043,7 +1051,7 @@ causing the user and the merchant to hold inconsistent views of the order inform
 
 Moreover, across all payment scenarios, protocols adopting payment pattern~A fail to satisfy both IA-O1 and IA-O2, while protocols following payment pattern~B fail to satisfy IA-O2.
 This demonstrates that protocol security is closely tied to the adopted payment pattern, whereas variations in payment scenarios have a limited impact on security.
-All counterexamples violating IA-O1 and IA-O2 shows that each of them arises from an order tampering attack.
+All counterexamples violating IA-O1 and IA-O2 show\DIFdelbegin \DIFdel{s}\DIFdelend  that each of them arises from an order tampering attack.
 
 \subsubsection{Order Tampering Attack}
 
@@ -1441,7 +1449,7 @@ SCC & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcol
 \end{table}
 \DIFaddbegin 
 
-\DIFadd{We model SCC in \Tamarin following the countermeasure models of our artifact, with the same channel rules, order and query oracles, tactics, and lemmas.
+\DIFadd{We model SCC in }\Tamarin \DIFadd{following the countermeasure models of our artifact, with the same channel rules, query oracle, tactics, and lemmas.
 The model uses the Base assumption, in which both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure; it grants the attacker the capabilities of both SecureMS and SecurePS.
 Through the order oracle, the attacker places orders with arbitrary amounts and descriptions on its own account, and each such order carries the attacker's own fulfilment target, consistent with the merchant's record of the order.
 }
@@ -1452,7 +1460,7 @@ To confirm that this commit point preserves the discriminating power of IA-O2, w
 
 \DIFadd{Table~\ref{tab:countermeasure-results} summarizes the results.
 SCC satisfies all five security properties under the Base assumption.
-The verification ran on a server with 32 CPU cores and 187~GB of memory (peak usage 7.0~GB).
+The verification used }\Tamarin \DIFadd{version~1.10.0 on a server with 32 CPU cores and 187~GB of memory (peak usage 7.0~GB).
 }
 
 \DIFaddend %-------------------------------------------------------------------------------
@@ -1594,8 +1602,8 @@ conducted a systematic analysis of transaction workflows }\DIFdelend \DIFaddbegi
 .
 Formal methods have been applied extensively to EMV: }\DIFaddend De Ruiter et al.~\cite{Ruiter2011FormalEMV} \DIFdelbegin \DIFdel{conducted a formal analysis of a variant of the EMV protocol using ProVerif, marking the first systematic application of formal methods to EMV protocol analysis.
 Subsequently, more precise and comprehensive models were proposed. 
-}\DIFdelend \DIFaddbegin \DIFadd{analyzed a variant of EMV with ProVerif, and }\DIFaddend Basin et al.~\cite{Basin2021EMVStandard} modeled the complete EMV protocol \DIFdelbegin \DIFdel{using the \Tamarin. 
-Formal analysis identified and explained multiple }\DIFdelend \DIFaddbegin \DIFadd{with \Tamarin, explaining }\DIFaddend real-world attacks \DIFdelbegin \DIFdel{, including the PIN bypassvulnerability}\DIFdelend \DIFaddbegin \DIFadd{such as PIN bypass}\DIFaddend ~\cite{Basin2023AuthenticationFailures} and \DIFdelbegin \DIFdel{the }\DIFdelend card brand mixup\DIFdelbegin \DIFdel{attack}\DIFdelend ~\cite{Basin2021CardBrandMixup}.
+}\DIFdelend \DIFaddbegin \DIFadd{analyzed a variant of EMV with ProVerif, and }\DIFaddend Basin et al.~\cite{Basin2021EMVStandard} modeled the complete EMV protocol \DIFdelbegin \DIFdel{using the }\DIFdelend \DIFaddbegin \DIFadd{with }\DIFaddend \Tamarin\DIFdelbegin \DIFdel{. 
+Formal analysis identified and explained multiple }\DIFdelend \DIFaddbegin \DIFadd{, explaining }\DIFaddend real-world attacks \DIFdelbegin \DIFdel{, including the PIN bypassvulnerability}\DIFdelend \DIFaddbegin \DIFadd{such as PIN bypass}\DIFaddend ~\cite{Basin2023AuthenticationFailures} and \DIFdelbegin \DIFdel{the }\DIFdelend card brand mixup\DIFdelbegin \DIFdel{attack}\DIFdelend ~\cite{Basin2021CardBrandMixup}.
 
 %DIF <  形式化方法在EMV协议分析中的成功启发我们为第三方支付协议安全分析引入形式化方法。
 \DIFdelbegin %DIFDELCMD < 
@@ -1651,7 +1659,8 @@ Formal verification confirms that it satisfies all security properties even unde
 \section*{Acknowledgments}
 We thank the anonymous reviewers \DIFdelbegin \DIFdel{and our shepherd }\DIFdelend for their constructive feedback.
 This research was supported in part by the National Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National Natural Science Foundation of China under grants No.~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018, and the Wuhan Scientific and Technical Achievements Project under grant No.~2024030803010172.
-The corresponding authors are Jing Chen and Min Shi.
+\DIFdelbegin \DIFdel{The corresponding authors are Jing Chen and Min Shi.
+}\DIFdelend 
 
 
 %DIF <  伦理附录
