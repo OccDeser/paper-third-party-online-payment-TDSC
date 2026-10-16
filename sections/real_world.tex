@@ -3,28 +3,16 @@
 \section{Real-World Attacks} \label{sec:real_world}
 %-------------------------------------------------------------------------------
 
-In this section, we present a real-world attack case that was identified inspired by our analysis results and successfully carried out in practice.
-We also introduce our measurement study to assess the scope and practical extent of the vulnerability's impact across affected systems.
-We further discuss the responsible vulnerability disclosure process.
+In this section, we present a real-world attack inspired by our analysis results, a measurement study of its impact, and the responsible disclosure process.
 
 \subsection{A Real-World Vulnerability}
 
 Inspired by the Variant~\Rom{2} attack, we identified an exploitable vulnerability on the Android platform.
-When initiating a payment request, merchant's Android applications use the Android Intent mechanism to transmit payment parameters to the payment service application.
-As a core inter-component communication mechanism provided by the Android system, Intent serves as the primary means by which the PSP-B and Alipay receive payment parameters from merchant applications.
-A merchant application typically constructs an Intent containing payment parameters and uses it to launch the corresponding payment application.
-
-It should be noted that Intents can be classified into two categories, explicit Intents and implicit Intents. 
-An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, allowing the system to match and select a responding component based on Intent Filters.
-The security risk primarily arises from the misuse of implicit Intents.
-
-When requesting a payment, a merchant application should use an explicit Intent to explicitly designate the PSP-B or Alipay applications as the target, thereby ensuring that the payment request is correctly routed to a trusted payment application.
-However, we find that some merchant applications use implicit Intents in practice.
-This means that an attacker can hijack payment requests originally sent to a payment application by deploying a malicious application that declares the same Intent handling capability.
-
-Intent hijacking is not specific to payment scenarios, but rather a systemic security risk inherent in the Android component communication mechanism.
-However, existing third-party online payment protocols are designed under the assumption that the communication channel between the merchant client and the payment application is trusted. 
-This channel assumption is unrealistic in real-world deployments.
+Merchant applications transmit payment parameters to the PSP-B and Alipay applications through the Android Intent mechanism.
+An explicit Intent specifies the fully qualified package name of the target application, whereas an implicit Intent only declares the action, category, and data, and the system selects a responding component based on Intent Filters.
+A merchant application should therefore use an explicit Intent to ensure that the payment request is routed to the trusted payment application.
+However, we find that some merchant applications use implicit Intents in practice, so an attacker can hijack payment requests by deploying a malicious application that declares the same Intent handling capability.
+Intent hijacking is a systemic risk of Android component communication, yet existing third-party online payment protocols are designed under the assumption that the channel between the merchant client and the payment application is trusted.
 
 \subsection{Attack Implementation}
 
@@ -32,14 +20,11 @@ We developed two Android applications, a malicious application and an attacker a
 The victim device runs the malicious application, a vulnerable merchant application, and a payment application; the malicious application is responsible for capturing and replaying payment parameters.
 The attacker device runs the attacker application, which places orders on the merchant platform and returns payment parameters to the malicious application.
 
-Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack.
-The attack proceeds in four phases:
-\begin{enumerate}[leftmargin=*]
-  \item A benign merchant application initiates a payment request by dispatching an implicit Intent containing payment parameters to the payment application;
-  \item By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information;
-  \item Using the extracted information, the attacker application places a new order under an attacker-controlled account on the merchant platform and obtains a fresh set of payment parameters that preserve the original order information while being bound to the attacker's account;
-  \item The tampered payment parameters are then relayed to the payment application, which processes the request without detecting the modification.
-\end{enumerate}
+Fig.~\ref{fig:real_world_attack_flow} illustrates the workflow of the new order tampering attack, which proceeds in four phases.
+(1)~A benign merchant application dispatches an implicit Intent containing payment parameters to the payment application.
+(2)~By hijacking the Intent resolution process, the malicious application intercepts the original payment parameters and extracts the embedded order information.
+(3)~Using the extracted information, the attacker application places a new order under an attacker-controlled account on the merchant platform and obtains fresh payment parameters that preserve the original order information while being bound to the attacker's account.
+(4)~The tampered payment parameters are relayed to the payment application, which processes the request without detecting the modification.
 As a result, the attacker successfully tampers with the order, causing the user to complete a payment specified by the attacker rather than the original merchant.
 
 \begin{figure}[t]
@@ -57,8 +42,7 @@ As a result, the attacker successfully tampers with the order, causing the user 
 \subsection{Impact Assessment}
 To assess the real-world impact of the identified vulnerability, we conducted a manual measurement study on Android applications and games that integrate the PSP-B or Alipay SDK.
 Our dataset consists of 150 popular Android applications and 50 games, covering up to the three most recent versions of each application and the latest version of each game.
-For some applications, only one or two versions were available.
-In total, we collected 461 application versions.
+For some applications, only one or two versions were available, giving 461 application versions in total.
 
 Among these versions, 419 support PSP-B and 401 support Alipay.
 Our analysis reveals that 64 PSP-B–enabled versions and 72 Alipay-enabled versions are vulnerable.

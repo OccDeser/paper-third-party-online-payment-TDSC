@@ -3,34 +3,20 @@
 %-------------------------------------------------------------------------------
 % In this section, we xxxx.
 
-In this section, we analyze the causes of order tampering attacks and introduce our countermeasure.
-% Then, we present the symbolic verification results of our countermeasure and discuss its advantages and limitations.
-Then, we verify our countermeasure using symbolic methods and present the results.
-Finally, we discuss our countermeasure.
+In this section, we analyze the causes of order tampering attacks, introduce our countermeasure, verify it using symbolic methods, and discuss it.
 
 \subsection{Cause Analysis}
 
 \textbf{Superficial Causes.}
-From a superficial perspective, order tampering attacks arise from the existence of insecure communication channels between \emph{MS} and \emph{PS-App}.
-An attacker can intercept and tamper with order information along this channel, thereby misleading the user into authorizing an incorrect payment.
-At first glance, addressing this issue appears straightforward.
-It suffices to ensure that the communication channels between \emph{MS} and \emph{PS-App} are secure.
-However, for payment service providers, this seemingly simple solution is difficult to realize in practice.
-The security of the communication path from merchant backends to \emph{PS-App} is influenced by both merchants and end users, and is largely beyond the control of payment service providers.
-Payment service providers serve a large number of merchants, each with diverse backend implementations, making it infeasible to ensure that all merchants correctly secure their communication channels.
-Similarly, merchants serve a vast user base with heterogeneous device environments, and payment service providers cannot guarantee that all users operate within secure network conditions.
-Therefore, defending against order tampering attacks solely by securing communication channels is, in practice, highly challenging.
+From a superficial perspective, order tampering attacks arise from insecure communication channels between \emph{MS} and \emph{PS-App}, over which an attacker can tamper with order information and mislead the user into authorizing an incorrect payment.
+Securing these channels is difficult for payment service providers in practice: the path from merchant backends to \emph{PS-App} depends on the backend implementations of a large number of merchants and on the network environments of a vast user base, both of which lie beyond the providers' control.
 Consequently, mitigation is often reactive: once an insecure communication channel is identified, merchants and users are notified to apply patches.
 
 \textbf{Root Causes.}
 The root cause of such attacks lies in the lack of a user-side authentication mechanism for order information in existing payment patterns.
-We examine the typical actions performed by users during the payment process: entering a payment password to authorize the transaction, and possibly verifying the payment amount and description.
-However, the user does not actually authenticate the order.
-Information such as the payment amount and item description merely represents the content of the current payment, and does not correspond to the original order that the user intends to confirm.
-In other words, during the \emph{Authentication} phase, the user performs no form of authentication of the order data.
-The user's authorization is applied only to the act of payment transaction, rather than to a specific order.
+During payment, the user enters a payment password to authorize the transaction and possibly checks the payment amount and description.
+These values describe the content of the current payment, not the original order that the user intends to confirm, so the user's authorization applies only to the act of payment rather than to a specific order.
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
-This observation reveals a design flaw in current payment patterns.
 
 An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the party that receives the goods.
 \emph{PS} cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give the user a check that the attacker cannot reproduce with its own order.
@@ -50,7 +36,7 @@ Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.92\linewidth]{img/cm_scc.pdf}
+  \includegraphics[width=0.85\linewidth]{img/cm_scc.pdf}
   \caption{Sealed Checkout Code on top of payment pattern~B.
     Black elements are new or changed; gray elements are identical to pattern~B.
     Notation: $D$ denotes the fulfilment target of the order; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that \emph{PS} recorded for $id_{prepay}$.}

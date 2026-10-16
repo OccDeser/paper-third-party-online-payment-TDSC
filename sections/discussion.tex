@@ -4,26 +4,23 @@
 
 
 \textbf{Advantages.}
-From a protocol design perspective, our payment pattern exhibits three key advantages.
+From a protocol design perspective, SCC exhibits two key advantages.
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Minimal trust assumptions.}
-  At the protocol design level, we minimize reliance on trusted channels.
-  The protocol is formally proven to guarantee payment security under weakened external channel assumptions.
-  \item \textbf{Formally provable security.}
-Our formal analysis results demonstrate that our payment pattern effectively prevents order tampering attacks and satisfies all security properties defined in this paper.
+  \item \textbf{Formally verified security under minimal trust assumptions.}
+  SCC does not rely on trusted external channels, and our formal analysis shows that it prevents order tampering attacks and satisfies all security properties defined in this paper when both external channels are insecure.
   \item \textbf{Protection of every payment without per-user state.}
 Every payment, including the first payment to a merchant, is bound to the order produced by the user's own checkout, without per-user keys, local bindings, or trust decisions.
 \end{enumerate}
 
 \textbf{Limitations.}
-We honestly present the limitations and trade-offs of our payment pattern.
+SCC involves the following trade-offs.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Encryption overhead.}
-Our payment pattern adds one public-key encryption in \emph{MF} and one decryption in \emph{PS} per payment, and merchants add the fulfilment target, which covers every field that determines delivery, to the signed order; we consider this overhead acceptable in practice.
+SCC adds one public-key encryption in \emph{MF} and one decryption in \emph{PS} per payment, and merchants add the fulfilment target, which covers every field that determines delivery, to the signed order; we consider this overhead acceptable in practice.
   \item \textbf{Additional user interaction.}
 In each payment, the user enters the short code shown by \emph{MF} together with the payment password.
 In in-app and mobile web payment, the user carries the code across the switch from \emph{MF} to \emph{PS-App}, and \emph{MF} keeps displaying it until the payment ends.
   \item \textbf{Code confidentiality on the device.}
-The security of our payment pattern requires that the attacker not learn the code before the user enters it, which the secure channel between the user and \emph{MF} provides in our model.
+The security of SCC requires that the attacker not learn the code before the user enters it, which the secure channel between the user and \emph{MF} provides in our model.
 Malware that reads the screen or overlays a fake input page on the user's device lies outside the channel attacker, and \emph{MF} and \emph{PS-App} render the code and its input field with screen-capture protection, such as \texttt{FLAG\_SECURE} on Android.
 \end{enumerate}
