@@ -21,15 +21,15 @@ However, payment service providers cannot guarantee the security of communicatio
 
 Unfortunately, numerous empirical studies have shown that insecure or misconfigured channels have led to various categories of security vulnerabilities in third-party payment workflows.
 % Prior work has demonstrated that untrusted channels may give rise to at least the following three types of attacks, which are often intertwined:
-Prior research has identifyed at least three types of attacks associated with untrusted channels:
+Prior research has identified at least three types of attacks associated with untrusted channels:
 (1) \emph{Order Injection and Tampering Over Insecure Channels}: 
-Attackers can replace or replay order, causing users to unknowingly pay for incorrect orders~\cite{Sun2014DetectingECommerce, Yang2017FlawedImplementations};
+Attackers can replace or replay orders, causing users to unknowingly pay for incorrect orders~\cite{Sun2014DetectingECommerce, Yang2017FlawedImplementations};
 (2) \emph{Misuse of Signatures and Parameter Structures}: 
 Attackers can alter payment parameters without invalidating the signature by exploiting flawed signature designs~\cite{Lou2021PaymentVulnerabilities};
 (3) \emph{Payment Result Forgery and UI Confusion}: 
 Attackers can inject forged ``payment success'' messages or leverage UI overlay attacks, H5 redirection, and script injection to mislead merchants or users about the transaction status, enabling free purchases or misdirected payments~\cite{Ulqinaku2019ScanAndPayAndroid, Yang2017FlawedImplementations}.
 These studies reveal a critical issue: the cryptographic mechanisms employed by current third-party online payment protocols are insufficient to withstand threats arising from insecure external channels.
-From the perspective of payment service providers, \emph{adopting weaker security assumptions for external channels reflects the relities of modern payment environments better}.
+From the perspective of payment service providers, \emph{adopting weaker security assumptions for external channels reflects the realities of modern payment environments better}.
 This observation \emph{motivates us to analyze the security of third-party online payment protocols under weakened external channel security assumptions}.
 
 In this paper, we establish comprehensive symbolic models for third-party online payment protocols.
@@ -51,10 +51,10 @@ Consequently, once the communication channel between the user and the merchant i
 Motivated by the findings from our formal analysis, we identify a new variant of the order tampering attack.
 We observe that many merchant applications on Android improperly use implicit intents to interact with payment applications.
 This misuse exposes the transmission of payment parameters to interception by malicious applications.
-We develop a proof-of-concept attack application that exploit this vulnerability and successfully perform order tampering attacks in real-world payment environments.
-To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
-Our results show that more than $25\%$ of the sampled applications are vulnerable.
-These applications collectively account for over 200 billion downloads, potentially affecting billions of users.
+We develop a proof-of-concept attack application that exploits this vulnerability and successfully performs order tampering attacks in real-world payment environments.
+To evaluate the prevalence and severity of this issue, we conduct a measurement study of 461 versions of 200 popular applications spanning multiple domains, including online shopping, online education, entertainment, and gaming.
+Our results show that more than $25\%$ of the sampled application versions are vulnerable.
+The vulnerable applications collectively account for over 200 billion downloads, potentially affecting billions of users.
 
 % As a result, it prevents order tampering at the protocol design level \textcolor{red}{while maintaining practical deployability.}
 

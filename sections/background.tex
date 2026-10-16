@@ -3,11 +3,11 @@
 %-------------------------------------------------------------------------------
 
 In this section, we first introduce the typical ecosystem architecture and payment scenarios of third-party online payments. 
-Then, we abstract two main high-level payment models, and finally introduce \Tamarin~\cite{Meier2013TAMARINProver}.
+Then, we abstract two main high-level payment patterns, and finally introduce \Tamarin~\cite{Meier2013TAMARINProver}.
 
 \subsection{Third-Party Online Payment Ecosystem} \label{sec:payment-ecosystem}
 
-Currentlly, there is no universally adopted regulatory standard governing third-party online payments, 
+Currently, there is no universally adopted regulatory standard governing third-party online payments, 
 and payment providers typically rely on proprietary protocols and implementations.
 By reviewing official documentation and developer guides~\cite{Alipay2025OpenPlatform}, alongside an analysis of payment workflows,
 we summarize the typical ecosystem architecture of third-party online payment systems.
@@ -88,7 +88,7 @@ We introduce two high-level payment patterns adopted by the two leading payment 
 
 \textbf{Payment Pattern A.}
 In this pattern, the payment parameters are generated directly by the \emph{MS}.
-Figure.~\ref{fig:payment_model_a} details the process by which the \emph{MS} generates the \emph{order information}.
+Fig.~\ref{fig:payment_model_a} details the process by which the \emph{MS} generates the \emph{order information}.
 Based on the $goods$ selected by the user, the \emph{MS} calculates the $amount$ to be paid and the order $description$, and generates a unique order identifier~($id_{order}$). 
 These values, together with the merchant identifier~($id_{M}$), constitute the order information.
 The \emph{MS} then signs the order information using its private key $priv_{M}$, producing a signature value $S_{order}$.

@@ -106,7 +106,7 @@ In every case the attack ends with a failed payment and does not redirect the us
 
 \input{tables/countermeasure.tex}
 
-We model SCC in \Tamarin following the countermeasure models of our artifact, with the same channel rules, order and query oracles, tactics, and lemmas.
+We model SCC in \Tamarin following the countermeasure models of our artifact, with the same channel rules, query oracle, tactics, and lemmas.
 The model uses the Base assumption, in which both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure; it grants the attacker the capabilities of both SecureMS and SecurePS.
 Through the order oracle, the attacker places orders with arbitrary amounts and descriptions on its own account, and each such order carries the attacker's own fulfilment target, consistent with the merchant's record of the order.
 
@@ -115,4 +115,4 @@ To confirm that this commit point preserves the discriminating power of IA-O2, w
 
 Table~\ref{tab:countermeasure-results} summarizes the results.
 SCC satisfies all five security properties under the Base assumption.
-The verification ran on a server with 32 CPU cores and 187~GB of memory (peak usage 7.0~GB).
+The verification used \Tamarin version~1.10.0 on a server with 32 CPU cores and 187~GB of memory (peak usage 7.0~GB).

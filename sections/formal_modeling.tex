@@ -47,7 +47,7 @@ Then, we introduce the oracle model for the adversary to obtain legitimate payme
 Under our security assumptions, users are capable of accurately identifying the payment $amount$ and $description$, thereby avoiding being misled into authorizing a payment.
 To model this capability in the symbolic model, we introduce two unary functions, 
 \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, which are used to compute the payment $amount$ and $description$ from $goods$, respectively.
-During the \emph{Ordering} phase, users select goods.
+During the \emph{Order} phase, users select goods.
 For the same goods (note that this does not refer to the same product model), a user can only purchase them at most once. 
 Therefore, in our model, we use a fresh value as an abstract representation of the goods.
 The following rule models the user's goods ordering behavior:
@@ -61,13 +61,13 @@ The following rule models the user's goods ordering behavior:
 This rule represents that the user \emph{U} selects a product $\TSymbolFr goods$ and sends it to \emph{MF}.
 Here, $\text{\TFact{Fr}}(\TSymbolFr goods)$ indicates that the value $\TSymbolFr goods$ is freshly generated.
 $\text{\TFact{Order}}(\TSymbolFr goods)$ indicates that the user has placed an order for the goods $\TSymbolFr goods$.
-In \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
+In the \emph{Prepayment} phase, \emph{MS} computes the payment $amount$ and $description$ based on $\TSymbolFr goods$ using \Tfunction{calc\_amt} and \Tfunction{gen\_desc}, as follows:
 \begin{tightflalign}
       amount & = \text{\Tfunction{calc\_amt}}(\TSymbolFr goods) &\\
       description & = \text{\Tfunction{gen\_desc}}(\TSymbolFr goods)
 \end{tightflalign}
-In \emph{Authorization} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
-Due to pattern matching, the user authorizes a payment if only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
+In the \emph{Authorization} phase, the user obtains the order information from the \emph{PS-App} and confirms it.
+Due to pattern matching, the user authorizes a payment if and only if the payment $amount$ and $description$ exactly match $\text{\Tfunction{calc\_amt}}(\TSymbolFr goods)$ and $\text{\Tfunction{gen\_desc}}(\TSymbolFr goods)$, respectively, and will not authorize any other values.
 The following rule models the user's payment authorization behavior:
 \begin{tightflalign}
       \TFacts{ &\text{\TFact{Order}}(\TSymbolFr goods),                     &\\
@@ -91,18 +91,18 @@ To intuitively model this behavior, we introduce an \emph{Order Oracle} within t
   \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)}}}}}
 \end{tightflalign}
 By querying this oracle with an order amount $amt$ and an order description $desc$, the adversary can obtain the corresponding legitimate payment parameters.
-The oracle is granted access to the merchant's identifier $id_M$ and rivate key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
+The oracle is granted access to the merchant's identifier $id_M$ and private key $priv_M$, enabling it to generate legitimate payment parameters that are accepted by \emph{PS}.
 The function \Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)} represents the process by which the oracle generates payment parameters from $amt$ and $desc$.
 This process is consistent with the procedure used by merchants to generate payment parameters in both payment pattern~A and payment pattern~B.
 We use equations to flexibly define this process in symbolic models.
-In protocols conforming to Model~A, the equation is defined as follows:
+In protocols conforming to pattern~A, the equation is defined as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_par}} & \text{\Tfunction{mas}}(amt, desc, id_M, priv_M) = \\
+  \text{\Tfunction{gen\_par}} & \text{\Tfunction{ams}}(amt, desc, id_M, priv_M) = \\
   & amt \parallel desc \parallel id_M \parallel \text{\Tfunction{sign}}(amt \parallel desc \parallel id_M, priv_M)
 \end{tightflalign}
-For protocols under Model~B, the equation is as follows:
+For protocols under pattern~B, the equation is as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_parmas}}(am&t, desc, id_M, priv_M, id_{prepay})   = \\
+  \text{\Tfunction{gen\_params}}(am&t, desc, id_M, priv_M, id_{prepay})   = \\
   & id_{prepay} \parallel id_M \parallel \text{\Tfunction{sign}}(id_{prepay} \parallel id_M, priv_M)
 \end{tightflalign}
 Here, our equation simplifies the actual generation process of payment parameters, such as the generation of $id_{prepay}$.

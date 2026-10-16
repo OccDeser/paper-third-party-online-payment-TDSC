@@ -16,13 +16,12 @@ Two types of atomic facts are necessary to define injective agreement:
   \item $\mathsf{Commit}(A,B,x)$:
     denotes that party $A$ subjectively believes that it has reached agreement with $B$ on data $x$ (e.g., after receiving and accepting a message).
 \end{enumerate}
-This notion is particularly well-suited for online payment scenarios, where both consistency and uniqueness of transactions are fundamentally essential requirements.
 We structure the security properties according to the logical progression of a payment protocol, namely agreement on the \emph{order}, agreement on \emph{user authorization}, and agreement on the \emph{result}.
 
 Each property instantiates the following template, in which $\mathsf{Commit}$ and $\mathsf{Running}$ are replaced by the fact pair of that property:
 \begin{tightflalign}
   \TAll \; \text{\Tterm{a}} & \text{\Tterm{ b x \#i.}} \; \text{\TFact{Commit(a, b, x)@\#i}} &\\
-  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{Running(b, a, x)@\#j}} \; \land\\
+  \implies & \TEx \; \text{\TLemma{\#j.}} \; \text{\TFact{Running(b, a, x)@\#j}} \land \text{\Tterm{\#j < \#i}} \land\\
   \lnot \; &(\;\TEx \; \text{\TLemma{a2 b2 \#i2.}} \; \text{\Tterm{\#i2}} \neq \text{\Tterm{\#i}} \; \land\\
   & \hspace{2em} \text{\TFact{Commit(a2, b2, x)@\#i2}})
 \end{tightflalign}

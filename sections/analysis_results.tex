@@ -14,14 +14,13 @@ Based on different combinations of these two weak-channel assumptions, we constr
 \end{enumerate}
 
 Under these three channel security assumptions, we conduct a comprehensive automated security analysis of six third-party online payment protocols, covering three payment scenarios for each of Alipay and PSP-B.
-All analyses are performed using \Tamarin version~1.10.0 and are executed on a server equipped with a 24-core, 32-thread Intel Core i9-14900K processor and 192,GB of memory, running Ubuntu~24.04~LTS.
-This section presents and discusses the verification results of the above analyses in detail.
+All analyses are performed using \Tamarin version~1.10.0 and are executed on a server equipped with a 24-core, 32-thread Intel Core i9-14900K processor and 192~GB of memory, running Ubuntu~24.04~LTS.
 
 \subsubsection{Results}
 
 Table~\ref{tab:lemma-results} summarizes our analysis results.
 We find that two protocols following payment pattern~A fail to satisfy the IA-O1 property under all three channel assumptions. 
-With respect to IA-O2, none of the six analyzed protocols we analysed satisfies this property under our channel assumptions.
+With respect to IA-O2, none of the six analyzed protocols satisfies this property under our channel assumptions.
 
 We further observe that the analysis results remain consistent across all three channel assumptions.
 This indicates that as long as any insecure channel exists, an adversary can successfully carry out an attack, 
@@ -29,7 +28,7 @@ causing the user and the merchant to hold inconsistent views of the order inform
 
 Moreover, across all payment scenarios, protocols adopting payment pattern~A fail to satisfy both IA-O1 and IA-O2, while protocols following payment pattern~B fail to satisfy IA-O2.
 This demonstrates that protocol security is closely tied to the adopted payment pattern, whereas variations in payment scenarios have a limited impact on security.
-All counterexamples violating IA-O1 and IA-O2 shows that each of them arises from an order tampering attack.
+All counterexamples violating IA-O1 and IA-O2 show that each of them arises from an order tampering attack.
 
 \subsubsection{Order Tampering Attack}
 
