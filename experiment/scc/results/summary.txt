@@ -1,16 +1,22 @@
+SCC (user account u_id bound in the seal), Base assumption, Tamarin 1.10.0, Maude 3.4
+run: 2026-10-19, 32 cores, 187 GB RAM
+
 summary of summaries:
 
 analyzed: /root/scc/scc_lean/models/countermeasures/scc_order.spthy
 
   output:          /root/scc/scc_lean/results/countermeasures/scc_order.spthy
-  processing time: 619.36s
+  processing time: 454.94s
   
   typing (all-traces): verified (39 steps)
   executable (exists-trace): verified (30 steps)
   PS_MS_Order_Injective_Agreement (all-traces): verified (17 steps)
-  U_MS_Order_Injective_Agreement (all-traces): verified (7664 steps)
-  MS_PS_Response_Injective_Agreement (all-traces): verified (9888 steps)
-  U_PS_Response_Injective_Agreement (all-traces): verified (7904 steps)
-  No_Payment_Without_Password_Input (all-traces): verified (4288 steps)
+  U_MS_Order_Injective_Agreement (all-traces): verified (5822 steps)
+  MS_PS_Response_Injective_Agreement (all-traces): verified (7180 steps)
+  U_PS_Response_Injective_Agreement (all-traces): verified (6062 steps)
+  No_Payment_Without_Password_Input (all-traces): verified (3271 steps)
 
-==============================================================================
+
+==== PEAK MEMORY BY MODEL (VmHWM) ====
+countermeasures  5.30GB
+OVERALL          5.30GB

@@ -10,12 +10,14 @@ functions: gen_desc/1, calc_amt/1, f/1
 * SCC (Sealed Checkout Code) countermeasure.
 * Built directly on countermeasures/regular_order.spthy:
 *   - removed: per-user key pair (ua_sk / ua_pk) and u_sig
-*   - added:   user's fulfilment target D, MF-generated nonce r,
-*              seal = aenc(<h(<ms_id, prepay_id, D>), r>, pk_PS),
+*   - added:   MF-generated nonce r,
+*              seal = aenc(<h(<ms_id, prepay_id, u_id>), r>, pk_PS),
 *              code = f(r) shown by MF and typed by the user,
 *              PS checks the seal against its order record and
 *              checks the typed code.
-* Channels, oracle, tactics and lemmas are kept as in regular_order.
+* Channels, query oracle, tactics and lemmas are kept as in regular_order;
+* the order oracle records the attacker account in the PS order (u_id is
+* part of the signed order) and may not use the honest user account.
 *
 * Role:
 *   - U (User), MF (Merchant Frontend), MS (Merchant Server), PS (Payment System)
@@ -101,6 +103,11 @@ functions: gen_desc/1, calc_amt/1, f/1
       (ch_id = 'MF-MS' | ch_id = 'MF-PS')
     "
 
+  // The order oracle places orders on accounts the attacker controls,
+  // which are never the account of the honest user.
+  restriction AttackerAccountNotHonest:
+    "All a #i #j. HonestUser(a)@#i & AttackerAccount(a)@#j ==> F"
+
 /*
 * ****************************************************************
 *   Secure Communication Channels
@@ -150,8 +157,8 @@ functions: gen_desc/1, calc_amt/1, f/1
 *   Oracle
 *   As in regular_order: the attacker orders on its OWN account with
 *   arbitrary amount and description. The order is ledger-faithful:
-*   its fulfilment target is the attacker's own (fresh, attacker-known)
-*   ~DA, consistent with the merchant ledger entry for $attacker.
+*   the order is recorded under the attacker account $attacker, both in
+*   the merchant ledger and in the signed order held by PS.
 * ****************************************************************
 */
   rule OrderCreateOracle[color=f9d27d]:
@@ -162,22 +169,20 @@ functions: gen_desc/1, calc_amt/1, f/1
     [
       Fr(~prepay_id),
       Fr(~order_id),
-      Fr(~DA),
       In(<amount, description>),
       !MerchantCreated(<$ms_id, ~m_sk>),
     ]
-    -->
+    --[ AttackerAccount($attacker) ]->
     [
       Out(Out_m),
-      Out(~DA),
       !MS_Database($ms_id, $attacker, ~prepay_id, amount, description, ~order_id),
-      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, ~DA)
+      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, $attacker)
     ]
 
   rule PaymentQueryOracle[color=f9d27d]:
     [
       In(~prepay_id),
-      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, D)
+      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, uid)
     ]
     --[]->
     [
@@ -212,7 +217,7 @@ functions: gen_desc/1, calc_amt/1, f/1
     [
       Fr(~password)
     ]
-    --[ OnlyOnceV(<'U'>) ]->
+    --[ OnlyOnceV(<'U'>), HonestUser($u_id) ]->
     [
       !UserRegistered(<$u_id, h(~password)>),
       !UserPassword(<$u_id, ~password>)
@@ -252,44 +257,42 @@ functions: gen_desc/1, calc_amt/1, f/1
 /*
 * ****************************************************************
 *   Order Processing
-*   SCC: the user also supplies its fulfilment target ~D to MF
-*   over the secure U-MF channel.
+*   SCC: MS includes the user account u_id in the order it signs for PS.
 * ****************************************************************
 */
   rule UOpenAndOrderMF[role="U"]:
     [
       Fr(~goods),
-      Fr(~D),
       U_State('init', ~session, <$u_id, $mf_id, $ms_id, $ps_id, ~password>)
     ]
     --[]->
     [
       U_State('ordered', ~session, <$u_id, $mf_id, $ms_id, $ps_id, ~password, ~goods>),
-      SOut('U-MF', ~session, $u_id, $mf_id, <'OpenAppAndOrder', ~goods, ~D>)
+      SOut('U-MF', ~session, $u_id, $mf_id, <'OpenAppAndOrder', ~goods>)
     ]
 
   rule MFOrderMS[role="MF"]:
     [
-      SIn('U-MF', ~session, $u_id, $mf_id, <'OpenAppAndOrder', ~goods, ~D>),
+      SIn('U-MF', ~session, $u_id, $mf_id, <'OpenAppAndOrder', ~goods>),
       MF_State('init', ~session, <$mf_id, $u_id, $ms_id, $ps_id>)
     ]
     --[
-      SOURCE_OUT_FACT_BkChaCon('MF-MS', ~session, $mf_id, $ms_id, <$u_id, ~goods, ~D>)
+      SOURCE_OUT_FACT_BkChaCon('MF-MS', ~session, $mf_id, $ms_id, <$u_id, ~goods>)
     ]->
     [
-      SOut('MF-MS', ~session, $mf_id, $ms_id, <$u_id, ~goods, ~D>),
-      MF_State('ordered', ~session, <$mf_id, $u_id, $ms_id, $ps_id, ~D>)
+      SOut('MF-MS', ~session, $mf_id, $ms_id, <$u_id, ~goods>),
+      MF_State('ordered', ~session, <$mf_id, $u_id, $ms_id, $ps_id>)
     ]
 
   rule MSProcessOrderMF[role="MS"]:
     let
       description = gen_desc(~goods)
       amount = calc_amt(~goods)
-      m_sig = sign(<$ms_id, ~order_id, amount, description, D>, ~m_sk)
-      Out_m = <$ms_id, ~order_id, amount, description, D, m_sig>
+      m_sig = sign(<$ms_id, ~order_id, amount, description, $u_id>, ~m_sk)
+      Out_m = <$ms_id, ~order_id, amount, description, $u_id, m_sig>
     in
     [
-      SIn('MF-MS', ~session, $mf_id, $ms_id, <$u_id, ~goods, D>),
+      SIn('MF-MS', ~session, $mf_id, $ms_id, <$u_id, ~goods>),
       MS_State('init', ~session, <$ms_id, $mf_id, $ps_id, $u_id, ~m_sk>),
       Fr(~order_id)
     ]
@@ -311,8 +314,8 @@ functions: gen_desc/1, calc_amt/1, f/1
 */
   rule PSReceiveOrderMS[role="PS"]:
     let
-      In_m = <$ms_id, ~order_id, amount, description, D, m_sig>
-      veri_result = verify(m_sig, <$ms_id, ~order_id, amount, description, D>, m_pk)
+      In_m = <$ms_id, ~order_id, amount, description, uid, m_sig>
+      veri_result = verify(m_sig, <$ms_id, ~order_id, amount, description, uid>, m_pk)
     in
     [
       SIn('MS-PS', ~session, $ms_id, $ps_id, In_m),
@@ -327,7 +330,7 @@ functions: gen_desc/1, calc_amt/1, f/1
     ]->
     [
       SOut('MS-PS', ~session, $ps_id, $ms_id, ~prepay_id),
-      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, D),
+      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, uid),
       PS_State('sendprepayid', ~session, <$ps_id, $u_id, $mf_id, $ms_id, ~p_sk>)
     ]
 
@@ -353,17 +356,17 @@ functions: gen_desc/1, calc_amt/1, f/1
     ]
 
   // SCC: MF draws r, seals <T, r> to PS (T binds merchant, order handle and
-  // the user's own D), shows code = f(r) to the user, and calls PS.
+  // the user account u_id), shows code = f(r) to the user, and calls PS.
   rule MFCallPS[role="MF"]:
     let
       In_m  = <~prepay_id, $ms_id, m_sig>
-      T     = h(<$ms_id, ~prepay_id, ~D>)
+      T     = h(<$ms_id, ~prepay_id, $u_id>)
       seal  = aenc(<T, ~r>, p_pk)
       Out_m = <~prepay_id, $ms_id, m_sig, seal>
     in
     [
       SIn('MF-MS', ~session, $ms_id, $mf_id, In_m),
-      MF_State('ordered', ~session, <$mf_id, $u_id, $ms_id, $ps_id, ~D>),
+      MF_State('ordered', ~session, <$mf_id, $u_id, $ms_id, $ps_id>),
       !PS_PubKey(p_pk),
       Fr(~r)
     ]
@@ -379,16 +382,16 @@ functions: gen_desc/1, calc_amt/1, f/1
     ]
 
   // SCC: PS opens the seal only if the sealed T matches its own record
-  // (merchant, order handle, fulfilment target). The code is NOT shown.
+  // (merchant, order handle, user account). The code is NOT shown.
   rule PSVerifyPaymentMF[role="PS"]:
     let
-      seal = aenc(<h(<$ms_id, ~prepay_id, D>), r>, pk(~p_sk))
+      seal = aenc(<h(<$ms_id, ~prepay_id, uid>), r>, pk(~p_sk))
       In_m = <~prepay_id, $ms_id, m_sig, seal>
       veri_result_m = verify(m_sig, <~prepay_id, $ms_id>, m_pk)
     in
     [
       SIn('MF-PS', ~session, $mf_id, $ps_id, In_m),
-      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, D),
+      !PS_Database($ps_id, ~prepay_id, amount, description, ~order_id, uid),
       PS_State('sendprepayid', ~session, <$ps_id, $u_id, $mf_id, $ms_id, ~p_sk>),
       !MerchantRegistered(<$ms_id, m_pk>)
     ]

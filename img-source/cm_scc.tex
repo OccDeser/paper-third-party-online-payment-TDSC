@@ -47,11 +47,11 @@
 
 \NewCoordBelowToC{c_smsg_U_MF_1}{c_ldiv_1-|c_U}{\LINEHEIGHT};
 \NewCoordAlignToN{c_rmsg_U_MF_1}{agent_MF}{c_smsg_U_MF_1};
-\DrawArrow{Arrow}{c_smsg_U_MF_1}{c_rmsg_U_MF_1}{$goods, D$};
+\DrawArrow{Arrow}{c_smsg_U_MF_1}{c_rmsg_U_MF_1}{$goods$};
 
 \NewCoordBelowToC{c_smsg_MF_MS_2}{c_rmsg_U_MF_1}{\LINEHEIGHT/2.25};
 \NewCoordAlignToN{c_rmsg_MF_MS_2}{agent_MS}{c_smsg_MF_MS_2};
-\DrawArrow{Arrow}{c_smsg_MF_MS_2}{c_rmsg_MF_MS_2}{$id_{U}, goods, D$};
+\DrawArrow{Arrow}{c_smsg_MF_MS_2}{c_rmsg_MF_MS_2}{$id_{U}, goods$};
 
 % Phase 2: Prepayment
 % -------------- Divide Line --------------
@@ -72,7 +72,7 @@
   $id_{order} := random()$\\
   $amount, description := calculate(goods)$\\
   $order := id_{M} \parallel id_{order} \parallel amount$\\
-  \quad\quad\quad\;\; $\parallel description \parallel D$\\
+  \quad\quad\quad\;\; $\parallel description \parallel id_{U}$\\
   $S_{order} := sign_{priv_{M}}(order)$
 };
 
@@ -106,7 +106,7 @@
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_MF1}{c_act_MF1}{
   $r := random()$\\
   $code := f(r)$\\
-  $T := H(id_{M} \parallel id_{prepay} \parallel D)$\\
+  $T := H(id_{M} \parallel id_{prepay} \parallel id_{U})$\\
   $seal := aenc_{pub_{P}}(T \parallel r)$
 };
 
@@ -121,7 +121,7 @@
 \NewCoordBelowToC{c_act_PS2}{c_rmsg_MF_PS_1}{\LINEHEIGHT/2};
 \NewNode{ACTION, draw=\SPECIALCOLOR}{action_PS2}{c_act_PS2}{
   $order := lookup(id_{prepay})$\\
-  $T' := H(id_{M} \parallel id_{prepay} \parallel D_{order})$\\
+  $T' := H(id_{M} \parallel id_{prepay} \parallel order.id_{U})$\\
   $T \parallel r := adec_{priv_{P}}(seal)$\\
   \textbf{if} $verify(S_{prepay}) \land T = T'$\\
   \textbf{then} $continue()$\\
@@ -187,7 +187,7 @@
 
 \NewCoordBelowToC{c_act_MS3}{c_rmsg_PS_MS_2}{\LINEHEIGHT/2};
 \NewNode{ACTION, draw=\COMMONCOLOR, text=\COMMONCOLOR}{action_MS3}{c_act_MS3}{
-  Deliver $goods$ to $D$
+  Deliver $goods$
 };
 
 \NewCoordBelowToC{c_smsg_PS_U_2}{action_MS3.south-|c_PS}{\LINEHEIGHT};

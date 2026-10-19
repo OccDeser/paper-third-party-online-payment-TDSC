@@ -26,6 +26,6 @@ Regulation and industry standards bind the user's authentication to the details 
 The regulatory technical standards of PSD2 require dynamic linking: for a remote payment, the authentication code is specific to the amount and the payee, and the payer is made aware of both~\cite{EU2018RTS}.
 EMV 3-D Secure lets the card issuer authenticate the cardholder for a card-not-present transaction using transaction data supplied by the merchant~\cite{EMVCo2023ThreeDS}, and Secure Payment Confirmation lets the browser display the payee and the amount and obtain an authenticator assertion over them~\cite{W3C2026SPC}.
 Attacks on mobile two-factor authentication and on PSD2 banking apps show that these guarantees weaken when the authentication factor and the transaction run on the same compromised device~\cite{Konoth2016Anywhere, Haupert2019PSD2}.
-These mechanisms bind the authorization to the amount and the payee, which an order created through the order oracle reproduces exactly, whereas SCC binds it to the order instance and its fulfilment target.
+These mechanisms bind the authorization to the amount and the payee, which an order created through the order oracle reproduces exactly, whereas SCC binds it to the order instance and the account that placed it.
 
 Short authenticated strings let users authenticate a key exchange between two devices by comparing a short value~\cite{Vaudenay2005SAS}, whereas SCC transfers a short code in one direction, from the merchant frontend through the user to the payment system (Section~\ref{sec:countermeasure}).

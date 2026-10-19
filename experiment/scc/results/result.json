@@ -1,6 +1,6 @@
 {
     "scc_order.spthy": {
-        "time": "619.36s",
+        "time": "454.94s",
         "lemmas": [
             {
                 "name": "typing",
@@ -24,25 +24,25 @@
                 "name": "U_MS_Order_Injective_Agreement",
                 "type": "all-traces",
                 "result": "verified",
-                "steps": "7664"
+                "steps": "5822"
             },
             {
                 "name": "MS_PS_Response_Injective_Agreement",
                 "type": "all-traces",
                 "result": "verified",
-                "steps": "9888"
+                "steps": "7180"
             },
             {
                 "name": "U_PS_Response_Injective_Agreement",
                 "type": "all-traces",
                 "result": "verified",
-                "steps": "7904"
+                "steps": "6062"
             },
             {
                 "name": "No_Payment_Without_Password_Input",
                 "type": "all-traces",
                 "result": "verified",
-                "steps": "4288"
+                "steps": "3271"
             }
         ]
     }
