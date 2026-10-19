@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Mon Oct 19 10:28:42 2026
-%DIF ADD new/main.tex   Mon Oct 19 10:28:40 2026
+%DIF DEL old/main.tex   Mon Oct 19 10:58:37 2026
+%DIF ADD new/main.tex   Mon Oct 19 10:58:36 2026
 
 \usepackage{cite}
 \usepackage{xspace}
@@ -1261,40 +1261,26 @@ Once an attacker is able to tamper with order parameters in transit, the user ca
 \DIFdelbegin \DIFdel{This observation reveals a design flaw in current payment patterns.
 }\DIFdelend 
 
-\DIFaddbegin \DIFadd{An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the account that placed it.
+\DIFdelbegin \subsection{\DIFdel{Countermeasure Design}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the account that placed it.
 }\emph{\DIFadd{PS}} \DIFadd{cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give the user a check that the attacker cannot reproduce with its own order.
-}
+}\DIFaddend 
 
-\subsection{\DIFadd{Design Goals}}
-
-\DIFadd{We design the countermeasure to meet four goals.
-}\begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
-  \item \textbf{\DIFadd{Protection of every payment.}} \DIFadd{The first payment between a user and a merchant is protected in the same way as every later payment.
-  }\item \textbf{\DIFadd{Single round and no per-user state.}} \DIFadd{A payment completes in one run of the protocol, without per-user keys, locally stored bindings, or trust decisions by the user.
-  }\item \textbf{\DIFadd{Compatible integration.}} \DIFadd{Merchants keep the existing prepayment and notification interfaces.
-  }\item \textbf{\DIFadd{Weak channel assumptions.}} \DIFadd{Security holds when both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure.
-}\end{enumerate}
-\DIFadd{Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
-}
-
-\DIFaddend \subsection{Countermeasure Design}
-
-\begin{figure}[t]
-  \centering
-  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=\linewidth]{img/cm_initial.pdf}
+\DIFdelbegin %DIFDELCMD < \begin{figure}[t]
+%DIFDELCMD <   \centering
+%DIFDELCMD <   \includegraphics[width=\linewidth]{img/cm_initial.pdf}
 %DIFDELCMD <   %%%
 %DIFDELCMD < \caption{%
 {%DIFAUXCMD
 \DIFdelFL{Initial Payment}}
   %DIFAUXCMD
 %DIFDELCMD < \label{fig:our_model_initial}
+%DIFDELCMD < \end{figure}
 %DIFDELCMD < %%%
-\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.85\linewidth]{img/cm_scc.pdf}
-  \caption{\DIFaddFL{Sealed Checkout Code on top of payment pattern~B.
-    Black elements are new or changed; gray elements are identical to pattern~B.
-    Notation: $id_{U}$ denotes the user's account at the merchant; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that }\emph{\DIFaddFL{PS}} \DIFaddFL{recorded for $id_{prepay}$.}}
-  \label{fig:cm_scc}
-\DIFaddendFL \end{figure}
+\DIFdelend \DIFaddbegin \subsection{\DIFadd{Design Goals}}
+\DIFaddend 
 
 \DIFdelbegin %DIFDELCMD < \begin{figure}[t]
 %DIFDELCMD <   \centering
@@ -1314,13 +1300,28 @@ Our payment protocol distinguishes between }\emph{\DIFdel{initial}} %DIFAUXCMD
 \DIFdel{and }\emph{\DIFdel{regular}} %DIFAUXCMD
 \DIFdel{payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.
 ~\ref{fig:our_model_regular}, respectively.
-For a given merchant and user , the first payment initiated by the user is defined as an }\emph{\DIFdel{initial}} %DIFAUXCMD
+For a given merchant and user, }\DIFdelend \DIFaddbegin \DIFadd{A countermeasure against order tampering should meet three goals.
+}\begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
+  \item \textbf{\DIFadd{Security under weak channel assumptions.}} \DIFadd{The protocol satisfies all security properties of Section~\ref{sec:security_properties} when both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure, without requiring the user to recognize the payee account.
+  }\item \textbf{\DIFadd{No per-user state.}} \DIFadd{Each payment completes in one protocol run without long-term keys or bindings for individual users, so }\DIFaddend the first payment \DIFdelbegin \DIFdel{initiated by the user is defined as an }\emph{\DIFdel{initial}} %DIFAUXCMD
 \DIFdel{payment, while all later payments are defined as }\emph{\DIFdel{regular}} %DIFAUXCMD
-\DIFdel{payments.
-}%DIFDELCMD < 
+\DIFdel{payments}\DIFdelend \DIFaddbegin \DIFadd{to a merchant is protected like any other.
+  }\item \textbf{\DIFadd{Small changes for merchants.}} \DIFadd{Merchants keep the existing prepayment and notification interfaces and only add the user account to the signed order.
+}\end{enumerate}
+\DIFadd{Our countermeasure, Sealed Checkout Code (SCC), meets all three goals}\DIFaddend .
 
-%DIFDELCMD < %%%
-\DIFdel{At the beginning of the }\DIFdelend \DIFaddbegin \DIFadd{SCC uses the user as the link between }\DIFaddend \emph{\DIFdelbegin \DIFdel{Prepayment}\DIFdelend \DIFaddbegin \DIFadd{MF}\DIFaddend } \DIFdelbegin \DIFdel{phase of a }\DIFdelend \DIFaddbegin \DIFadd{and }\emph{\DIFadd{PS}} \DIFadd{that the attacker does not control.
+\DIFdelbegin \DIFdel{At the beginning of the }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Countermeasure Design}}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\linewidth]{img/cm_scc.pdf}
+  \caption{\DIFaddFL{Sealed Checkout Code on top of payment pattern~B.
+    Black elements are new or changed; gray elements are identical to pattern~B.
+    Notation: $id_{U}$ denotes the user's account at the merchant; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that }\emph{\DIFaddFL{PS}} \DIFaddFL{recorded for $id_{prepay}$.}}
+  \label{fig:cm_scc}
+\end{figure}
+
+\DIFadd{SCC uses the user as the link between }\DIFaddend \emph{\DIFdelbegin \DIFdel{Prepayment}\DIFdelend \DIFaddbegin \DIFadd{MF}\DIFaddend } \DIFdelbegin \DIFdel{phase of a }\DIFdelend \DIFaddbegin \DIFadd{and }\emph{\DIFadd{PS}} \DIFadd{that the attacker does not control.
 For each payment, }\emph{\DIFadd{MF}} \DIFadd{draws a fresh nonce $r$, seals it to }\emph{\DIFadd{PS}} \DIFadd{together with a digest of the order handle and the }\DIFaddend user's \DIFdelbegin \DIFdel{initial payment, }\DIFdelend \DIFaddbegin \DIFadd{account, and shows a short code derived from $r$ to the user.
 }\emph{\DIFadd{PS}} \DIFadd{opens the seal only for the order it was created for, and completes the payment only if the user enters the same code.
 Fig.~\ref{fig:cm_scc} shows the workflow on top of payment pattern~B.
