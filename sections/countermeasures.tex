@@ -23,14 +23,13 @@ An order created through the order oracle carries the same amount, description, 
 
 \subsection{Design Goals}
 
-We design the countermeasure to meet four goals.
+A countermeasure against order tampering should meet three goals.
 \begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
-  \item \textbf{Protection of every payment.} The first payment between a user and a merchant is protected in the same way as every later payment.
-  \item \textbf{Single round and no per-user state.} A payment completes in one run of the protocol, without per-user keys, locally stored bindings, or trust decisions by the user.
-  \item \textbf{Compatible integration.} Merchants keep the existing prepayment and notification interfaces.
-  \item \textbf{Weak channel assumptions.} Security holds when both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure.
+  \item \textbf{Security under weak channel assumptions.} The protocol satisfies all security properties of Section~\ref{sec:security_properties} when both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure, without requiring the user to recognize the payee account.
+  \item \textbf{No per-user state.} Each payment completes in one protocol run without long-term keys or bindings for individual users, so the first payment to a merchant is protected like any other.
+  \item \textbf{Small changes for merchants.} Merchants keep the existing prepayment and notification interfaces and only add the user account to the signed order.
 \end{enumerate}
-Our countermeasure, Sealed Checkout Code (SCC), meets all four goals.
+Our countermeasure, Sealed Checkout Code (SCC), meets all three goals.
 
 \subsection{Countermeasure Design}
 
