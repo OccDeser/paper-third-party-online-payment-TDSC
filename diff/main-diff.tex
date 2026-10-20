@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Mon Oct 19 10:58:37 2026
-%DIF ADD new/main.tex   Mon Oct 19 10:58:36 2026
+%DIF DEL old/main.tex   Tue Oct 20 09:25:24 2026
+%DIF ADD new/main.tex   Tue Oct 20 09:25:22 2026
 
 \usepackage{cite}
 \usepackage{xspace}
@@ -645,8 +645,8 @@ We consider the following communication channels to be potentially insecure:
 
 
 %-------------------------------------------------------------------------------
-\section{Payment Protocol Modeling}
-%-------------------------------------------------------------------------------
+\section{Payment Protocol Modeling} \DIFaddbegin \label{sec:modeling}
+\DIFaddend %-------------------------------------------------------------------------------
 We formally model the payment protocols of PSP-B and Alipay in three payment scenarios, and the full models are available in an open-source repository~\cite{third_payment_model_2026}.
 In this section, we present the key details for modeling third-party payment protocols.
 First, we describe the user model, which allows us to capture users' evaluation of payment information and their authorization behavior within the symbolic model.
@@ -1258,15 +1258,12 @@ In other words, during the }\emph{\DIFdel{Authentication}} %DIFAUXCMD
 \DIFdel{phase, the userperforms no form of authentication of the order data.
 The user}\DIFdelend \DIFaddbegin \DIFadd{, so the user}\DIFaddend 's authorization \DIFdelbegin \DIFdel{is applied }\DIFdelend \DIFaddbegin \DIFadd{applies }\DIFaddend only to the act of payment \DIFdelbegin \DIFdel{transaction, }\DIFdelend rather than to a specific order.
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
-\DIFdelbegin \DIFdel{This observation reveals a design flaw in current payment patterns.
-}\DIFdelend 
+\DIFdelbegin \DIFdel{This observation reveals a design flaw in current payment patterns}\DIFdelend \DIFaddbegin 
 
-\DIFdelbegin \subsection{\DIFdel{Countermeasure Design}}
-%DIFAUXCMD
-\addtocounter{subsection}{-1}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \DIFadd{An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the account that placed it.
-}\emph{\DIFadd{PS}} \DIFadd{cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give the user a check that the attacker cannot reproduce with its own order.
-}\DIFaddend 
+\DIFadd{An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the account that placed it.
+}\emph{\DIFadd{PS}} \DIFadd{cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give }\emph{\DIFadd{PS}} \DIFadd{a check, carried by the user, that the attacker cannot reproduce with its own order}\DIFaddend .
+
+\subsection{\DIFdelbegin \DIFdel{Countermeasure }\DIFdelend Design \DIFaddbegin \DIFadd{Goals}\DIFaddend }
 
 \DIFdelbegin %DIFDELCMD < \begin{figure}[t]
 %DIFDELCMD <   \centering
@@ -1279,69 +1276,63 @@ Once an attacker is able to tamper with order parameters in transit, the user ca
 %DIFDELCMD < \label{fig:our_model_initial}
 %DIFDELCMD < \end{figure}
 %DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \subsection{\DIFadd{Design Goals}}
-\DIFaddend 
+\DIFdelend \DIFaddbegin \DIFadd{A countermeasure against order tampering should meet three goals.
+}\begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
+  \item \textbf{\DIFadd{Security under weak channel assumptions.}} \DIFadd{The protocol satisfies all security properties of Section~\ref{sec:security_properties} when both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure, without requiring the user to recognize the payee account.
+  }\item \textbf{\DIFadd{No per-user state.}} \DIFadd{Each payment completes in one protocol run without long-term keys or bindings for individual users, so the first payment to a merchant is protected like any other.
+  }\item \textbf{\DIFadd{Small changes for merchants.}} \DIFadd{Merchants keep the existing message flow and notification interface; the signed order gains one field, the user account.
+}\end{enumerate}
+\DIFadd{Our countermeasure, Sealed Checkout Code (SCC), meets all three goals.
+}\DIFaddend 
 
-\DIFdelbegin %DIFDELCMD < \begin{figure}[t]
-%DIFDELCMD <   \centering
-%DIFDELCMD <   \includegraphics[width=\linewidth]{img/cm_regular.pdf}
+\DIFaddbegin \subsection{\DIFadd{Countermeasure Design}}
+
+\DIFaddend \begin{figure}[t]
+  \centering
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=\linewidth]{img/cm_regular.pdf}
 %DIFDELCMD <   %%%
 %DIFDELCMD < \caption{%
 {%DIFAUXCMD
 \DIFdelFL{Regular Payment}}
   %DIFAUXCMD
 %DIFDELCMD < \label{fig:our_model_regular}
-%DIFDELCMD < \end{figure}
-%DIFDELCMD < 
-
 %DIFDELCMD < %%%
-\DIFdel{To fundamentally address order tampering attacks, we design and propose a new third-party payment protocol that introduces a user-side orderauthentication mechanism to effectively prevent such attacks.
-Our payment protocol distinguishes between }\emph{\DIFdel{initial}} %DIFAUXCMD
-\DIFdel{and }\emph{\DIFdel{regular}} %DIFAUXCMD
-\DIFdel{payments, whose workflows are illustrated in Fig.~\ref{fig:our_model_initial} and Fig.
-~\ref{fig:our_model_regular}, respectively.
-For a given merchant and user, }\DIFdelend \DIFaddbegin \DIFadd{A countermeasure against order tampering should meet three goals.
-}\begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
-  \item \textbf{\DIFadd{Security under weak channel assumptions.}} \DIFadd{The protocol satisfies all security properties of Section~\ref{sec:security_properties} when both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure, without requiring the user to recognize the payee account.
-  }\item \textbf{\DIFadd{No per-user state.}} \DIFadd{Each payment completes in one protocol run without long-term keys or bindings for individual users, so }\DIFaddend the first payment \DIFdelbegin \DIFdel{initiated by the user is defined as an }\emph{\DIFdel{initial}} %DIFAUXCMD
-\DIFdel{payment, while all later payments are defined as }\emph{\DIFdel{regular}} %DIFAUXCMD
-\DIFdel{payments}\DIFdelend \DIFaddbegin \DIFadd{to a merchant is protected like any other.
-  }\item \textbf{\DIFadd{Small changes for merchants.}} \DIFadd{Merchants keep the existing prepayment and notification interfaces and only add the user account to the signed order.
-}\end{enumerate}
-\DIFadd{Our countermeasure, Sealed Checkout Code (SCC), meets all three goals}\DIFaddend .
-
-\DIFdelbegin \DIFdel{At the beginning of the }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Countermeasure Design}}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.85\linewidth]{img/cm_scc.pdf}
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.85\linewidth]{img/cm_scc.pdf}
   \caption{\DIFaddFL{Sealed Checkout Code on top of payment pattern~B.
     Black elements are new or changed; gray elements are identical to pattern~B.
     Notation: $id_{U}$ denotes the user's account at the merchant; $H$ denotes a hash function; $aenc_{k}(m)$ and $adec_{k}(c)$ denote public-key encryption and decryption; $f$ maps a nonce to a short code; $lookup(id_{prepay})$ returns the order that }\emph{\DIFaddFL{PS}} \DIFaddFL{recorded for $id_{prepay}$.}}
   \label{fig:cm_scc}
-\end{figure}
+\DIFaddendFL \end{figure}
 
-\DIFadd{SCC uses the user as the link between }\DIFaddend \emph{\DIFdelbegin \DIFdel{Prepayment}\DIFdelend \DIFaddbegin \DIFadd{MF}\DIFaddend } \DIFdelbegin \DIFdel{phase of a }\DIFdelend \DIFaddbegin \DIFadd{and }\emph{\DIFadd{PS}} \DIFadd{that the attacker does not control.
-For each payment, }\emph{\DIFadd{MF}} \DIFadd{draws a fresh nonce $r$, seals it to }\emph{\DIFadd{PS}} \DIFadd{together with a digest of the order handle and the }\DIFaddend user's \DIFdelbegin \DIFdel{initial payment, }\DIFdelend \DIFaddbegin \DIFadd{account, and shows a short code derived from $r$ to the user.
-}\emph{\DIFadd{PS}} \DIFadd{opens the seal only for the order it was created for, and completes the payment only if the user enters the same code.
-Fig.~\ref{fig:cm_scc} shows the workflow on top of payment pattern~B.
-}
+\DIFdelbegin \DIFdel{To fundamentally address order tampering attacks, we design and propose a new third-party payment protocol that introduces a user-side order authentication mechanism to effectively prevent such attacks.
+  Our payment protocol distinguishes between }\emph{\DIFdel{initial}} %DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{SCC uses the user as the link between }\emph{\DIFadd{MF}} \DIFaddend and \DIFdelbegin \emph{\DIFdel{regular}} %DIFAUXCMD
+\DIFdel{payments, whose workflows are illustrated in Fig.
+  ~\ref{fig:our_model_initial} and Fig.
+~\ref{fig:our_model_regular}, respectively.
+For a given merchant and user, the first payment initiated by the user is defined as an }\emph{\DIFdel{initial}} %DIFAUXCMD
+\DIFdel{payment , while all later payments are defined as }\emph{\DIFdel{regular}} %DIFAUXCMD
+\DIFdel{payments}\DIFdelend \DIFaddbegin \emph{\DIFadd{PS}} \DIFadd{that the attacker does not control.
+For each payment, }\emph{\DIFadd{MF}} \DIFadd{draws a fresh nonce $r$, seals it to }\emph{\DIFadd{PS}} \DIFadd{together with a digest of the order handle and the user's account, and shows a short code derived from $r$ to the user.
+}\emph{\DIFadd{PS}} \DIFadd{accepts the seal only for the order it was created for, and completes the payment only if the user enters the same code.
+Fig.~\ref{fig:cm_scc} shows the workflow on top of payment pattern~B}\DIFaddend .
 
-\textbf{\DIFadd{User account.}}
+\DIFdelbegin \DIFdel{At the beginning of the }\emph{\DIFdel{Prepayment}} %DIFAUXCMD
+\DIFdel{phase of a }\DIFdelend \DIFaddbegin \textbf{\DIFadd{User account.}}
 \DIFadd{$id_{U}$ denotes the account under which the user is logged in at the merchant.
-}\emph{\DIFadd{MF}} \DIFadd{knows $id_{U}$ locally and already sends it to }\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{generates a public–private key pair $(priv_{UA}, pub_{UA})$ for }\emph{\DIFdel{U}}%DIFAUXCMD
-\DIFdel{, and then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them to }\DIFdelend \DIFaddbegin \DIFadd{in the }\DIFaddend \emph{\DIFdelbegin \DIFdel{PS}%DIFDELCMD < \MBLOCKRIGHTBRACE%%%
-\DIFdel{.
-Then, }\DIFdelend \DIFaddbegin \DIFadd{Order}} \DIFadd{phase.
+}\emph{\DIFadd{MF}} \DIFadd{knows $id_{U}$ from the user's login, and }\emph{\DIFadd{MS}} \DIFadd{associates each order with the account of the logged-in user.
+As in the rest of the paper, the }\DIFaddend user's \DIFdelbegin \DIFdel{initial payment, }\DIFdelend \DIFaddbegin \DIFadd{login session with }\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{generates a public–private key pair $(priv_{UA}, pub_{UA})$ for }\emph{\DIFdel{U}}%DIFAUXCMD
+\DIFdel{, and then uses the merchant private key $priv_M$ to sign $pub_{UA}$ together with the order information before sending them }\DIFdelend \DIFaddbegin \DIFadd{is authentic, and the attacker controls the payment messages on the two external channels.
 An attacker places orders on accounts it controls, so every order created through the order oracle carries an account other than $id_{U}$.
 }
 
 \textbf{\DIFadd{Order Phase.}}
-\DIFadd{The user selects $goods$ in }\emph{\DIFadd{MF}}\DIFadd{, and }\emph{\DIFadd{MF}} \DIFadd{sends $id_{U}$ and $goods$ to }\emph{\DIFadd{MS}}\DIFadd{.
+\DIFadd{The user selects $goods$ in }\emph{\DIFadd{MF}}\DIFadd{, and }\emph{\DIFadd{MF}} \DIFadd{sends $goods$ to }\emph{\DIFadd{MS}} \DIFadd{within the user's login session, which identifies $id_{U}$.
 }
 
 \textbf{\DIFadd{Prepayment Phase.}}
-\emph{\DIFadd{MS}} \DIFadd{includes $id_{U}$ in the order it signs and submits to }\DIFaddend \emph{PS}\DIFdelbegin \DIFdel{temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~(}\DIFdelend \DIFaddbegin \DIFadd{, and }\emph{\DIFadd{PS}} \DIFadd{records the order under a fresh }\DIFaddend $id_{prepay}$\DIFdelbegin \DIFdel{) to the merchant.
+\emph{\DIFadd{MS}} \DIFadd{includes $id_{U}$ in the order it signs and submits }\DIFaddend to \emph{PS}\DIFdelbegin \DIFdel{.
+Then, }\DIFdelend \DIFaddbegin \DIFadd{, and }\DIFaddend \emph{PS} \DIFdelbegin \DIFdel{temporarily stores $pub_{UA}$ together with the order information and returns the prepay identifier~(}\DIFdelend \DIFaddbegin \DIFadd{records the order under a fresh }\DIFaddend $id_{prepay}$\DIFdelbegin \DIFdel{) to the merchant.
 Upon receiving $id_{prepay}$, }\DIFdelend \DIFaddbegin \DIFadd{.
 }\DIFaddend \emph{MS} \DIFdelbegin \DIFdel{generates two signatures over }\DIFdelend \DIFaddbegin \DIFadd{then generates }\DIFaddend the payment parameters \DIFdelbegin \DIFdel{using $pub_M$ and $pub_{UA}$, respectively, and sends signatures and $id_{prepay}$ to }\DIFdelend \DIFaddbegin \DIFadd{exactly as in pattern~B.
 Upon receiving the parameters, }\DIFaddend \emph{MF} \DIFdelbegin \DIFdel{During the }\emph{\DIFdel{Authentication}} %DIFAUXCMD
@@ -1372,27 +1363,18 @@ If }\DIFaddend \emph{PS-App} \DIFdelbegin \DIFdel{first checks whether a public 
 If such a binding exists, }\emph{\DIFdel{PS-App}} %DIFAUXCMD
 \DIFdel{verifies both signatures before prompting the user to confirm the order information and complete the payment.
 Otherwise, }\DIFdelend \DIFaddbegin \DIFadd{displayed the code for the user to compare, an attacker that intercepts the parameters and }\DIFaddend the \DIFdelbegin \DIFdel{application informs the user that }\DIFdelend \DIFaddbegin \DIFadd{seal could open the cashier under its own payment account, read the code, and choose a nonce $r_A$ with $f(r_A)$ equal to that code for its own order.
-In SCC the code travels only from }\emph{\DIFadd{MF}} \DIFadd{to }\DIFaddend the \DIFdelbegin \DIFdel{merchant is not trusted and asks whether to proceed with the payment}\DIFdelend \DIFaddbegin \DIFadd{user and from the user to }\emph{\DIFadd{PS}}\DIFadd{, both over secure channels}\DIFaddend .
+In SCC the code travels only from }\emph{\DIFadd{MF}} \DIFadd{to }\DIFaddend the \DIFdelbegin \DIFdel{merchant is not trusted and asks whether to proceed with the }\DIFdelend \DIFaddbegin \DIFadd{user and from the user to }\emph{\DIFadd{PS}}\DIFadd{, both over secure channels.
+}
 
-\DIFdelbegin \subsection{\DIFdel{Symbolic Verification}}
-%DIFAUXCMD
-\addtocounter{subsection}{-1}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdel{We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
-The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
-This demonstrates that by introducing an order authentication mechanism on }\DIFdelend \DIFaddbegin \textbf{\DIFadd{Integration.}}
+\textbf{\DIFadd{Integration.}}
 \DIFadd{Merchants integrate SCC by adding $id_{U}$ to the signed order.
-The seal and }\DIFaddend the \DIFdelbegin \DIFdel{user side, we can fundamentally address the problem of order tampering attacks.
-  Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
-  }\DIFdelend \DIFaddbegin \DIFadd{code are computed by the payment SDK embedded in }\emph{\DIFadd{MF}}\DIFadd{, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
-}\DIFaddend 
+The seal and the code are computed by the payment SDK embedded in }\emph{\DIFadd{MF}}\DIFadd{, which also carries $pub_{P}$; the message flow and the notification interface remain unchanged.
+}
 
-\DIFaddbegin \subsection{\DIFadd{Security Analysis}}
+\subsection{\DIFadd{Security Analysis}}
 
 \DIFadd{The attacker controls }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{and obtains legitimate payment parameters for its own orders through the order oracle.
-To make the user pay for an order of its own, the attacker has three options.
+To make the user pay for an order of its own, the attacker has two options.
 }
 
 \begin{enumerate}[leftmargin=*]
@@ -1402,27 +1384,32 @@ To make the user pay for an order of its own, the attacker has three options.
   }\emph{\DIFadd{PS}} \DIFadd{recomputes $T'$ from the attacker's order, which carries the attacker's own handle and account, so $T \neq T'$ and }\emph{\DIFadd{PS}} \DIFadd{aborts.
   }\item \textbf{\DIFadd{Forge a seal for its own order.}}
   \DIFadd{The attacker builds a consistent seal for its own order with a nonce $r_A$ of its choice.
-  }\emph{\DIFadd{PS}} \DIFadd{opens the cashier, but the payment requires $f(r_A)$, while the user enters the code $f(r)$ shown by its own }\emph{\DIFadd{MF}}\DIFadd{.
-  The nonce $r$ appears only inside the seal and as the code on the channel between }\emph{\DIFadd{MF}} \DIFadd{and the user, so the attacker can only guess.
-  With a four-digit code, a guess succeeds with probability $10^{-4}$, and }\emph{\DIFadd{PS}} \DIFadd{bounds the number of failed attempts per payment.
-  }\item \textbf{\DIFadd{Move the user's order to its own account.}}
-  \DIFadd{The attacker replaces $id_{U}$ on its way to }\emph{\DIFadd{MS}}\DIFadd{, so that }\emph{\DIFadd{MS}} \DIFadd{records the user's order under the attacker's account.
-  The order at }\emph{\DIFadd{PS}} \DIFadd{then carries the attacker's account while }\emph{\DIFadd{MF}} \DIFadd{seals the user's account, so $T \neq T'$ and the payment fails.
-}\end{enumerate}
+  }\emph{\DIFadd{PS}} \DIFadd{opens the cashier, but the }\DIFaddend payment \DIFaddbegin \DIFadd{requires $f(r_A)$, while the user enters the code $f(r)$ shown by its own }\emph{\DIFadd{MF}}\DIFadd{.
+  The nonce $r$ appears only inside the seal, and $f(r)$ only on the user's channels to }\emph{\DIFadd{MF}} \DIFadd{and }\emph{\DIFadd{PS}}\DIFadd{, so the attacker can only guess.
+  With a four-digit code, a guess succeeds with probability $10^{-4}$}\DIFaddend .
+\DIFaddbegin \end{enumerate}
+\DIFaddend 
 
-\DIFadd{In every case the attack ends with a failed payment and does not redirect the user's funds or goods.
+\DIFaddbegin \DIFadd{Except for guessing the code, the attack ends with a failed payment and does not redirect the user's funds or goods.
 }
 
-\subsection{\DIFadd{Symbolic Verification}}
+\DIFaddend \subsection{Symbolic Verification}
 
 
-\DIFaddend \begin{table}[t]
+\DIFdelbegin \DIFdel{We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
+The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
+This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
+  Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
+  }%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdelend \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.12}
 
-\caption{Verification Results of Countermeasure. \textcolor{xgreen}{\ding{51}}~means satisfy, while \textcolor{xred}{\ding{55}}~indicates a violation.}
+\caption{Verification Results of Countermeasure. \textcolor{xgreen}{\ding{51}}~\DIFdelbeginFL \DIFdelFL{means satisfy, while \textcolor{xred}{\ding{55}}~}\DIFdelendFL indicates \DIFdelbeginFL \DIFdelFL{a violation}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{that the security property is satisfied}\DIFaddendFL .}
 \label{tab:countermeasure-results}
 
 \DIFdelbeginFL %DIFDELCMD < \begin{tabularx}{\linewidth}{Xccccc  >{\raggedright\arraybackslash}X }
@@ -1442,7 +1429,7 @@ To make the user pay for an order of its own, the attacker has three options.
 \DIFdelendFL \DIFaddbeginFL \begin{tabularx}{\linewidth}{Xccccc  >{\raggedright\arraybackslash}X }
 \toprule
 \textbf{Protocol} &
-\textbf{IA-O1} & \textbf{IA-O2} & \textbf{IA-UA} & \textbf{IA-R1} & \textbf{IA-R2} & \textbf{Time(s)} \\
+\textbf{IA-O1} & \textbf{IA-O2} & \textbf{IA-UA} & \textbf{IA-R1} & \textbf{IA-R2} & \textbf{Time (s)} \\
 \midrule
 
 SCC & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}} & \textcolor{xgreen}{\ding{51}}  & 454.94\\
@@ -1454,9 +1441,10 @@ SCC & \textcolor{xgreen}{\ding{51}}  & \textcolor{xgreen}{\ding{51}}  & \textcol
 \end{table}
 \DIFaddbegin 
 
-\DIFadd{We model SCC in }\Tamarin \DIFadd{following the countermeasure models of our artifact, with the same channel rules, order and query oracles, tactics, and lemmas.
-The model uses the Base assumption, in which both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure; it grants the attacker the capabilities of both SecureMS and SecurePS.
+\DIFadd{We model SCC in }\Tamarin \DIFadd{following the models of Section~\ref{sec:modeling}, with the same channel rules, tactics, and lemmas.
+The model uses the Base assumption, in which both }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{and }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}} \DIFadd{are insecure; every trace admitted under SecureMS or SecurePS is also admitted under Base, so the results carry over to both.
 Through the order oracle, the attacker places orders with arbitrary amounts and descriptions on any account other than the honest user's, and }\emph{\DIFadd{MS}} \DIFadd{signs that account into each order.
+The model has one honest user and no payment account for the attacker, so the argument for the direction of the code lies outside the model.
 }
 
 \DIFadd{The user commits to the order when the payment completes, because }\emph{\DIFadd{PS}} \DIFadd{checks the code after the user submits it.
@@ -1464,8 +1452,8 @@ To confirm that this commit point preserves the discriminating power of IA-O2, w
 }
 
 \DIFadd{Table~\ref{tab:countermeasure-results} summarizes the results.
-SCC satisfies all five security properties under the Base assumption.
-The verification used }\Tamarin \DIFadd{version~1.10.0 on a server with 32 CPU cores and 187~GB of memory (peak usage 5.3~GB).
+SCC satisfies all five security properties under the Base assumption, and an exists-trace lemma confirms that an honest payment completes in the model.
+The verification used }\Tamarin \DIFadd{version~1.10.0 and Maude~3.4 on a server with a 16-core, 32-thread AMD Ryzen~9 7950X3D processor and 187~GB of memory (peak usage 5.3~GB).
 }
 
 \DIFaddend %-------------------------------------------------------------------------------
@@ -1483,7 +1471,7 @@ From a protocol design perspective, \DIFdelbegin \DIFdel{our payment pattern exh
 \item%DIFAUXCMD
 \textbf{\DIFdel{Formally provable security.}} 
 %DIFAUXCMD
-\DIFdel{Our formal analysis results demonstrate that our payment pattern effectively }\DIFdelend \DIFaddbegin \DIFadd{SCC does not rely on trusted external channels, and our formal analysis shows that it }\DIFaddend prevents order tampering attacks \DIFdelbegin \DIFdel{during regular payments }\DIFdelend and satisfies all security properties defined in this paper \DIFdelbegin \DIFdel{.
+\DIFdel{Our formal analysis results demonstrate that our payment pattern effectively prevents order tampering attacks during regular payments }\DIFdelend \DIFaddbegin \DIFadd{SCC does not rely on the security of }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{MS}} \DIFadd{or }\emph{\DIFadd{MF}} \DIFadd{$\Longleftrightarrow$ }\emph{\DIFadd{PS}}\DIFadd{, and our formal analysis shows that it prevents tampered orders from completing a payment }\DIFaddend and satisfies all security properties defined in this paper \DIFdelbegin \DIFdel{.
 }\DIFdelend \DIFaddbegin \DIFadd{when both external channels are insecure.
   }\item \textbf{\DIFadd{Protection of every payment without per-user state.}}
 \DIFadd{Every payment, including the first payment to a merchant, is bound to the order produced by the user's own checkout, without per-user keys, local bindings, or trust decisions.
@@ -1498,13 +1486,14 @@ However, no new cryptographic primitives are introduced, and we consider the res
   \item \textbf{Additional user interaction\DIFdelbegin \DIFdel{during the initial payment}\DIFdelend .}
 \DIFdelbegin \DIFdel{During the initial payment, users are required to explicitly confirm their trust in the merchant, introducing additional user interaction.
 For regular payments, no extra interaction is required, and }\DIFdelend \DIFaddbegin \DIFadd{In each payment, }\DIFaddend the \DIFdelbegin \DIFdel{overall user experience remains comparable to that of existing payment patterns}\DIFdelend \DIFaddbegin \DIFadd{user enters the short code shown by }\emph{\DIFadd{MF}} \DIFadd{together with the payment password.
-In in-app and mobile web payment, the user carries the code across the switch from }\emph{\DIFadd{MF}} \DIFadd{to }\emph{\DIFadd{PS-App}}\DIFadd{, and }\emph{\DIFadd{MF}} \DIFadd{keeps displaying it until the payment ends}\DIFaddend .
+In in-app and mobile web payment, the user carries the code across the switch from }\emph{\DIFadd{MF}} \DIFadd{to }\emph{\DIFadd{PS-App}} \DIFadd{and can return to }\emph{\DIFadd{MF}} \DIFadd{to read it again}\DIFaddend .
   \item \textbf{\DIFdelbegin \DIFdel{No security improvement for }\DIFdelend \DIFaddbegin \DIFadd{Code confidentiality on }\DIFaddend the \DIFdelbegin \DIFdel{initial payment}\DIFdelend \DIFaddbegin \DIFadd{device}\DIFaddend .}
 \DIFdelbegin \DIFdel{Our proposed model does not provide additional security guarantees for the initial payment.
 Instead, our design follows the widely adopted Trust-On-First-Use (TOFU) model, under which the initial interaction may be vulnerable to active network attacks.
 Once a legitimate payment context is established, however, any subsequent deviation can be reliably detected.
 Consequently, while an adversary may interfere with the initial payment, our scheme guarantees the integrity of subsequent payments and enables attack detection even if the first payment was compromised}\DIFdelend \DIFaddbegin \DIFadd{The security of SCC requires that the attacker not learn the code before the user enters it, which the secure channel between the user and }\emph{\DIFadd{MF}} \DIFadd{provides in our model.
-Malware that reads the screen or overlays a fake input page on the user's device lies outside the channel attacker, and }\emph{\DIFadd{MF}} \DIFadd{and }\emph{\DIFadd{PS-App}} \DIFadd{render the code and its input field with screen-capture protection, such as }\texttt{\DIFadd{FLAG\_SECURE}} \DIFadd{on Android}\DIFaddend .
+Malware on the user's device lies outside the channel attacker.
+}\emph{\DIFadd{MF}} \DIFadd{and }\emph{\DIFadd{PS-App}} \DIFadd{can additionally render the code and its input field with screen-capture protection, such as }\texttt{\DIFadd{FLAG\_SECURE}} \DIFadd{on Android, which prevents screenshots and screen recording}\DIFaddend .
 \end{enumerate}
 \DIFaddbegin 
 
