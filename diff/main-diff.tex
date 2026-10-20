@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Tue Oct 20 11:14:49 2026
-%DIF ADD new/main.tex   Tue Oct 20 11:14:48 2026
+%DIF DEL old/main.tex   Tue Oct 20 11:58:05 2026
+%DIF ADD new/main.tex   Tue Oct 20 11:58:04 2026
 
 \usepackage{cite}
 \usepackage{xspace}
@@ -731,8 +731,8 @@ In practice, the adversary acquires such legitimate payment parameters by access
 To intuitively model this behavior, we introduce an \emph{Order Oracle} within the symbolic framework, which is defined by the following rule:
 \begin{tightflalign}
 \text{\Tterm{Ru}}  & \text{\Tterm{le OrderOracle}} :        & \\
-  \TFacts{  & \text{\TFactTerm{In}{<$amt$, $desc$>}, \TFactTerm{!Merchant}{$id_M$, $priv_M$}}} 
-             \TEmpActFactSL{}                              \\
+  \TFacts{  & \text{\TFactTerm{In}{<$amt$, $desc$>}, \TFactTerm{!Merchant}{$id_M$, $priv_M$}}}  \DIFaddbegin \\
+            & \DIFaddend \TEmpActFactSL{}                              \\
   \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)}}}}}
 \end{tightflalign}
 By querying this oracle with an order amount $amt$ and an order description $desc$, the adversary can obtain the corresponding legitimate payment parameters.
@@ -742,14 +742,15 @@ This process is consistent with the procedure used by merchants to generate paym
 We use equations to flexibly define this process in symbolic models.
 In protocols conforming to \DIFdelbegin \DIFdel{Model}\DIFdelend \DIFaddbegin \DIFadd{pattern}\DIFaddend ~A, the equation is defined as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_par}} & \text{\DIFdelbegin %DIFDELCMD < \Tfunction{mas}%%%
-\DIFdelend \DIFaddbegin \Tfunction{ams}\DIFaddend }(amt, desc, id_M, priv_M) = \\
+  \text{\DIFdelbegin %DIFDELCMD < \Tfunction{gen\_par}%%%
+\DIFdelend \DIFaddbegin \Tfunction{gen}\DIFaddend } & \text{\DIFdelbegin %DIFDELCMD < \Tfunction{mas}%%%
+\DIFdelend \DIFaddbegin \Tfunction{\_params}\DIFaddend }(amt, desc, id_M, priv_M) = \\
   & amt \parallel desc \parallel id_M \parallel \text{\Tfunction{sign}}(amt \parallel desc \parallel id_M, priv_M)
 \end{tightflalign}
 For protocols under \DIFdelbegin \DIFdel{Model}\DIFdelend \DIFaddbegin \DIFadd{pattern}\DIFaddend ~B, the equation is as follows:
 \begin{tightflalign}
   \text{\DIFdelbegin %DIFDELCMD < \Tfunction{gen\_parmas}%%%
-\DIFdelend \DIFaddbegin \Tfunction{gen\_params}\DIFaddend }(am&t, desc, id_M, priv_M, id_{prepay})   = \\
+\DIFdelend \DIFaddbegin \Tfunction{gen\_par}\DIFaddend } \DIFdelbegin \DIFdel{(am}\DIFdelend & \DIFdelbegin \DIFdel{t}\DIFdelend \DIFaddbegin \DIFadd{\text{\Tfunction{ams}}(amt}\DIFaddend , desc, id_M, priv_M, id_{prepay})   = \\
   & id_{prepay} \parallel id_M \parallel \text{\Tfunction{sign}}(id_{prepay} \parallel id_M, priv_M)
 \end{tightflalign}
 Here, our equation simplifies the actual generation process of payment parameters, such as the generation of $id_{prepay}$.
