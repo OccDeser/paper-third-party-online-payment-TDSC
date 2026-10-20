@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL old/main.tex   Tue Oct 20 09:25:24 2026
-%DIF ADD new/main.tex   Tue Oct 20 09:25:22 2026
+%DIF DEL old/main.tex   Tue Oct 20 10:41:10 2026
+%DIF ADD new/main.tex   Tue Oct 20 10:41:09 2026
 
 \usepackage{cite}
 \usepackage{xspace}
@@ -221,20 +221,19 @@
 \begin{document}
 %-------------------------------------------------------------------------------
 
-\title{When Authorization Loses Its Meaning:\\
-    Breaking and Fixing Third-Party Online Payments}
+\title{Formal Analysis and Fixing of Third-Party Online Payments}
 
 \author{Yongkang~Xiao,
-        Jing~Chen,
+        Jing~Chen,~\IEEEmembership{Senior~Member,~IEEE,}
         Min~Shi,
-        Kun~He,
+        Kun~He,~\IEEEmembership{Member,~IEEE,}
         Qiyi~Deng,
         and~Ruiying~Du%
 \thanks{Y. Xiao, J. Chen, M. Shi, K. He, Q. Deng, and R. Du are with the School of Cyber Science and Engineering, Wuhan University, Wuhan, China (e-mail: \{xiaoyongkang, chenjing, itachi, hekun, qiyideng, duraying\}@whu.edu.cn). (Corresponding authors: Jing Chen and Min Shi.)}%
 \thanks{A preliminary version of this paper appears in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26)~\cite{xiao2026authorization}. This version presents a new countermeasure, Sealed Checkout Code, together with its formal verification.}}
 
 \markboth{IEEE Transactions on Dependable and Secure Computing}%
-{Xiao \MakeLowercase{\textit{et al.}}: Breaking and Fixing Third-Party Online Payments}
+{Xiao \MakeLowercase{\textit{et al.}}: Formal Analysis and Fixing of Third-Party Online Payments}
 
 \maketitle
 
@@ -1390,20 +1389,21 @@ To make the user pay for an order of its own, the attacker has two options.
 \DIFaddbegin \end{enumerate}
 \DIFaddend 
 
-\DIFaddbegin \DIFadd{Except for guessing the code, the attack ends with a failed payment and does not redirect the user's funds or goods.
-}
-
-\DIFaddend \subsection{Symbolic Verification}
-
+\DIFdelbegin \subsection{\DIFdel{Symbolic Verification}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{Except for guessing the code, the attack ends with a failed payment and does not redirect the user's funds or goods.
+}\DIFaddend 
 
 \DIFdelbegin \DIFdel{We formally modeled and verified the initial and regular payments, and the results are summarized in Table~\ref{tab:countermeasure-results}.
 The analysis shows that under all three channel assumptions, our regular payment effectively defends against order tampering attacks and satisfies all security properties.
 This demonstrates that by introducing an order authentication mechanism on the user side, we can fundamentally address the problem of order tampering attacks.
   Although our initial payment does not satisfy all security properties under certain channel assumptions, which is consistent with the behavior of Model~B, the initial payment occurs only once and thus minimizes the likelihood of successful attacks.
-  }%DIFDELCMD < 
+  }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Formal Verification}}
+\DIFaddend 
 
-%DIFDELCMD < %%%
-\DIFdelend \begin{table}[t]
+
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -1651,10 +1651,12 @@ Finally, we propose a deployable countermeasure that binds user authorization to
 Formal verification confirms that it satisfies all security properties even under weakened channel assumptions, offering a practical path toward more secure third-party payments.
 % 致谢
 \section*{Acknowledgments}
-We thank the anonymous reviewers \DIFdelbegin \DIFdel{and our shepherd }\DIFdelend for their constructive feedback.
-This research was supported in part by the National Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National Natural Science Foundation of China under grants No.~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018, and the Wuhan Scientific and Technical Achievements Project under grant No.~2024030803010172.
-\DIFdelbegin \DIFdel{The corresponding authors are Jing Chen and Min Shi.
-}\DIFdelend 
+\DIFdelbegin \DIFdel{We thank the anonymous reviewers and our shepherd for their constructive feedback.
+}\DIFdelend This research was supported in part by the National \DIFdelbegin \DIFdel{Cryptologic Science Fund of China under grant No.~2025NCSF02027, the National }\DIFdelend Natural Science Foundation of China under grants  No. \DIFdelbegin \DIFdel{~62302343 and No.~62472323, the Key R\&D Program of Hubei Province under grant No.~2024BAB018}\DIFdelend \DIFaddbegin \DIFadd{62625207, 62602479}\DIFaddend , 
+and the \DIFdelbegin \DIFdel{Wuhan Scientific and Technical Achievements Project under grant No. 
+~2024030803010172.
+}\DIFdelend \DIFaddbegin \DIFadd{China Postdoctoral Science Foundation - Hubei Joint Support Program under Grant Number 2026T077HB. 
+}\DIFaddend The  corresponding  authors  are  Jing Chen and Min Shi.
 
 
 %DIF <  伦理附录
