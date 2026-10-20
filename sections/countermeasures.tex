@@ -19,7 +19,7 @@ These values describe the content of the current payment, not the original order
 Once an attacker is able to tamper with order parameters in transit, the user can be induced to authorize an incorrect order.
 
 An order created through the order oracle carries the same amount, description, and payee as the user's order, so it passes every check the user performs; the two orders differ only in the order instance and in the account that placed it.
-\emph{PS} cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give the user a check that the attacker cannot reproduce with its own order.
+\emph{PS} cannot tell them apart either, because it cannot authenticate the sender of the payment parameters, so a countermeasure has to give \emph{PS} a check, carried by the user, that the attacker cannot reproduce with its own order.
 
 \subsection{Design Goals}
 
@@ -27,7 +27,7 @@ A countermeasure against order tampering should meet three goals.
 \begin{enumerate}[leftmargin=*, label=\textbf{G\arabic*}]
   \item \textbf{Security under weak channel assumptions.} The protocol satisfies all security properties of Section~\ref{sec:security_properties} when both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure, without requiring the user to recognize the payee account.
   \item \textbf{No per-user state.} Each payment completes in one protocol run without long-term keys or bindings for individual users, so the first payment to a merchant is protected like any other.
-  \item \textbf{Small changes for merchants.} Merchants keep the existing prepayment and notification interfaces and only add the user account to the signed order.
+  \item \textbf{Small changes for merchants.} Merchants keep the existing message flow and notification interface; the signed order gains one field, the user account.
 \end{enumerate}
 Our countermeasure, Sealed Checkout Code (SCC), meets all three goals.
 
@@ -44,16 +44,17 @@ Our countermeasure, Sealed Checkout Code (SCC), meets all three goals.
 
 SCC uses the user as the link between \emph{MF} and \emph{PS} that the attacker does not control.
 For each payment, \emph{MF} draws a fresh nonce $r$, seals it to \emph{PS} together with a digest of the order handle and the user's account, and shows a short code derived from $r$ to the user.
-\emph{PS} opens the seal only for the order it was created for, and completes the payment only if the user enters the same code.
+\emph{PS} accepts the seal only for the order it was created for, and completes the payment only if the user enters the same code.
 Fig.~\ref{fig:cm_scc} shows the workflow on top of payment pattern~B.
 
 \textbf{User account.}
 $id_{U}$ denotes the account under which the user is logged in at the merchant.
-\emph{MF} knows $id_{U}$ locally and already sends it to \emph{MS} in the \emph{Order} phase.
+\emph{MF} knows $id_{U}$ from the user's login, and \emph{MS} associates each order with the account of the logged-in user.
+As in the rest of the paper, the user's login session with \emph{MS} is authentic, and the attacker controls the payment messages on the two external channels.
 An attacker places orders on accounts it controls, so every order created through the order oracle carries an account other than $id_{U}$.
 
 \textbf{Order Phase.}
-The user selects $goods$ in \emph{MF}, and \emph{MF} sends $id_{U}$ and $goods$ to \emph{MS}.
+The user selects $goods$ in \emph{MF}, and \emph{MF} sends $goods$ to \emph{MS} within the user's login session, which identifies $id_{U}$.
 
 \textbf{Prepayment Phase.}
 \emph{MS} includes $id_{U}$ in the order it signs and submits to \emph{PS}, and \emph{PS} records the order under a fresh $id_{prepay}$.
@@ -78,12 +79,12 @@ In SCC the code travels only from \emph{MF} to the user and from the user to \em
 
 \textbf{Integration.}
 Merchants integrate SCC by adding $id_{U}$ to the signed order.
-The seal and the code are computed by the payment SDK embedded in \emph{MF}, which also carries $pub_{P}$, and the prepayment and notification interfaces remain unchanged.
+The seal and the code are computed by the payment SDK embedded in \emph{MF}, which also carries $pub_{P}$; the message flow and the notification interface remain unchanged.
 
 \subsection{Security Analysis}
 
 The attacker controls \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} and obtains legitimate payment parameters for its own orders through the order oracle.
-To make the user pay for an order of its own, the attacker has three options.
+To make the user pay for an order of its own, the attacker has two options.
 
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Substitute its own order.}
@@ -93,26 +94,24 @@ To make the user pay for an order of its own, the attacker has three options.
   \item \textbf{Forge a seal for its own order.}
   The attacker builds a consistent seal for its own order with a nonce $r_A$ of its choice.
   \emph{PS} opens the cashier, but the payment requires $f(r_A)$, while the user enters the code $f(r)$ shown by its own \emph{MF}.
-  The nonce $r$ appears only inside the seal and as the code on the channel between \emph{MF} and the user, so the attacker can only guess.
-  With a four-digit code, a guess succeeds with probability $10^{-4}$, and \emph{PS} bounds the number of failed attempts per payment.
-  \item \textbf{Move the user's order to its own account.}
-  The attacker replaces $id_{U}$ on its way to \emph{MS}, so that \emph{MS} records the user's order under the attacker's account.
-  The order at \emph{PS} then carries the attacker's account while \emph{MF} seals the user's account, so $T \neq T'$ and the payment fails.
+  The nonce $r$ appears only inside the seal, and $f(r)$ only on the user's channels to \emph{MF} and \emph{PS}, so the attacker can only guess.
+  With a four-digit code, a guess succeeds with probability $10^{-4}$.
 \end{enumerate}
 
-In every case the attack ends with a failed payment and does not redirect the user's funds or goods.
+Except for guessing the code, the attack ends with a failed payment and does not redirect the user's funds or goods.
 
 \subsection{Symbolic Verification}
 
 \input{tables/countermeasure.tex}
 
-We model SCC in \Tamarin following the countermeasure models of our artifact, with the same channel rules, order and query oracles, tactics, and lemmas.
-The model uses the Base assumption, in which both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure; it grants the attacker the capabilities of both SecureMS and SecurePS.
+We model SCC in \Tamarin following the models of Section~\ref{sec:modeling}, with the same channel rules, tactics, and lemmas.
+The model uses the Base assumption, in which both \emph{MF} $\Longleftrightarrow$ \emph{MS} and \emph{MF} $\Longleftrightarrow$ \emph{PS} are insecure; every trace admitted under SecureMS or SecurePS is also admitted under Base, so the results carry over to both.
 Through the order oracle, the attacker places orders with arbitrary amounts and descriptions on any account other than the honest user's, and \emph{MS} signs that account into each order.
+The model has one honest user and no payment account for the attacker, so the argument for the direction of the code lies outside the model.
 
 The user commits to the order when the payment completes, because \emph{PS} checks the code after the user submits it.
 To confirm that this commit point preserves the discriminating power of IA-O2, we applied the same change to all six protocols of Table~\ref{tab:lemma-results} under all three channel assumptions; IA-O2 remains falsified in all 18 models.
 
 Table~\ref{tab:countermeasure-results} summarizes the results.
-SCC satisfies all five security properties under the Base assumption.
-The verification used \Tamarin version~1.10.0 on a server with 32 CPU cores and 187~GB of memory (peak usage 5.3~GB).
+SCC satisfies all five security properties under the Base assumption, and an exists-trace lemma confirms that an honest payment completes in the model.
+The verification used \Tamarin version~1.10.0 and Maude~3.4 on a server with a 16-core, 32-thread AMD Ryzen~9 7950X3D processor and 187~GB of memory (peak usage 5.3~GB).

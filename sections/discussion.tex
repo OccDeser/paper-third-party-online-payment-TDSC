@@ -7,7 +7,7 @@
 From a protocol design perspective, SCC exhibits two key advantages.
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Formally verified security under minimal trust assumptions.}
-  SCC does not rely on trusted external channels, and our formal analysis shows that it prevents order tampering attacks and satisfies all security properties defined in this paper when both external channels are insecure.
+  SCC does not rely on the security of \emph{MF} $\Longleftrightarrow$ \emph{MS} or \emph{MF} $\Longleftrightarrow$ \emph{PS}, and our formal analysis shows that it prevents tampered orders from completing a payment and satisfies all security properties defined in this paper when both external channels are insecure.
   \item \textbf{Protection of every payment without per-user state.}
 Every payment, including the first payment to a merchant, is bound to the order produced by the user's own checkout, without per-user keys, local bindings, or trust decisions.
 \end{enumerate}
@@ -19,8 +19,9 @@ SCC involves the following trade-offs.
 SCC adds one public-key encryption in \emph{MF} and one decryption in \emph{PS} per payment, and merchants add the user account to the signed order; we consider this overhead acceptable in practice.
   \item \textbf{Additional user interaction.}
 In each payment, the user enters the short code shown by \emph{MF} together with the payment password.
-In in-app and mobile web payment, the user carries the code across the switch from \emph{MF} to \emph{PS-App}, and \emph{MF} keeps displaying it until the payment ends.
+In in-app and mobile web payment, the user carries the code across the switch from \emph{MF} to \emph{PS-App} and can return to \emph{MF} to read it again.
   \item \textbf{Code confidentiality on the device.}
 The security of SCC requires that the attacker not learn the code before the user enters it, which the secure channel between the user and \emph{MF} provides in our model.
-Malware that reads the screen or overlays a fake input page on the user's device lies outside the channel attacker, and \emph{MF} and \emph{PS-App} render the code and its input field with screen-capture protection, such as \texttt{FLAG\_SECURE} on Android.
+Malware on the user's device lies outside the channel attacker.
+\emph{MF} and \emph{PS-App} can additionally render the code and its input field with screen-capture protection, such as \texttt{FLAG\_SECURE} on Android, which prevents screenshots and screen recording.
 \end{enumerate}
