@@ -16,7 +16,8 @@ The manuscript makes three main contributions:
   \setlength{\itemsep}{2pt}
   \item \textbf{Formal analysis of deployed payment protocols.} Using \textsc{Tamarin}, we analyze six third-party online payment protocols of the two dominant payment service providers in China under weakened channel assumptions. The analysis shows that the mainstream payment patterns do not bind the user's payment authorization to the intended order, which enables order tampering attacks.
   \item \textbf{A practical attack variant and its prevalence.} We demonstrate a new variant of this attack on Android through implicit Intent hijacking and find that more than 25\% of 461 tested versions of popular merchant applications are vulnerable.
-  \item \textbf{A formally verified countermeasure.} We propose Sealed Checkout Code (SCC), which protects every payment in a single protocol run without per-user keys, and verify with \textsc{Tamarin} that it satisfies all security properties when both external channels are insecure. The formal models are publicly available at \url{https://github.com/luojiazhishu/third-party-payment-formal-models}.
+  \item \textbf{A formally verified countermeasure.} We propose Sealed Checkout Code (SCC), which protects every payment in a single protocol run without per-user keys, and verify with \textsc{Tamarin} that it satisfies all security properties when both external channels are insecure. The formal models are publicly available at \\
+\url{https://github.com/luojiazhishu/third-party-payment-formal-models}.
 \end{enumerate}
 
 We believe the manuscript fits the scope of TDSC, which covers the formal verification and security of deployed systems.
