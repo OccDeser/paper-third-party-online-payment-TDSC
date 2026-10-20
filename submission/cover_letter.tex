@@ -1,0 +1,42 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+\begin{document}
+
+\today
+
+Editor-in-Chief\\
+IEEE Transactions on Dependable and Secure Computing
+
+Dear Editor-in-Chief,
+
+We submit the manuscript ``Formal Analysis and Fixing of Third-Party Online Payment Protocols'' for consideration as a regular paper in IEEE Transactions on Dependable and Secure Computing.
+
+The manuscript formally analyzes six third-party online payment protocols of the two dominant payment service providers in China under weakened channel assumptions using \textsc{Tamarin}.
+The analysis shows that the mainstream payment patterns do not bind the user's payment authorization to the intended order, which enables order tampering attacks.
+We demonstrate a new variant of this attack on Android through implicit Intent hijacking and find that more than 25\% of 461 tested versions of popular merchant applications are vulnerable.
+We then propose Sealed Checkout Code (SCC), a countermeasure that protects every payment in a single protocol run without per-user keys, and verify with \textsc{Tamarin} that it satisfies all security properties when both external channels are insecure.
+
+This manuscript extends our paper ``When Authorization Loses Its Meaning: Breaking and Fixing Third-Party Online Payments,'' published in the Proceedings of the 35th USENIX Security Symposium (USENIX Security '26).
+The journal version replaces the conference countermeasure, which relied on trust on first use and left the first payment to each merchant unprotected, with SCC, and adds its design, security analysis, formal verification, and a comparison with transaction authentication mechanisms such as PSD2 dynamic linking.
+The conference paper and a detailed summary of the differences are uploaded as previously published files.
+
+At the request of the vendor, we refer to one of the two payment service providers as PSP-B in the manuscript.
+We reported the vulnerabilities to both providers, and both acknowledged them.
+
+This manuscript has not been published elsewhere and is not under consideration by another journal or conference.
+All authors have approved the submission.
+
+Thank you for your consideration.
+
+Sincerely,
+
+Jing Chen and Min Shi (corresponding authors), on behalf of all authors\\
+School of Cyber Science and Engineering, Wuhan University, Wuhan, China\\
+E-mail: chenjing@whu.edu.cn, itachi@whu.edu.cn
+
+\end{document}
