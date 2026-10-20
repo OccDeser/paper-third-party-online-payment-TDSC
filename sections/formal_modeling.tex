@@ -86,8 +86,8 @@ In practice, the adversary acquires such legitimate payment parameters by access
 To intuitively model this behavior, we introduce an \emph{Order Oracle} within the symbolic framework, which is defined by the following rule:
 \begin{tightflalign}
 \text{\Tterm{Ru}}  & \text{\Tterm{le OrderOracle}} :        & \\
-  \TFacts{  & \text{\TFactTerm{In}{<$amt$, $desc$>}, \TFactTerm{!Merchant}{$id_M$, $priv_M$}}} 
-             \TEmpActFactSL{}                              \\
+  \TFacts{  & \text{\TFactTerm{In}{<$amt$, $desc$>}, \TFactTerm{!Merchant}{$id_M$, $priv_M$}}}  \\
+            & \TEmpActFactSL{}                              \\
   \TFacts{  & \text{\TFactTerm{Out}{\text{\Tfunction{gen\_params($amt$, $desc$, $id_M$, $priv_M$)}}}}}
 \end{tightflalign}
 By querying this oracle with an order amount $amt$ and an order description $desc$, the adversary can obtain the corresponding legitimate payment parameters.
@@ -97,12 +97,12 @@ This process is consistent with the procedure used by merchants to generate paym
 We use equations to flexibly define this process in symbolic models.
 In protocols conforming to pattern~A, the equation is defined as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_par}} & \text{\Tfunction{ams}}(amt, desc, id_M, priv_M) = \\
+  \text{\Tfunction{gen}} & \text{\Tfunction{\_params}}(amt, desc, id_M, priv_M) = \\
   & amt \parallel desc \parallel id_M \parallel \text{\Tfunction{sign}}(amt \parallel desc \parallel id_M, priv_M)
 \end{tightflalign}
 For protocols under pattern~B, the equation is as follows:
 \begin{tightflalign}
-  \text{\Tfunction{gen\_params}}(am&t, desc, id_M, priv_M, id_{prepay})   = \\
+  \text{\Tfunction{gen\_par}} & \text{\Tfunction{ams}}(amt, desc, id_M, priv_M, id_{prepay})   = \\
   & id_{prepay} \parallel id_M \parallel \text{\Tfunction{sign}}(id_{prepay} \parallel id_M, priv_M)
 \end{tightflalign}
 Here, our equation simplifies the actual generation process of payment parameters, such as the generation of $id_{prepay}$.
